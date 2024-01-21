@@ -1,0 +1,31 @@
+{
+    "language.info" : {
+        "line_break_func": "ascii"
+    },
+    "general.apply": "Apply",
+    "language.name": "English",
+    "language.region": "United States",
+    "language.code": "en_us",
+    "menu.start_game": "Start Game",
+    "menu.settings": "Settings",
+    "menu.exit": "Exit",
+    "settings.back": "Back",
+    "settings.graphic": "Graphic",
+    "settings.language": "Language",
+    "settings.sound": "Sound",
+    "settings.title": "Settings",
+    "start.plot.0": "As a lover of adventure, I have always traveled all over the world in search of dusty truths or hidden treasures.",
+    "start.plot.1": "This time, I came to southern continent, where I heard that there was a castle inhabited by a count hundreds of years ago. It is rumored that this count was skilled in powerful magic and hid a large amount of treasure in the castle on his deathbed.",
+    "start.plot.2": "Finding the castle, however, is no easy task. It is said the count has cast a powerful invisibility spell to protect the castle, which can only be seen when you get close to it.",
+    "start.plot.3": "If I am lucky enough to find the castle, the legend goes, I will also have to solve the puzzles left by the count in order to gain access to his vast wealth. Meanwhile, the castle is full of traps that will kill you if you are not careful.",
+    "start.plot.4": "... ...",
+    "start.plot.5": "I have been walking across the vast plains for three days, with nothing but lush grass in sight and very little food left for me. I must find the castle as soon as possible!",
+    "start.plot.6": "... ... ...",
+    "start.plot.7": "Suddenly, the scene ahead me began to blur. When my vision cleared, I was surprised to see an old castle in front of me. It seems that I had successfully crossed the magic barrier and found the count's castle.",
+    "start.plot.8": "As I approached the castle, the iron gate was covered in rust, but the words engraved on it were unusually clear. I read it carefully, and it was undoubtedly a warning to intruders like me!",
+    "start.plot.9": "[toggle display]",
+    "start.plot.10": "Words on the door.",
+    "start.plot.11": "[toggle display]",
+    "start.plot.12": "Looks like the real adventure is just now beginning!",
+    "start.plot.13": ""
+}
