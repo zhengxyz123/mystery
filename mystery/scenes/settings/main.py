@@ -99,5 +99,11 @@ class SettingsScene(Scene):
         self.sound_button.position = (width // 2 - 120, height // 2 - 30)
         self.language_button.position = (width // 2 - 120, height // 2 - 100)
 
+    def on_language_change(self):
+        self.buttons_frame.title = self.window.resource.translate("settings.title")
+        self.graphic_button.text = self.window.resource.translate("settings.graphic")
+        self.sound_button.text = self.window.resource.translate("settings.sound")
+        self.language_button.text = self.window.resource.translate("settings.language")
+
 
 __all__ = "SettingsScene"

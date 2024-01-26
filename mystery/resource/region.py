@@ -1,6 +1,6 @@
 from typing import Dict, Tuple
 
-texture_region: Dict[str, Tuple[int, int, int, int]] = {
+texture_region: Dict[str, Tuple[int, ...]] = {
     # textures/gui/widgets/buttons.png
     "bnl": (0, 117, 40, 28),
     "bnm": (42, 117, 40, 28),

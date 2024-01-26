@@ -62,6 +62,8 @@ class OptionGroup(EventDispatcher):
 
     def on_toggle(self, which: OptionBase):
         assert which in self._options_list
+        if self._options_list[self._now] is which:
+            return
         self._options_list[self._now].selected = False
         self._now = self._options_list.index(which)
         self._value = self._options_list[self._now].value

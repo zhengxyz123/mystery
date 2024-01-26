@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from atexit import register
 from typing import Dict
 
 from pyglet.event import EventDispatcher
@@ -97,7 +98,7 @@ class GameWindow(Window):
         # next time the scene switches back to the scene while moving
         # the mouse, and the state of the button will be recalculated.
         # By using this trick, the state of widgets can be recalculated
-        # immediately without physically moving the mouse.
+        # without physically moving the mouse.
         self._scenes[self._now].frame.on_mouse_motion(
             self._mouse_x, self._mouse_y, 1, 1
         )

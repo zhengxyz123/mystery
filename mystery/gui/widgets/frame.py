@@ -31,7 +31,7 @@ simple_frame_image = {"top": {}, "middle": {}, "bottom": {}}
 for i in ["top", "middle", "bottom"]:
     for j in ["left", "middle", "right"]:
         if i == "top":
-            region = f"sft{j[0]}2"
+            region = f"sft{j[0]}1"
         else:
             region = f"f{i[0]}{j[0]}"
         simple_frame_image[i][j] = frame_texture.get_region(*texture_region[region])
@@ -51,7 +51,6 @@ class AdvancedFrame(WidgetBase):
         group: Optional[Group] = None,
     ):
         super().__init__(x, y, width, height)
-        self._title = title
         self._pressed = False
         self._button_center = (0, 0)
         self._frame_group = Group(order=0, parent=group)
@@ -71,7 +70,7 @@ class AdvancedFrame(WidgetBase):
                 )
                 self._frame_sprites[i][j].scale = 2
         self._label = Label(
-            self._title,
+            title,
             font_name="Unifont",
             font_size=18,
             anchor_y="top",
@@ -141,12 +140,11 @@ class AdvancedFrame(WidgetBase):
 
     @property
     def title(self) -> str:
-        return self._title
+        return self._label.text
 
     @title.setter
-    def title(self, value: str):
-        self._title = value
-        self._label.text = value
+    def title(self, text: str):
+        self._label.text = text
 
     def draw(self):
         for i in ["top", "middle", "bottom"]:

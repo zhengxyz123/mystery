@@ -85,7 +85,12 @@ class StartScene(Scene):
         text = self._line_break_func(self.label_text, self.label.width)
         self.label.text = text
 
+    def on_language_change(self):
+        self.plot[:] = []
+        self._load_plots()
+
     def on_scene_enter(self):
+        self.now_plot = 0
         self.message.text = self.plot[0]
 
 

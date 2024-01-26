@@ -94,6 +94,14 @@ class DecoratedButton(WidgetBase):
         self._label.group = self._label_group
 
     @property
+    def text(self) -> str:
+        return self._label.text
+
+    @text.setter
+    def text(self, text: str):
+        self._label.text = text
+
+    @property
     def value(self):
         return self._pressed
 
@@ -205,6 +213,14 @@ class TextButton(WidgetBase):
         for sprite in self._sprites.values():
             sprite.group = self._sprites_group
         self._label.group = self._label_group
+
+    @property
+    def text(self) -> str:
+        return self._label.text
+
+    @text.setter
+    def text(self, text: str):
+        self._label.text = text
 
     @property
     def value(self):

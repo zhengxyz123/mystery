@@ -1,7 +1,9 @@
 __pycache__/
+.build/
 bin/
 include/
 lib/
 
 lib64
+mystery.pyz
 pyvenv.cfg

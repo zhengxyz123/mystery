@@ -1,7 +1,7 @@
 from pyglet.graphics import Batch, Group
+from pyglet.shapes import Rectangle
 from pyglet.sprite import Sprite
 from pyglet.text import Label
-from pyglet.shapes import Rectangle
 from pyglet.window import Window
 
 from mystery.gui.widgets import (
@@ -47,7 +47,7 @@ class LanguageSettingScene(Scene):
             batch=self.batch,
             group=self.mid_group,
         )
-        self.confirm_button = DecoratedButton(
+        self.apply_button = DecoratedButton(
             self.window.resource.translate("general.apply"),
             self.window.width // 2 - 75,
             self.window.height // 2 - 270,
@@ -90,12 +90,20 @@ class LanguageSettingScene(Scene):
         self.language_frame.push_handlers(
             on_button_click=lambda: self.window.switch_scene("settings.main")
         )
+        self.apply_button.push_handlers(on_click=self.apply_change)
         self.frame.add_widget(
             self.language_frame,
-            self.confirm_button,
+            self.apply_button,
             self.options_layout,
             self.scroll_bar,
         )
+
+    def apply_change(self):
+        self.window.setting["lang"] = self.options_group.value
+        self.window.setting.save()
+        self.window.resource.language = self.options_group.value
+        self.dispatch_event("on_language_change")
+        self.window.switch_scene("settings.main")
 
     def on_draw(self):
         self.window.clear()
@@ -108,7 +116,7 @@ class LanguageSettingScene(Scene):
         else:
             self.background.scale = height / self.background.image.height
         self.language_frame.position = (width // 2 - 300, height // 2 - 250)
-        self.confirm_button.position = (width // 2 - 75, height // 2 - 270)
+        self.apply_button.position = (width // 2 - 75, height // 2 - 270)
         self.options_layout.position = (width // 2 - 220, height // 2 - 210)
         self.scroll_bar.position = (width // 2 + 220, height // 2 - 210)
         for index, option in enumerate(self.language_options):
@@ -116,6 +124,10 @@ class LanguageSettingScene(Scene):
                 width // 2 - 200, height // 2 + 130 - 50 * index
             )
             option.position = position
+
+    def on_language_change(self):
+        self.language_frame.title = self.window.resource.translate("settings.language")
+        self.apply_button.text = self.window.resource.translate("general.apply")
 
     def on_scene_enter(self):
         i = list(SUPPORTED_LANG.keys()).index(self.window.resource.language)
