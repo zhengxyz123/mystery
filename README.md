@@ -1,7 +1,3 @@
-<div style="text-align: center">
-    <img alt="" src="cover.png" width="384", height="288">
-</div>
-
 # Mystery
 A game in the early stage of development.
 
@@ -19,3 +15,6 @@ pip install -r requirements.txt
 # Then run the game.
 python3 -m mystery
 ```
+
+## 中文繁简转换
+为减少**开发前期**的工作量，各繁体中文的本地化翻译都默认由简体中文通过`opencc`转换而成，如有错误请谅解。

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from atexit import register
 from typing import Dict
 
 from pyglet.event import EventDispatcher

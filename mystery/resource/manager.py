@@ -7,7 +7,9 @@ from pyglet.resource import Loader
 
 SUPPORTED_LANG = {
     "en_us": "English",
-    "zh_cn": "简体中文",
+    "zh_cn": "简体中文(中国大陆)",
+    "zh_hk": "繁體中文(中國香港)",
+    "zh_tw": "繁體中文(中國臺灣)",
 }
 
 
