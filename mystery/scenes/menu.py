@@ -43,9 +43,9 @@ class MenuScene(Scene):
         self.game_button = TextButton(
             self.window.resource.translate("menu.start_game"),
             self.window.width // 2 - 150,
-            0.8 * self.window.height // 2 + 70,
+            0.8 * self.window.height // 2 + 65,
             300,
-            60,
+            55,
             batch=self.batch,
             group=self.fore_group,
         )
@@ -54,16 +54,16 @@ class MenuScene(Scene):
             self.window.width // 2 - 150,
             0.8 * self.window.height // 2 + 5,
             300,
-            60,
+            55,
             batch=self.batch,
             group=self.fore_group,
         )
         self.settings_button = TextButton(
             self.window.resource.translate("menu.settings"),
             self.window.width // 2 - 150,
-            0.8 * self.window.height // 2 - 65,
+            0.8 * self.window.height // 2 - 55,
             300,
-            60,
+            55,
             font_size=24,
             batch=self.batch,
             group=self.fore_group,
@@ -71,9 +71,9 @@ class MenuScene(Scene):
         self.exit_button = TextButton(
             self.window.resource.translate("menu.exit"),
             self.window.width // 2 - 150,
-            0.8 * self.window.height // 2 - 135,
+            0.8 * self.window.height // 2 - 115,
             300,
-            60,
+            55,
             font_size=24,
             batch=self.batch,
             group=self.fore_group,
@@ -117,10 +117,10 @@ class MenuScene(Scene):
         else:
             self.background.scale = height / self.background.image.height
         self.title.position = (width // 2, 0.8 * height, 0)
-        self.game_button.position = (width // 2 - 150, 0.8 * height // 2 + 70)
+        self.game_button.position = (width // 2 - 150, 0.8 * height // 2 + 65)
         self.saves_button.position = (width // 2 - 150, 0.8 * height // 2 + 5)
-        self.settings_button.position = (width // 2 - 150, 0.8 * height // 2 - 65)
-        self.exit_button.position = (width // 2 - 150, 0.8 * height // 2 - 135)
+        self.settings_button.position = (width // 2 - 150, 0.8 * height // 2 - 55)
+        self.exit_button.position = (width // 2 - 150, 0.8 * height // 2 - 115)
 
     def on_language_change(self):
         self.game_button.text = self.window.resource.translate("menu.start_game")
