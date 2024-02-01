@@ -5,6 +5,7 @@ from pyglet.font import have_font
 from pyglet.font import load as load_font
 from pyglet.resource import Loader
 
+FONT_NAME = "Unifont"
 SUPPORTED_LANG = {
     "en_us": "English",
     "zh_cn": "简体中文(中国大陆)",
@@ -38,12 +39,13 @@ class ResourceManager:
         self._lang = name
         if self._lang == "en_us":
             self._translation_now = self._translation_en_us
+            return
         contents = self.loader.file(f"i18n/{self._lang}.json", mode="rb").read()
         s = contents.decode("utf-8")
         self._translation_now = loads(s)
 
     def info(self, key: str):
-        return self._translation_now["language.info"].get(key)
+        return self._translation_now["language.info"].get(key, "")
 
     def translate(self, name: str, **kwargs: dict) -> str:
         """Get the translation of `name`.
@@ -63,4 +65,4 @@ class ResourceManager:
             return name
 
 
-__all__ = "SUPPORTED_LANG", "ResourceManager"
+__all__ = "FONT_NAME", "SUPPORTED_LANG", "ResourceManager"

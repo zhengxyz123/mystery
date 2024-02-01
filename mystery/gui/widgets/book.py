@@ -1,7 +1,6 @@
 from typing import Optional, Tuple
 
 from pyglet.graphics import Batch, Group
-from pyglet.image import load as load_image
 from pyglet.sprite import Sprite
 from pyglet.window import Window
 
@@ -11,11 +10,10 @@ from mystery.gui.widgets import WidgetBase
 
 pages_texture = []
 for i in range(1, 8):
-    page_file = resource.loader.file(f"textures/gui/book/flip_pages_{i}.png")
-    img = load_image("example.png", page_file)
-    img.anchor_x = img.width // 2
-    img.anchor_y = img.height // 2
-    pages_texture.append(img)
+    page_img = resource.loader.image(f"textures/gui/book/flip_pages_{i}.png")
+    page_img.anchor_x = page_img.width // 2
+    page_img.anchor_y = page_img.height // 2
+    pages_texture.append(page_img)
 
 
 class Book(WidgetBase):

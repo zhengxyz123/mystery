@@ -8,6 +8,7 @@ from pyglet.text import Label
 from mystery import resource
 from mystery.gui.widgets import WidgetBase
 from mystery.resource import texture_region
+from mystery.resource.manager import FONT_NAME
 
 WHITE = (255, 255, 255, 255)
 GRAY = (170, 170, 170, 255)
@@ -61,7 +62,7 @@ class DecoratedButton(WidgetBase):
             anchor_x="center",
             anchor_y="center",
             align="center",
-            font_name="Unifont",
+            font_name=FONT_NAME,
             font_size=16,
             batch=batch,
             group=self._label_group,
@@ -176,7 +177,7 @@ class TextButton(WidgetBase):
             anchor_x="center",
             anchor_y="center",
             align="center",
-            font_name="Unifont",
+            font_name=FONT_NAME,
             font_size=font_size,
             batch=batch,
             group=self._label_group,

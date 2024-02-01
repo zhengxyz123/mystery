@@ -149,8 +149,6 @@ class ScrollableLayout(WidgetBase):
                 widget.on_mouse_drag(x, y, dx, dy, buttons, modifiers)
 
     def on_mouse_motion(self, x, y, dx, dy):
-        if not self._check_hit(x, y):
-            return
         for widget in self._elements:
             if hasattr(widget, "on_mouse_motion"):
                 widget.on_mouse_motion(x, y, dx, dy)
@@ -163,8 +161,6 @@ class ScrollableLayout(WidgetBase):
                 widget.on_mouse_press(x, y, buttons, modifiers)
 
     def on_mouse_release(self, x, y, buttons, modifiers):
-        if not self._check_hit(x, y):
-            return
         for widget in self._elements:
             if hasattr(widget, "on_mouse_release"):
                 widget.on_mouse_release(x, y, buttons, modifiers)

@@ -8,6 +8,7 @@ from pyglet.text import Label
 from mystery import resource
 from mystery.gui.widgets import WidgetBase
 from mystery.resource import texture_region
+from mystery.resource.manager import FONT_NAME
 
 frame_texture = resource.loader.image("textures/gui/widgets/frames.png")
 button_and_icon_texture = resource.loader.image(
@@ -71,7 +72,7 @@ class AdvancedFrame(WidgetBase):
                 self._frame_sprites[i][j].scale = 2
         self._label = Label(
             title,
-            font_name="Unifont",
+            font_name=FONT_NAME,
             font_size=18,
             anchor_y="top",
             batch=batch,

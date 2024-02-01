@@ -70,7 +70,7 @@ class LanguageSettingScene(Scene):
             batch=self.batch,
             group=self.fore_group,
         )
-        self.options_layout.content_height = 0
+        self.options_layout.content_height = len(SUPPORTED_LANG) * 50
         self.language_options = []
         for index, item in enumerate(SUPPORTED_LANG.items()):
             self.language_options.append(

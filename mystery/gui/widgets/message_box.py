@@ -10,6 +10,7 @@ from pyglet.window import Window
 from mystery import resource, utils
 from mystery.gui.widgets import WidgetBase
 from mystery.resource import texture_region
+from mystery.resource.manager import FONT_NAME
 
 mb_texture = resource.loader.image("textures/gui/message_box.png")
 mb_images = {}
@@ -40,7 +41,7 @@ class MessageBox(WidgetBase):
                 mb_images[where], batch=batch, group=self._back_group
             )
         self._label = Label(
-            font_name="Unifont",
+            font_name=FONT_NAME,
             font_size=18,
             width=self._width - 40,
             multiline=True,

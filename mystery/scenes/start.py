@@ -1,3 +1,4 @@
+from importlib import import_module
 from typing import Optional
 
 from pyglet.graphics import Batch, Group
@@ -6,6 +7,7 @@ from pyglet.window import Window, key, mouse
 
 from mystery import utils
 from mystery.gui.widgets import MessageBox
+from mystery.resource.manager import FONT_NAME
 from mystery.scenes import Scene
 
 
@@ -24,7 +26,7 @@ class StartScene(Scene):
 
         self.message = MessageBox(self.window, self.batch, self.mb_group)
         self.label = Label(
-            font_name="Unifont",
+            font_name=FONT_NAME,
             font_size=24,
             x=self.window.width // 2,
             y=self.window.height // 2,
@@ -51,7 +53,10 @@ class StartScene(Scene):
 
     def _next_plot(self):
         if self.now_plot + 1 >= len(self.plot):
-            self.window.switch_scene("menu")
+            if not self.window.has_scene("game"):
+                game_scene = import_module("mystery.scenes.game").GameScene
+                self.window.add_scene("game", game_scene)
+            self.window.switch_scene("game")
         if self.now_plot + 1 < len(self.plot):
             self.now_plot += 1
         if self.plot[self.now_plot] == "[toggle display]":
