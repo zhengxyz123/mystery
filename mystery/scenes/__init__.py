@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+from time import strftime
 from typing import Dict
 
 from pyglet.event import EventDispatcher
 from pyglet.image import get_buffer_manager
 from pyglet.window import Window, key
 
-from mystery import resource, setting
+from mystery import data_path, resmgr, setting
 from mystery.gui import WidgetFrame
 
 
@@ -31,6 +32,15 @@ class Scene(EventDispatcher):
         pass
 
 
+Scene.register_event_type("on_key_press")
+Scene.register_event_type("on_key_release")
+Scene.register_event_type("on_mouse_drag")
+Scene.register_event_type("on_mouse_motion")
+Scene.register_event_type("on_mouse_press")
+Scene.register_event_type("on_mouse_release")
+Scene.register_event_type("on_mouse_scroll")
+Scene.register_event_type("on_resize")
+
 Scene.register_event_type("on_language_change")
 Scene.register_event_type("on_scene_enter")
 Scene.register_event_type("on_scene_leave")
@@ -45,7 +55,7 @@ class GameWindow(Window):
         self.set_minimum_size(768, 576)
         self._scenes: Dict[str, Scene] = {}
         self._now = ""
-        self.resource = resource
+        self.resource = resmgr
         self.setting = setting
 
     @property
@@ -89,8 +99,7 @@ class GameWindow(Window):
         if self._scenes[self._now].language != self.resource.language:
             self._scenes[self._now].dispatch_event("on_language_change")
             self._scenes[self._now].language = self.resource.language
-        if hasattr(self._scenes[self._now], "on_resize"):
-            self._scenes[self._now].on_resize(self.width, self.height)
+        self._scenes[self._now].dispatch_event("on_resize", self.width, self.height)
         # Use a little trick to move the mouse slightly.
         # If the scene switches immediately after the button is pressed
         # (actually released), the button will remain hover until the
@@ -105,7 +114,10 @@ class GameWindow(Window):
         self.push_handlers(self._scenes[self._now])
 
     def on_key_press(self, symbol, modifiers):
-        if symbol == key.F11:
+        if symbol == key.F5:
+            filename = data_path / "screenshots" / strftime("%Y%m%d_%H%M%S.png")
+            get_buffer_manager().get_color_buffer().save(filename)
+        elif symbol == key.F11:
             self.set_fullscreen(not self.fullscreen)
             if not self.fullscreen:
                 self.set_minimum_size(768, 576)

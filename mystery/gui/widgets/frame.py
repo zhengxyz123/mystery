@@ -5,13 +5,13 @@ from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 from pyglet.text import Label
 
-from mystery import resource
+from mystery import resmgr
 from mystery.gui.widgets import WidgetBase
 from mystery.resource import texture_region
 from mystery.resource.manager import FONT_NAME
 
-frame_texture = resource.loader.image("textures/gui/widgets/frames.png")
-button_and_icon_texture = resource.loader.image(
+frame_texture = resmgr.loader.image("textures/gui/widgets/frames.png")
+button_and_icon_texture = resmgr.loader.image(
     "textures/gui/widgets/round_buttons_and_icons.png"
 )
 icon_image = button_and_icon_texture.get_region(*texture_region["icon.close"])

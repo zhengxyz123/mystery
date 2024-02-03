@@ -28,11 +28,11 @@ if not settings_path.exists():
     settings_path.mkdir()
 setting = Setting(settings_path)
 
-resource = ResourceManager()
+resmgr = ResourceManager()
 if setting["lang"] == "auto":
     lang_code = getdefaultlocale()[0].lower()
 else:
     lang_code = setting.get("lang", "en_us")
-resource.language = lang_code
+resmgr.language = lang_code
 
-__all__ = "version", "data_path", "setting", "resource"
+__all__ = "version", "data_path", "setting", "resmgr"

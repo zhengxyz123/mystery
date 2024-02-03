@@ -6,7 +6,7 @@ from pyglet.shapes import Rectangle
 from pyglet.sprite import Sprite
 from pyglet.text import Label
 
-from mystery import resource
+from mystery import resmgr
 from mystery.gui.widgets import WidgetBase
 from mystery.gui.widgets.misc import Color, Icon
 from mystery.resource import texture_region

@@ -5,15 +5,15 @@ from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 from pyglet.text import Label
 
-from mystery import resource
+from mystery import resmgr
 from mystery.gui.widgets import WidgetBase
 from mystery.resource import texture_region
 from mystery.resource.manager import FONT_NAME
 
 WHITE = (255, 255, 255, 255)
 GRAY = (170, 170, 170, 255)
-button_texture = resource.loader.image("textures/gui/widgets/buttons.png")
-decorated_button_texture = resource.loader.image(
+button_texture = resmgr.loader.image("textures/gui/widgets/buttons.png")
+decorated_button_texture = resmgr.loader.image(
     "textures/gui/widgets/frame_decorations.png"
 )
 button_image = {}

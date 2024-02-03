@@ -7,7 +7,7 @@ from pyglet.resource import Loader
 
 FONT_NAME = "Unifont"
 SUPPORTED_LANG = {
-    "en_us": "English",
+    "en_us": "English(United States)",
     "zh_cn": "简体中文(中国大陆)",
     "zh_hk": "繁體中文(中國香港)",
     "zh_tw": "繁體中文(中國臺灣)",

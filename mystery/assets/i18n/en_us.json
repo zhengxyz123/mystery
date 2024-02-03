@@ -3,6 +3,13 @@
         "line_break_func": "ascii"
     },
     "general.apply": "Apply",
+    "hint.arrow": "Move",
+    "hint.e": "Open inventory",
+    "hint.escape": "Back",
+    "hint.f5": "Take screenshot",
+    "hint.f11": "Toggle fullscreen",
+    "hint.shift": "Run",
+    "hint.space": "Interact",
     "language.name": "English",
     "language.region": "United States",
     "language.code": "en_us",

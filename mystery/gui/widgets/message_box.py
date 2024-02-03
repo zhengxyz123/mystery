@@ -7,12 +7,12 @@ from pyglet.sprite import Sprite
 from pyglet.text import Label
 from pyglet.window import Window
 
-from mystery import resource, utils
+from mystery import resmgr, utils
 from mystery.gui.widgets import WidgetBase
 from mystery.resource import texture_region
 from mystery.resource.manager import FONT_NAME
 
-mb_texture = resource.loader.image("textures/gui/message_box.png")
+mb_texture = resmgr.loader.image("textures/gui/message_box.png")
 mb_images = {}
 for where in ["left", "middle", "right"]:
     name = f"mb{where[0]}"
@@ -72,7 +72,7 @@ class MessageBox(WidgetBase):
         self._label.text = self._line_break_func(self._text, self._label.width)
 
     def _line_break_func(self, s: str, width: int) -> str:
-        func = getattr(utils, f"line_break_{resource.info('line_break_func')}")
+        func = getattr(utils, f"line_break_{resmgr.info('line_break_func')}")
         return func(s, width)
 
     def _update_position(self):

@@ -7,15 +7,15 @@ from pyglet.image import Animation, AnimationFrame, ImageGrid
 from pyglet.sprite import Sprite
 from pyglet.window import Window, key
 
-from mystery import resource
+from mystery import resmgr
 
-idle_img = resource.loader.image("textures/character/idle.png")
+idle_img = resmgr.loader.image("textures/character/idle.png")
 idle_seq = ImageGrid(idle_img, 4, 3).get_texture_sequence()
-run_img = resource.loader.image("textures/character/run.png")
+run_img = resmgr.loader.image("textures/character/run.png")
 run_seq = ImageGrid(run_img, 4, 8).get_texture_sequence()
-sit_img = resource.loader.image("textures/character/sit.png")
+sit_img = resmgr.loader.image("textures/character/sit.png")
 sit_seq = ImageGrid(sit_img, 4, 3).get_texture_sequence()
-walk_img = resource.loader.image("textures/character/walk.png")
+walk_img = resmgr.loader.image("textures/character/walk.png")
 walk_seq = ImageGrid(walk_img, 4, 8).get_texture_sequence()
 
 char_anime = {
@@ -69,6 +69,12 @@ class Charcter(EventDispatcher):
         self._runnable = False
         self._prev_state = None
         self._prev_direction = None
+        self._mapping = {
+            key.RIGHT: CharcterDirection.RIGHT,
+            key.DOWN: CharcterDirection.DOWN,
+            key.LEFT: CharcterDirection.LEFT,
+            key.UP: CharcterDirection.UP,
+        }
 
     @property
     def state(self) -> CharcterState:
@@ -103,19 +109,10 @@ class Charcter(EventDispatcher):
             self._window.switch_scene("menu")
         elif symbol == key.LSHIFT:
             self._runnable = True
-        elif symbol == key.RIGHT:
-            self._direction = CharcterDirection.RIGHT
+        elif key.LEFT <= symbol <= key.DOWN:
+            self._direction = self._mapping[symbol]
             self._state = CharcterState.WALK
-        elif symbol == key.DOWN:
-            self._direction = CharcterDirection.DOWN
-            self._state = CharcterState.WALK
-        elif symbol == key.LEFT:
-            self._direction = CharcterDirection.LEFT
-            self._state = CharcterState.WALK
-        elif symbol == key.UP:
-            self._direction = CharcterDirection.UP
-            self._state = CharcterState.WALK
-        if self._state == CharcterState.WALK and self._runnable:
+        if self._runnable and self._state == CharcterState.WALK:
             self._state = CharcterState.RUN
 
     def on_key_release(self, symbol, modifiers):
@@ -125,8 +122,9 @@ class Charcter(EventDispatcher):
             self._runnable = False
             if self._state == CharcterState.RUN:
                 self._state = CharcterState.WALK
-        elif symbol in [key.RIGHT, key.DOWN, key.LEFT, key.UP]:
-            self._state = CharcterState.IDLE
+        elif key.LEFT <= symbol <= key.DOWN:
+            if self._mapping[symbol] == self._direction:
+                self._state = CharcterState.IDLE
 
     def update(self, dt: float):
         if self._prev_state != self._state or self._prev_direction != self._direction:
