@@ -17,6 +17,8 @@ sit_img = resmgr.loader.image("textures/character/sit.png")
 sit_seq = ImageGrid(sit_img, 4, 3).get_texture_sequence()
 walk_img = resmgr.loader.image("textures/character/walk.png")
 walk_seq = ImageGrid(walk_img, 4, 8).get_texture_sequence()
+bubble_img = resmgr.loader.image("textures/character/bubble.png")
+bubble_seq = ImageGrid(bubble_img, 4, 8).get_texture_sequence()
 
 char_anime = {
     "idle": {},
@@ -24,6 +26,7 @@ char_anime = {
     "sit": {},
     "walk": {},
 }
+bubble_anime = {}
 # Idle animations.
 for n, direction in enumerate(["right", "down", "left", "up"]):
     frame1 = AnimationFrame(idle_seq[(n, 0)], 0.4)
@@ -38,9 +41,31 @@ for state, seq in {"run": run_seq, "walk": walk_seq}.items():
             frame = AnimationFrame(seq[(m, n)], 0.0625)
             all_frames.append(frame)
         char_anime[state][direction] = Animation(all_frames)
+# Bubble animations.
+for i, state in enumerate(["question", "exclamation", "dots", "love"]):
+    all_frames = []
+    for j in range(8):
+        frame = AnimationFrame(bubble_seq[(i, j)], 0.25 if j < 7 else 0.5)
+        all_frames.append(frame)
+    bubble_anime[state] = Animation(all_frames)
 
 
-class CharcterState(StrEnum):
+class CharacterDirection(StrEnum):
+    RIGHT = "right"
+    DOWN = "down"
+    LEFT = "left"
+    UP = "up"
+
+
+class CharacterBubble(StrEnum):
+    EMPTY = "empty"
+    LOVE = "love"
+    DOTS = "dots"
+    EXCLAMATION = "exclamation"
+    QUESTION = "question"
+
+
+class CharacterState(StrEnum):
     CTRLED = "controlled"
     IDLE = "idle"
     RUN = "run"
@@ -48,62 +73,85 @@ class CharcterState(StrEnum):
     WALK = "walk"
 
 
-class CharcterDirection(StrEnum):
-    RIGHT = "right"
-    DOWN = "down"
-    LEFT = "left"
-    UP = "up"
-
-
-class Charcter(EventDispatcher):
+class Character(EventDispatcher):
     def __init__(self, window: Window, batch: Batch, group: Group):
         self._window = window
         self._batch = batch
         self._group = Group(parent=group)
-        self._sprite = Sprite(
+        self._char_sprite = Sprite(
             char_anime["idle"]["up"], batch=self._batch, group=self._group
         )
+        self._bubble_sprite = Sprite(
+            bubble_anime["dots"],
+            self._char_sprite.x + 30,
+            self._char_sprite.y + 50,
+            batch=self._batch,
+            group=self._group,
+        )
+        self._bubble_sprite.visible = False
+        self._bubble_sprite.set_handler("on_animation_end", self._reset_bubble)
 
-        self._state = CharcterState.IDLE
-        self._direction = CharcterDirection.UP
+        self._state = CharacterState.IDLE
+        self._direction = CharacterDirection.UP
+        self._bubble = CharacterBubble.EMPTY
         self._runnable = False
         self._prev_state = None
         self._prev_direction = None
+        self._prev_emotion = None
         self._mapping = {
-            key.RIGHT: CharcterDirection.RIGHT,
-            key.DOWN: CharcterDirection.DOWN,
-            key.LEFT: CharcterDirection.LEFT,
-            key.UP: CharcterDirection.UP,
+            key.RIGHT: CharacterDirection.RIGHT,
+            key.DOWN: CharacterDirection.DOWN,
+            key.LEFT: CharacterDirection.LEFT,
+            key.UP: CharacterDirection.UP,
         }
 
+    def _reset_bubble(self):
+        self.bubble = CharacterBubble.EMPTY
+
     @property
-    def state(self) -> CharcterState:
+    def state(self) -> CharacterState:
         return self._state
 
     @state.setter
-    def state(self, state: CharcterState):
-        assert isinstance(state, CharcterState)
+    def state(self, state: CharacterState):
+        assert isinstance(state, CharacterState)
         self._state = state
 
     @property
-    def direction(self) -> CharcterDirection:
+    def direction(self) -> CharacterDirection:
         return self._direction
 
     @direction.setter
-    def direction(self, direction: CharcterDirection):
-        assert isinstance(direction, CharcterDirection)
+    def direction(self, direction: CharacterDirection):
+        assert isinstance(direction, CharacterDirection)
         self._direction = direction
 
     @property
+    def bubble(self) -> CharacterBubble:
+        return self._bubble
+
+    @bubble.setter
+    def bubble(self, bubble: CharacterBubble):
+        assert isinstance(bubble, CharacterBubble)
+        self._bubble = bubble
+        if bubble == CharacterBubble.EMPTY:
+            self._bubble_sprite.visible = False
+        else:
+            self._bubble_sprite.image = bubble_anime[self._bubble]
+            self._bubble_sprite.visible = True
+
+    @property
     def position(self) -> Tuple[int]:
-        return self._sprite.position
+        return self._char_sprite.position
 
     @position.setter
     def position(self, pos: Tuple[int]):
-        self._sprite.position = pos
+        self._char_sprite.position = pos
+        x, y, _ = pos
+        self._bubble_sprite.position = (x + 30, y + 50, 0)
 
     def on_key_press(self, symbol, modifiers):
-        if self._state == CharcterState.CTRLED:
+        if self._state == CharacterState.CTRLED:
             return
         if symbol == key.ESCAPE:
             self._window.switch_scene("menu")
@@ -111,26 +159,26 @@ class Charcter(EventDispatcher):
             self._runnable = True
         elif key.LEFT <= symbol <= key.DOWN:
             self._direction = self._mapping[symbol]
-            self._state = CharcterState.WALK
-        if self._runnable and self._state == CharcterState.WALK:
-            self._state = CharcterState.RUN
+            self._state = CharacterState.WALK
+        if self._runnable and self._state == CharacterState.WALK:
+            self._state = CharacterState.RUN
 
     def on_key_release(self, symbol, modifiers):
-        if self._state == CharcterState.CTRLED:
+        if self._state == CharacterState.CTRLED:
             return
         if symbol == key.LSHIFT:
             self._runnable = False
-            if self._state == CharcterState.RUN:
-                self._state = CharcterState.WALK
+            if self._state == CharacterState.RUN:
+                self._state = CharacterState.WALK
         elif key.LEFT <= symbol <= key.DOWN:
             if self._mapping[symbol] == self._direction:
-                self._state = CharcterState.IDLE
+                self._state = CharacterState.IDLE
 
     def update(self, dt: float):
         if self._prev_state != self._state or self._prev_direction != self._direction:
             state = self._prev_state = self._state.value
             direction = self._prev_direction = self._direction.value
-            self._sprite.image = char_anime[state][direction]
+            self._char_sprite.image = char_anime[state][direction]
 
 
-__all__ = "CharcterState", "CharcterDirection", "Charcter"
+__all__ = "CharacterState", "CharacterDirection", "CharacterBubble", "Character"

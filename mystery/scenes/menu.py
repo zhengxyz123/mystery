@@ -43,47 +43,34 @@ class MenuScene(Scene):
         self.game_button = TextButton(
             self.window.resource.translate("menu.start_game"),
             self.window.width // 2 - 150,
-            0.8 * self.window.height // 2 + 65,
+            0.8 * self.window.height // 2 + 40,
             300,
-            55,
+            60,
             batch=self.batch,
             group=self.fore_group,
         )
         self.saves_button = TextButton(
             self.window.resource.translate("menu.saves"),
             self.window.width // 2 - 150,
-            0.8 * self.window.height // 2 + 5,
+            0.8 * self.window.height // 2 - 30,
             300,
-            55,
+            60,
             batch=self.batch,
             group=self.fore_group,
         )
         self.settings_button = TextButton(
             self.window.resource.translate("menu.settings"),
             self.window.width // 2 - 150,
-            0.8 * self.window.height // 2 - 55,
+            0.8 * self.window.height // 2 - 100,
             300,
-            55,
-            font_size=24,
-            batch=self.batch,
-            group=self.fore_group,
-        )
-        self.exit_button = TextButton(
-            self.window.resource.translate("menu.exit"),
-            self.window.width // 2 - 150,
-            0.8 * self.window.height // 2 - 115,
-            300,
-            55,
+            60,
             font_size=24,
             batch=self.batch,
             group=self.fore_group,
         )
         self.game_button.push_handlers(on_click=self.start)
         self.settings_button.push_handlers(on_click=self.settings)
-        self.exit_button.push_handlers(on_click=self.window.close)
-        self.frame.add_widget(
-            self.game_button, self.saves_button, self.settings_button, self.exit_button
-        )
+        self.frame.add_widget(self.game_button, self.saves_button, self.settings_button)
 
     def _animate(self, dt):
         if self.background.opacity <= 10:
@@ -117,16 +104,14 @@ class MenuScene(Scene):
         else:
             self.background.scale = height / self.background.image.height
         self.title.position = (width // 2, 0.8 * height, 0)
-        self.game_button.position = (width // 2 - 150, 0.8 * height // 2 + 65)
-        self.saves_button.position = (width // 2 - 150, 0.8 * height // 2 + 5)
-        self.settings_button.position = (width // 2 - 150, 0.8 * height // 2 - 55)
-        self.exit_button.position = (width // 2 - 150, 0.8 * height // 2 - 115)
+        self.game_button.position = (width // 2 - 150, 0.8 * height // 2 + 40)
+        self.saves_button.position = (width // 2 - 150, 0.8 * height // 2 - 30)
+        self.settings_button.position = (width // 2 - 150, 0.8 * height // 2 - 100)
 
     def on_language_change(self):
         self.game_button.text = self.window.resource.translate("menu.start_game")
         self.saves_button.text = self.window.resource.translate("menu.saves")
         self.settings_button.text = self.window.resource.translate("menu.settings")
-        self.exit_button.text = self.window.resource.translate("menu.exit")
 
     def on_scene_leave(self):
         self.background.opacity = 255

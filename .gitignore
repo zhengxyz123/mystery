@@ -1,6 +1,7 @@
 __pycache__/
-.build/
 bin/
+build/
+dist/
 include/
 lib/
 

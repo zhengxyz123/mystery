@@ -1,3 +1,4 @@
+import sys
 from json import load, loads
 
 from pyglet import gl
@@ -18,7 +19,11 @@ class ResourceManager:
     """Manage resources."""
 
     def __init__(self):
-        self.loader = Loader("mystery/assets")
+        if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+            path = "assets"
+        else:
+            path = "mystery/assets"
+        self.loader = Loader(path)
         self._lang = "en_us"
         self._translation_en_us = load(self.loader.file("i18n/en_us.json", mode="r"))
         self._translation_now = {}

@@ -1,0 +1,20 @@
+#! /usr/bin/sh
+
+rm -rf build/ dist/ mystery.pyz mystery.spec
+
+# Build zip archive using zipapp.
+mkdir .cache/
+cp mystery/ .cache/ -r
+pip install -r requirements.txt --target .cache/
+python3 - << EOF
+from glob import glob
+from shutil import rmtree
+for path in glob(".cache/**/__pycache__/", recursive=True):
+    rmtree(path)
+EOF
+python3 -m zipapp .cache/ -o mystery.pyz -m "mystery.__main__:start" -p "/usr/bin/env python3" -c
+rm -r .cache
+
+# Build executable file using pyinstaller.
+pyinstaller -D mystery/__main__.py -n mystery --additional-hooks-dir .
+rm -r build/ mystery.spec

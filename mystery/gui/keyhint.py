@@ -5,7 +5,7 @@ from pyglet.graphics import Batch, Group
 from pyglet.shapes import Rectangle
 from pyglet.sprite import Sprite
 from pyglet.text import Label
-from pyglet.window import Window
+from pyglet.window import Window, key
 
 from mystery import resmgr
 from mystery.resource.manager import FONT_NAME
@@ -38,6 +38,7 @@ class KeyHint:
         self._hint_group1 = Group(order=1, parent=group)
         self._hint_group2 = Group(order=2, parent=group)
         self._hint_group2.visible = False
+        self._state = 0
 
         self._shape = Rectangle(
             10,
@@ -182,12 +183,21 @@ class KeyHint:
         )
         self._width2 = 60 + max_width
 
+    def on_key_press(self, symbol, modifiers):
+        if self._state < 0:
+            return
+        if key.LEFT <= symbol <= key.DOWN and self._state == 0:
+            clock.schedule_once(self.update1, 3)
+            self._state = 1
+        elif symbol == key.E and self._state == 1:
+            clock.schedule_once(self.update2, 3)
+            self._state = 2
+
     def update1(self, dt: float):
         self._shape.width = self._width2
         self._shape.height = 153
         self._hint_group1.visible = False
         self._hint_group2.visible = True
-        clock.schedule_once(self.update2, 5)
 
     def update2(self, dt: float):
         self._hint_group2.visible = False
@@ -199,6 +209,7 @@ class KeyHint:
         self._shape_group.visible = True
         self._hint_group1.visible = True
         self._hint_group2.visible = False
+        self._state = 0
 
 
 __all__ = "KeyHint"
