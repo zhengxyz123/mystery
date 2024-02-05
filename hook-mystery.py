@@ -1,3 +1,6 @@
+# "Hook" file for PyInstaller to easily pack the game with
+# assets and dynamic-imported modules.
+
 datas = [("mystery/assets", "assets")]
 
 hiddenimports = [
