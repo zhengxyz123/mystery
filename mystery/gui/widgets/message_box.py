@@ -32,7 +32,6 @@ class MessageBox(WidgetBase):
         super().__init__(x, y, width, height)
 
         self._text = ""
-        self._displayed_text = ""
         self._back_group = Group(order=0, parent=group)
         self._fore_group = Group(order=1, parent=group)
         self._sprites = {}
@@ -102,7 +101,7 @@ class MessageBox(WidgetBase):
 
     def resize(self):
         self.width, self.height = self._window.width - 20, 78 * 2
-        text = self._line_break_func(self._displayed_text, self._label.width)
+        text = self._line_break_func(self._text, self._label.width)
         self._label.text = text
 
 
