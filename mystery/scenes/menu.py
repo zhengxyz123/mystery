@@ -2,6 +2,7 @@ from importlib import import_module
 
 from pyglet import app, clock
 from pyglet.graphics import Batch, Group
+from pyglet.math import Mat4, Vec3
 from pyglet.sprite import Sprite
 from pyglet.text import Label
 from pyglet.window import Window

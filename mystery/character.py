@@ -1,9 +1,10 @@
 from enum import StrEnum
-from typing import Tuple
+from typing import Optional, Tuple
 
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.image import Animation, AnimationFrame, ImageGrid
+from pyglet.math import Vec2
 from pyglet.sprite import Sprite
 from pyglet.window import Window, key
 
@@ -74,7 +75,12 @@ class CharacterState(StrEnum):
 
 
 class Character(EventDispatcher):
-    def __init__(self, window: Window, batch: Batch, group: Group):
+    def __init__(
+        self,
+        window: Window,
+        batch: Optional[Batch] = None,
+        group: Optional[Group] = None,
+    ):
         self._window = window
         self._batch = batch
         self._group = Group(parent=group)
@@ -104,9 +110,35 @@ class Character(EventDispatcher):
             key.LEFT: CharacterDirection.LEFT,
             key.UP: CharacterDirection.UP,
         }
+        self._move_vec = {
+            CharacterDirection.RIGHT: Vec2(8, 0),
+            CharacterDirection.DOWN: Vec2(0, -8),
+            CharacterDirection.LEFT: Vec2(-8, 0),
+            CharacterDirection.UP: Vec2(0, 8),
+        }
+        self._allow_move = None
 
     def _reset_bubble(self):
         self.bubble = CharacterBubble.EMPTY
+
+    @property
+    def batch(self) -> Batch:
+        return self._char_sprite.batch
+
+    @batch.setter
+    def batch(self, batch: Batch):
+        self._char_sprite.batch = batch
+        self._bubble_sprite.batch = batch
+
+    @property
+    def group(self) -> Group:
+        return self._char_sprite.group
+
+    @group.setter
+    def group(self, group: Group):
+        self._group = Group(parent=group)
+        self._char_sprite.group = self._group
+        self._bubble_sprite.group = self._group
 
     @property
     def state(self) -> CharacterState:
@@ -142,12 +174,12 @@ class Character(EventDispatcher):
 
     @property
     def position(self) -> Tuple[int]:
-        return self._char_sprite.position
+        return self._char_sprite.position[:2]
 
     @position.setter
     def position(self, pos: Tuple[int]):
-        self._char_sprite.position = pos
-        x, y, _ = pos
+        x, y, *z = pos
+        self._char_sprite.position = (x, y, 0)
         self._bubble_sprite.position = (x + 30, y + 50, 0)
 
     def on_key_press(self, symbol, modifiers):
@@ -179,6 +211,14 @@ class Character(EventDispatcher):
             state = self._prev_state = self._state.value
             direction = self._prev_direction = self._direction.value
             self._char_sprite.image = char_anime[state][direction]
+        if self._state in (CharacterState.RUN, CharacterState.WALK):
+            dp = self._move_vec[self._direction]
+            if self._state == CharacterState.RUN:
+                dp *= 2
+            prev_pos = Vec2(*self.position)
+            now_pos = prev_pos + dp
+            if callable(self.allow_move) and self.allow_move(now_pos):
+                self.position = tuple(now_pos)
 
 
 __all__ = "CharacterState", "CharacterDirection", "CharacterBubble", "Character"

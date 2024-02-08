@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from contextlib import contextmanager
 from time import strftime
 from typing import Dict
 
 from pyglet.event import EventDispatcher
 from pyglet.image import get_buffer_manager
+from pyglet.math import Mat4
 from pyglet.window import Window, key
 
 from mystery import data_path, resmgr, setting
@@ -65,6 +67,15 @@ class GameWindow(Window):
     @scene.setter
     def scene(self, name: str):
         self.switch_scene(name)
+
+    @contextmanager
+    def apply_view(self, view: Mat4):
+        prev_view = self.view
+        self.view = view
+        try:
+            yield
+        finally:
+            self.view = prev_view
 
     def add_scene(self, name: str, scene: Scene):
         """Add a scene."""

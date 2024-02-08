@@ -1,7 +1,6 @@
 from math import ceil, floor
 from typing import Optional
 
-from pyglet import clock
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 from pyglet.text import Label

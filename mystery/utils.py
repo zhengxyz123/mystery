@@ -2,7 +2,7 @@ from typing import List, Tuple
 from unicodedata import east_asian_width
 
 
-def line_break_ascii(text: str, width: int, font_width: int = 24) -> str:
+def line_break_ascii(text: str, line_width: int, font_width: int = 24) -> str:
     return text
 
 
@@ -35,7 +35,7 @@ def line_break_cjk(text: str, line_width: int, font_width: int = 24) -> str:
     return breaked
 
 
-def point_in_polygon(polygon: List[Tuple[int, ...]], point: Tuple[int, ...]) -> bool:
+def point_in_polygon(polygon: List[Tuple[float, ...]], point: Tuple[float, ...]) -> bool:
     """Use raycasting to determine if a point is inside a polygon
 
     This function is an example implementation available under MIT License at:
