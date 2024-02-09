@@ -45,7 +45,7 @@ class KeyHint:
             10,
             100,
             131,
-            color=(89, 86, 82, 128),
+            color=(89, 86, 82, 192),
             batch=batch,
             group=self._shape_group,
         )

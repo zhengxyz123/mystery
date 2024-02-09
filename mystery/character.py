@@ -116,7 +116,7 @@ class Character(EventDispatcher):
             CharacterDirection.LEFT: Vec2(-8, 0),
             CharacterDirection.UP: Vec2(0, 8),
         }
-        self._allow_move = None
+        self.allow_move = None
 
     def _reset_bubble(self):
         self.bubble = CharacterBubble.EMPTY

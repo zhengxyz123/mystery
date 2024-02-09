@@ -1,12 +1,13 @@
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.math import Mat4, Vec3
+from pyglet.shapes import Circle
 from pyglet.sprite import Sprite
 from pyglet.window import Window
 
 from mystery import resmgr
 from mystery.character import Character
-from mystery.tiled import get_object_layer, get_tile_layers
+from mystery.tiled import TiledMap
 from mystery.utils import point_in_polygon
 
 
@@ -40,16 +41,18 @@ class BaseRoom(EventDispatcher):
         return self._name
 
     def _allow_move(self, pos) -> bool:
+        pos1 = pos[0] + 20, pos[1] + 3
+        pos2 = pos1[0] + 24, pos1[1]
+        check1, check2 = [], []
         for poly in self._collisions:
-            pos1 = pos[0] + 15, pos[1]
-            pos2 = pos1[0] + 34, pos1[1]
-            if not (point_in_polygon(poly, pos1) and point_in_polygon(poly, pos2)):
-                return False
-        return True
+            check1.append(point_in_polygon(poly, pos1))
+            check2.append(point_in_polygon(poly, pos2))
+        return any(check1) and any(check2)
 
     def _load_map(self):
-        tmx_file = self._name + ".tmx"
-        for name, tiles in get_tile_layers(tmx_file).items():
+        tmx_file = f"maps/{self._name}.tmx"
+        map = TiledMap(tmx_file)
+        for name, tiles in map.layers():
             parent, order = name.split("_")
             group = Group(int(order), self.base_group[parent])
             self.other_groups.append(group)
@@ -65,18 +68,20 @@ class BaseRoom(EventDispatcher):
                     group=group,
                 )
                 self.sprits.append(sprite)
-        for objs in get_object_layer(tmx_file, "objects"):
+        for objs in map.objects():
             if objs.type == "CollisionPolygon":
-                self._collisions.append(objs.properties[0].value)
+                self._collisions.append(objs.properties["points"])
             elif objs.type == "SpawnPoint":
-                name = objs.properties[0].value
+                name = objs.properties["sp_name"]
                 position = (objs.x, objs.y)
                 self._spawn_points[name] = position
         self.char.position = self._spawn_points["start"]
 
     def draw(self):
         char_pos = Vec3(*self.char.position, 0)
-        center_pos = Vec3(self._window.width // 2 - 32, self._window.height // 2 - 32, 1)
+        center_pos = Vec3(
+            self._window.width // 2 - 32, self._window.height // 2 - 32, 0
+        )
         trans_mat = Mat4.from_translation(center_pos - char_pos)
         with self._window.apply_view(trans_mat):
             self.batch.draw()

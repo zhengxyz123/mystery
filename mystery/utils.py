@@ -35,15 +35,16 @@ def line_break_cjk(text: str, line_width: int, font_width: int = 24) -> str:
     return breaked
 
 
-def point_in_polygon(polygon: List[Tuple[float, ...]], point: Tuple[float, ...]) -> bool:
+def point_in_polygon(
+    polygon: List[Tuple[float, ...]], point: Tuple[float, ...]
+) -> bool:
     """Use raycasting to determine if a point is inside a polygon
 
     This function is an example implementation available under MIT License at:
     https://www.algorithms-and-technologies.com/point_in_polygon/python
     """
     odd = False
-    i = 0
-    j = len(polygon) - 1
+    i, j = -1, len(polygon) - 1
     while i < len(polygon) - 1:
         i = i + 1
         if ((polygon[i][1] > point[1]) != (polygon[j][1] > point[1])) and (
