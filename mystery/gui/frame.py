@@ -1,23 +1,19 @@
-from typing import Dict, Set
-
-from pyglet.window import Window
-
 from mystery.gui.widgets import WidgetBase
 
 
 class WidgetFrame:
     """The Frame object, rewritten from `pyglet.gui.frame.Frame`."""
 
-    def __init__(self, window: Window, cell_size=128, order=0):
+    def __init__(self, window: "mystery.scenes.GameWindow", cell_size=128, order=0):
         self._window = window
         self._cell_size = cell_size
-        self._cells: Dict[Set[int, int], Set[WidgetBase]] = {}
-        self._active_widgets = set()
+        self._cells: dict[tuple[int, int], set[WidgetBase]] = {}
+        self._active_widgets: set[WidgetBase] = set()
         self._order = order
         self._enable = False
         self._mouse_pos = 0, 0
 
-    def _hash(self, x, y):
+    def _hash(self, x: int, y: int) -> tuple[int, int]:
         return int(x / self._cell_size), int(y / self._cell_size)
 
     def _on_reposition_handler(self, widget):
@@ -25,12 +21,12 @@ class WidgetFrame:
         self.add_widget(widget)
 
     @property
-    def enable(self):
+    def enable(self) -> bool:
         return self._enable
 
     @enable.setter
-    def enable(self, value: bool):
-        self._enable = bool(value)
+    def enable(self, status: bool):
+        self._enable = bool(status)
         if self._enable:
             self._window.push_handlers(self)
         else:

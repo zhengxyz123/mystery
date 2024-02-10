@@ -2,7 +2,6 @@ from typing import Optional, Tuple
 
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
-from pyglet.window import Window
 
 from mystery import resmgr
 from mystery.gui.groups import ScissorGroup
@@ -21,7 +20,7 @@ class Book(WidgetBase):
 
     def __init__(
         self,
-        window: Window,
+        window: "mystery.scenes.GameWindow",
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
     ):

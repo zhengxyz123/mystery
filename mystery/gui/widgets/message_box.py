@@ -4,7 +4,6 @@ from typing import Optional
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 from pyglet.text import Label
-from pyglet.window import Window
 
 from mystery import resmgr, utils
 from mystery.gui.widgets import WidgetBase
@@ -21,7 +20,7 @@ for where in ["left", "middle", "right"]:
 class MessageBox(WidgetBase):
     def __init__(
         self,
-        window: Window,
+        window: "mystery.scenes.GameWindow",
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
     ):

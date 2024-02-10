@@ -101,6 +101,7 @@ class Character(EventDispatcher):
         self._direction = CharacterDirection.UP
         self._bubble = CharacterBubble.EMPTY
         self._runnable = False
+        self._room = None
         self._prev_state = None
         self._prev_direction = None
         self._prev_emotion = None
@@ -116,7 +117,6 @@ class Character(EventDispatcher):
             CharacterDirection.LEFT: Vec2(-8, 0),
             CharacterDirection.UP: Vec2(0, 8),
         }
-        self.allow_move = None
 
     def _reset_bubble(self):
         self.bubble = CharacterBubble.EMPTY
@@ -139,6 +139,14 @@ class Character(EventDispatcher):
         self._group = Group(parent=group)
         self._char_sprite.group = self._group
         self._bubble_sprite.group = self._group
+
+    @property
+    def room(self) -> "mystery.room.BaseRoom":
+        return self._room
+
+    @room.setter
+    def room(self, room: "mystery.room.BaseRoom"):
+        self._room = room
 
     @property
     def state(self) -> CharacterState:
@@ -217,7 +225,7 @@ class Character(EventDispatcher):
                 dp *= 2
             prev_pos = Vec2(*self.position)
             now_pos = prev_pos + dp
-            if callable(self.allow_move) and self.allow_move(now_pos):
+            if self._room and self._room._allow_move(now_pos):
                 self.position = tuple(now_pos)
 
 

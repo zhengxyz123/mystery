@@ -3,10 +3,10 @@ from pyglet.graphics import Batch, Group
 from pyglet.math import Mat4, Vec3
 from pyglet.shapes import Circle
 from pyglet.sprite import Sprite
-from pyglet.window import Window
 
 from mystery import resmgr
 from mystery.character import Character
+from mystery.scenes import GameWindow
 from mystery.tiled import TiledMap
 from mystery.utils import point_in_polygon
 
@@ -14,10 +14,12 @@ from mystery.utils import point_in_polygon
 class BaseRoom(EventDispatcher):
     def __init__(
         self,
-        window: Window,
+        window: GameWindow,
+        game: "mystery.scenes.game.GameScene",
         char: Character,
     ):
         self._window = window
+        self._game = game
         self.char = char
         self.batch = Batch()
         self.base_group = {
@@ -27,7 +29,7 @@ class BaseRoom(EventDispatcher):
         }
         self.char.batch = self.batch
         self.char.group = self.base_group["char"]
-        self.char.allow_move = self._allow_move
+        self.char.room = self
         self.other_groups = []
         self.sprits = []
 
@@ -85,6 +87,16 @@ class BaseRoom(EventDispatcher):
         trans_mat = Mat4.from_translation(center_pos - char_pos)
         with self._window.apply_view(trans_mat):
             self.batch.draw()
+
+    def on_room_enter(self, *args):
+        pass
+
+    def on_rome_leave(self, *args):
+        pass
+
+
+BaseRoom.register_event_type("on_room_enter")
+BaseRoom.register_event_type("on_room_leave")
 
 
 __all__ = "BaseRoom"

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from time import strftime
-from typing import Dict
 
 from pyglet.event import EventDispatcher
 from pyglet.image import get_buffer_manager
@@ -34,15 +33,7 @@ class Scene(EventDispatcher):
         pass
 
 
-Scene.register_event_type("on_key_press")
-Scene.register_event_type("on_key_release")
-Scene.register_event_type("on_mouse_drag")
-Scene.register_event_type("on_mouse_motion")
-Scene.register_event_type("on_mouse_press")
-Scene.register_event_type("on_mouse_release")
-Scene.register_event_type("on_mouse_scroll")
 Scene.register_event_type("on_resize")
-
 Scene.register_event_type("on_language_change")
 Scene.register_event_type("on_scene_enter")
 Scene.register_event_type("on_scene_leave")
@@ -55,7 +46,7 @@ class GameWindow(Window):
         super().__init__(*args, **kwargs)
         self.set_caption("Mystery")
         self.set_minimum_size(768, 576)
-        self._scenes: Dict[str, Scene] = {}
+        self._scenes: dict[str, Scene] = {}
         self._now = ""
         self.resource = resmgr
         self.setting = setting
@@ -77,7 +68,7 @@ class GameWindow(Window):
         finally:
             self.view = prev_view
 
-    def add_scene(self, name: str, scene: Scene):
+    def add_scene(self, name: str, scene: type[Scene]):
         """Add a scene."""
         self._scenes[name] = scene(self)
 

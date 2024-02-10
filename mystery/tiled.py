@@ -1,5 +1,6 @@
 from base64 import b64decode
 from collections import namedtuple
+from collections.abc import Iterator
 from gzip import decompress as gzip_decompress
 from struct import unpack
 from xml.etree import ElementTree
@@ -42,14 +43,14 @@ class TiledMap:
     def background(self) -> tuple[int, ...]:
         if self._bgcolor_converted is not None:
             return self._bgcolor_converted
-        a = 255
-        color = self._bgcolor[1:]
-        if len(self._bgcolor) == 9:
-            a = int(color[:2], base=16)
-            color = color[2:]
-        r = int(color[0:2], base=16)
-        g = int(color[2:4], base=16)
-        b = int(color[4:6], base=16)
+        color = int(self._bgcolor[1:], base=16)
+        b = color & 0xFF
+        color = (color - b) >> 8
+        g = color & 0xFF
+        color = (color - g) >> 8
+        r = color & 0xFF
+        color = (color - r) >> 8
+        a = color if color > 0 else 255
         self._bgcolor_converted = (r, g, b, a)
         return self._bgcolor_converted
 
@@ -66,7 +67,7 @@ class TiledMap:
         self._size = (map_width, map_height)
         return self._size
 
-    def _decode_tilesets(self) -> dict:
+    def _decode_tilesets(self) -> dict[int, SourceTile]:
         all_tilesets = self._root.findall("tileset")
         tilesets = {}
         for tileset in all_tilesets:
@@ -105,7 +106,7 @@ class TiledMap:
                 tilesets[gid] = SourceTile(image_filename, image_size, x, y, collision)
         return tilesets
 
-    def _get_map_gid_dests(self) -> dict:
+    def _get_map_gid_dests(self) -> dict[int, tuple[int, int]]:
         """Get mapping of [gid] to (x, y) target destinations."""
         tile_width = int(self._root.get("tilewidth"))
         tile_height = int(self._root.get("tileheight"))
@@ -142,7 +143,7 @@ class TiledMap:
             raise NotImplementedError(f"encoding '{encoding}' not yet supported")
         return Layer(layer_name, gid_list)
 
-    def _map_copy_rects(self, layer: ElementTree.Element):
+    def _map_copy_rects(self, layer: ElementTree.Element) -> Iterator[tuple]:
         tileset_dict = self._decode_tilesets()
         map_gid_dests = self._get_map_gid_dests()
         layerobj = self._decode_layer(layer)
@@ -162,7 +163,7 @@ class TiledMap:
                 src_tile.collision,
             )
 
-    def layers(self):
+    def layers(self) -> Iterator[tuple[str, Tile]]:
         tile_width = int(self._root.get("tilewidth"))
         tile_height = int(self._root.get("tileheight"))
         map_height = int(self._root.get("height")) * tile_height
@@ -197,7 +198,7 @@ class TiledMap:
                 tiles.append(tile)
             yield name, tiles
 
-    def objects(self, layer_name: str = "objects"):
+    def objects(self, layer_name: str = "objects") -> Iterator[Object]:
         tile_height = int(self._root.get("tileheight"))
         map_height = int(self._root.get("height")) * tile_height
         for object_group in self._root.findall("objectgroup"):

@@ -5,10 +5,11 @@ from pyglet.graphics import Batch, Group
 from pyglet.shapes import Rectangle
 from pyglet.sprite import Sprite
 from pyglet.text import Label
-from pyglet.window import Window, key
+from pyglet.window import key
 
 from mystery import resmgr
 from mystery.resource.manager import FONT_NAME
+from mystery.scenes import GameWindow
 
 key_image = {}
 for name in [
@@ -29,7 +30,7 @@ for name in [
 class KeyHint:
     def __init__(
         self,
-        window: Window,
+        window: GameWindow,
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
     ):
