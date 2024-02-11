@@ -3,13 +3,9 @@ from typing import Optional
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.shapes import Rectangle
-from pyglet.sprite import Sprite
 from pyglet.text import Label
 
-from mystery import resmgr
 from mystery.gui.widgets import WidgetBase
-from mystery.gui.widgets.misc import Color, Icon
-from mystery.resource import texture_region
 from mystery.resource.manager import FONT_NAME
 
 WHITE = (255, 255, 255)

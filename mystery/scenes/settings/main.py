@@ -2,14 +2,13 @@ from importlib import import_module
 
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
-from pyglet.window import Window
 
 from mystery.gui.widgets import AdvancedFrame, TextButton
 from mystery.scenes import Scene
 
 
 class SettingsScene(Scene):
-    def __init__(self, window: Window):
+    def __init__(self, window: "mystery.scenes.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
         self.back_group = Group(order=0)
@@ -106,4 +105,4 @@ class SettingsScene(Scene):
         self.language_button.text = self.window.resource.translate("settings.language")
 
 
-__all__ = "SettingsScene"
+__all__ = ("SettingsScene",)

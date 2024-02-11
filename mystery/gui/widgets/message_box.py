@@ -103,4 +103,4 @@ class MessageBox(WidgetBase):
         self._label.text = text
 
 
-__all__ = "MessageBox"
+__all__ = ("MessageBox",)

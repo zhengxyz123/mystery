@@ -1,15 +1,14 @@
 from pyglet import clock
-from pyglet.graphics import Batch, Group
-from pyglet.window import Window, key
+from pyglet.graphics import Batch
 
-from mystery.character import Character, CharacterBubble
+from mystery.character import Character
 from mystery.gui.keyhint import KeyHint
 from mystery.rooms import BaseRoom
 from mystery.scenes import Scene
 
 
 class GameScene(Scene):
-    def __init__(self, window: Window):
+    def __init__(self, window: "mystery.scenes.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
         self.character = Character(self.window)
@@ -34,4 +33,4 @@ class GameScene(Scene):
         self.window.remove_handlers(self.key_hint)
 
 
-__all__ = "GameScene"
+__all__ = ("GameScene",)

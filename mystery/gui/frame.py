@@ -86,4 +86,4 @@ class WidgetFrame:
             widget.on_text_motion_select(motion)
 
 
-__all__ = "WidgetFrame"
+__all__ = ("WidgetFrame",)

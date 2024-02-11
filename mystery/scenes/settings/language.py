@@ -1,8 +1,5 @@
 from pyglet.graphics import Batch, Group
-from pyglet.shapes import Rectangle
 from pyglet.sprite import Sprite
-from pyglet.text import Label
-from pyglet.window import Window
 
 from mystery.gui.widgets import (
     AdvancedFrame,
@@ -17,7 +14,7 @@ from mystery.scenes import Scene
 
 
 class LanguageSettingScene(Scene):
-    def __init__(self, window: Window):
+    def __init__(self, window: "mystery.scenes.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
         self.back_group = Group(order=0)
@@ -136,4 +133,4 @@ class LanguageSettingScene(Scene):
         self.options_layout.offset_y = 0
 
 
-__all__ = "LanguageSettingScene"
+__all__ = ("LanguageSettingScene",)

@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
@@ -53,4 +53,4 @@ class Book(WidgetBase):
         ) // 2
 
 
-__all__ = "Book"
+__all__ = ("Book",)

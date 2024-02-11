@@ -1,6 +1,6 @@
 #! /usr/bin/sh
 
-if [ $1 = "--pyz" ]
+if [ $1 = "pyz" ]
 then
 	# Build zip archive using zipapp.
 	mkdir .cache/
@@ -15,11 +15,11 @@ then
 	EOF
 	python3 -m zipapp .cache/ -o mystery.pyz -m "mystery.__main__:start" -p "/usr/bin/env python3" -c
 	rm -r .cache
-elif [ $1 = "--exec" ]
+elif [ $1 = "exec" ]
 then
 	# Build executable file using pyinstaller.
 	pyinstaller -D mystery/__main__.py -n mystery --additional-hooks-dir . -y
 	rm -r build/ mystery.spec
 else
-	echo "Unknown flag '$1'"
+	echo "Unknown action '$1'"
 fi

@@ -39,4 +39,4 @@ class ScissorGroup(Group):
         gl.glDisable(gl.GL_SCISSOR_TEST)
 
 
-__all__ = "ScissorGroup"
+__all__ = ("ScissorGroup",)

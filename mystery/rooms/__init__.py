@@ -1,10 +1,11 @@
+import time
+
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.math import Mat4, Vec3
 from pyglet.shapes import Circle
 from pyglet.sprite import Sprite
 
-from mystery import resmgr
 from mystery.character import Character
 from mystery.scenes import GameWindow
 from mystery.tiled import TiledMap
@@ -12,6 +13,10 @@ from mystery.utils import point_in_polygon
 
 
 class BaseRoom(EventDispatcher):
+    """An example room, shows how rooms work."""
+
+    _name = "example"
+
     def __init__(
         self,
         window: GameWindow,
@@ -23,9 +28,9 @@ class BaseRoom(EventDispatcher):
         self.char = char
         self.batch = Batch()
         self.base_group = {
-            "back": Group(order=0),
-            "char": Group(order=1),
-            "fore": Group(order=2),
+            "back": Group(order=1),
+            "char": Group(order=2),
+            "fore": Group(order=3),
         }
         self.char.batch = self.batch
         self.char.group = self.base_group["char"]
@@ -33,7 +38,6 @@ class BaseRoom(EventDispatcher):
         self.other_groups = []
         self.sprits = []
 
-        self._name = "example"
         self._collisions = []
         self._spawn_points = {}
         self._load_map()
@@ -70,7 +74,7 @@ class BaseRoom(EventDispatcher):
                     group=group,
                 )
                 self.sprits.append(sprite)
-        for objs in map.objects():
+        for objs in map.objects("objects"):
             if objs.type == "CollisionPolygon":
                 self._collisions.append(objs.properties["points"])
             elif objs.type == "SpawnPoint":
@@ -99,4 +103,4 @@ BaseRoom.register_event_type("on_room_enter")
 BaseRoom.register_event_type("on_room_leave")
 
 
-__all__ = "BaseRoom"
+__all__ = ("BaseRoom",)

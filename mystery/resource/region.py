@@ -42,4 +42,4 @@ texture_region: Dict[str, Tuple[int, ...]] = {
     "mbr": (240, 0, 78, 78),
 }
 
-__all__ = "texture_region"
+__all__ = ("texture_region",)

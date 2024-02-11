@@ -1,18 +1,15 @@
 from importlib import import_module
 
-from pyglet import app, clock
+from pyglet import clock
 from pyglet.graphics import Batch, Group
-from pyglet.math import Mat4, Vec3
 from pyglet.sprite import Sprite
-from pyglet.text import Label
-from pyglet.window import Window
 
 from mystery.gui.widgets import TextButton
 from mystery.scenes import Scene
 
 
 class MenuScene(Scene):
-    def __init__(self, window: Window):
+    def __init__(self, window: "mystery.scenes.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
         self.back_group = Group(order=0)
@@ -119,4 +116,4 @@ class MenuScene(Scene):
         self.fore_group.visible = True
 
 
-__all__ = "StartScene"
+__all__ = ("MenuScene",)

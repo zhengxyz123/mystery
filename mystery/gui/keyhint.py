@@ -213,4 +213,4 @@ class KeyHint:
         self._state = 0
 
 
-__all__ = "KeyHint"
+__all__ = ("KeyHint",)

@@ -1,9 +1,8 @@
 from importlib import import_module
-from typing import Optional
 
 from pyglet.graphics import Batch, Group
 from pyglet.text import Label
-from pyglet.window import Window, key, mouse
+from pyglet.window import key, mouse
 
 from mystery import utils
 from mystery.gui.widgets import MessageBox
@@ -12,7 +11,7 @@ from mystery.scenes import Scene
 
 
 class StartScene(Scene):
-    def __init__(self, window: Window):
+    def __init__(self, window: "mystery.scenes.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
         self.mb_group = Group(order=0)
@@ -99,4 +98,4 @@ class StartScene(Scene):
         self.message.text = self.plot[0]
 
 
-__all__ = "StartScene"
+__all__ = ("StartScene",)

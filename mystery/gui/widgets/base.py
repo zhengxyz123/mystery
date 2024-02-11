@@ -58,4 +58,4 @@ class WidgetBase(PygletWidgetBase):
 WidgetBase.register_event_type("on_reposition")
 
 
-__all__ = "WidgetBase"
+__all__ = ("WidgetBase",)

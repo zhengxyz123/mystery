@@ -186,7 +186,7 @@ class Character(EventDispatcher):
 
     @position.setter
     def position(self, pos: Tuple[int]):
-        x, y, *z = pos
+        x, y, *_ = pos
         self._char_sprite.position = (x, y, 0)
         self._bubble_sprite.position = (x + 30, y + 50, 0)
 

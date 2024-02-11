@@ -27,7 +27,7 @@ class TiledMap:
         self._orientation = self._root.get("orientation", "orthogonal")
         self._render_order = self._root.get("renderorder", "right-down")
         self._bgcolor = self._root.get("backgroundcolor", "#000000")
-        self._infinite = int(self._root.get("infinite", "0"))
+        self._infinite = int(self._root.get("infinite", 0))
         assert (
             self._orientation == "orthogonal"
         ), "Only orthogonal orientation is supported"
@@ -63,7 +63,7 @@ class TiledMap:
         tile_width = int(self._root.get("tilewidth"))
         tile_height = int(self._root.get("tileheight"))
         map_width = int(self._root.get("width")) * tile_width
-        map_height = int(self.map_root.get("height")) * tile_height
+        map_height = int(self._root.get("height")) * tile_height
         self._size = (map_width, map_height)
         return self._size
 
@@ -135,6 +135,10 @@ class TiledMap:
                 data = zlib_decompress(data)
             elif compression == "gzip":
                 data = gzip_decompress(data)
+            else:
+                raise NotImplementedError(
+                    f"compression '{compression}' not yet supported"
+                )
             gid_tuples = [unpack("<I", data[i : i + 4]) for i in range(0, len(data), 4)]
             gid_list = [g[0] for g in gid_tuples]
         elif encoding == "csv":
@@ -198,7 +202,7 @@ class TiledMap:
                 tiles.append(tile)
             yield name, tiles
 
-    def objects(self, layer_name: str = "objects") -> Iterator[Object]:
+    def objects(self, layer_name: str) -> Iterator[Object]:
         tile_height = int(self._root.get("tileheight"))
         map_height = int(self._root.get("height")) * tile_height
         for object_group in self._root.findall("objectgroup"):
@@ -238,4 +242,4 @@ class TiledMap:
                 yield Object(oname, x, y, width, height, otype, arg, properties)
 
 
-__all__ = "TiledMap"
+__all__ = ("TiledMap",)

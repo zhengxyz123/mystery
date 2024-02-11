@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple, Union
+from typing import Optional
 
-from pyglet import gl
 from pyglet.graphics import Batch, Group
 from pyglet.gui.widgets import WidgetBase as PygletWidgetBase
 from pyglet.shapes import Rectangle, ShapeBase
@@ -36,7 +35,7 @@ class ScrollableLayout(WidgetBase):
         self._value = 0
         self._group = ScissorGroup(x, y, width, height, parent=group)
         self._hscroll: Optional[ScrollBar] = None
-        self._elements: List[Union[PygletWidgetBase, ShapeBase, Sprite]] = []
+        self._elements: list[PygletWidgetBase |ShapeBase | Sprite] = []
 
     def _update_position(self):
         self._group.area = self._x, self._y, self._width, self._height
@@ -102,7 +101,7 @@ class ScrollableLayout(WidgetBase):
         else:
             self._hscroll.value = self._offset_y / (self._content_height - self._height)
 
-    def add(self, *elements: Union[PygletWidgetBase, ShapeBase, Sprite]):
+    def add(self, *elements: PygletWidgetBase | ShapeBase | Sprite):
         """Add some elements to ScrollableLayout.
 
         Objects that are instanced in `pyglet.gui.widget.WidgetBase`,
@@ -128,7 +127,7 @@ class ScrollableLayout(WidgetBase):
         for widget in self._elements:
             widget.draw()
 
-    def get_point(self, x: int, y: int) -> Tuple[int, int]:
+    def get_point(self, x: int, y: int) -> tuple[int, int]:
         """Get the absolute position of `(x, y)` after the ScrollableLayout
         has been scrolled.
 
@@ -239,7 +238,7 @@ class ScrollBar(WidgetBase):
         )
         self._value = max(0, min(1, self._value))
 
-    def _update_position(self):
+    def _update_position(self):     
         self._scrolling_area.position = (self._x, self._y)
         self._scrolling_area.height = self._height
 
@@ -311,4 +310,4 @@ class ScrollBar(WidgetBase):
             )
 
 
-__all__ = ("ScrollableLayout", "ScrollBar")
+__all__ = "ScrollableLayout", "ScrollBar"
