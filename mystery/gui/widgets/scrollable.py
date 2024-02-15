@@ -35,7 +35,7 @@ class ScrollableLayout(WidgetBase):
         self._value = 0
         self._group = ScissorGroup(x, y, width, height, parent=group)
         self._hscroll: Optional[ScrollBar] = None
-        self._elements: list[PygletWidgetBase |ShapeBase | Sprite] = []
+        self._elements: list[PygletWidgetBase | ShapeBase | Sprite] = []
 
     def _update_position(self):
         self._group.area = self._x, self._y, self._width, self._height
@@ -238,7 +238,7 @@ class ScrollBar(WidgetBase):
         )
         self._value = max(0, min(1, self._value))
 
-    def _update_position(self):     
+    def _update_position(self):
         self._scrolling_area.position = (self._x, self._y)
         self._scrolling_area.height = self._height
 

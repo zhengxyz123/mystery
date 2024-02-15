@@ -6,7 +6,7 @@ from pyglet.graphics import Batch, Group
 from pyglet.image import Animation, AnimationFrame, ImageGrid
 from pyglet.math import Vec2
 from pyglet.sprite import Sprite
-from pyglet.window import Window, key
+from pyglet.window import key
 
 from mystery import resmgr
 
@@ -77,11 +77,11 @@ class CharacterState(StrEnum):
 class Character(EventDispatcher):
     def __init__(
         self,
-        window: Window,
+        game: "mystery.scenes.game.GameScene",
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
     ):
-        self._window = window
+        self._game = game
         self._batch = batch
         self._group = Group(parent=group)
         self._char_sprite = Sprite(
@@ -194,7 +194,7 @@ class Character(EventDispatcher):
         if self._state == CharacterState.CTRLED:
             return
         if symbol == key.ESCAPE:
-            self._window.switch_scene("menu")
+            self._game.window.switch_scene("menu")
         elif symbol == key.LSHIFT:
             self._runnable = True
         elif key.LEFT <= symbol <= key.DOWN:

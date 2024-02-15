@@ -23,7 +23,7 @@
   </data>
  </layer>
  <objectgroup id="4" name="objects">
-  <object id="1" name="sp_0" type="SpawnPoint" x="500" y="503">
+  <object id="1" name="sp_0" type="SpawnPoint" x="512" y="512">
    <properties>
     <property name="sp_name" value="start"/>
    </properties>

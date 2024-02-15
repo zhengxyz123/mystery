@@ -19,23 +19,21 @@ class BaseRoom(EventDispatcher):
 
     def __init__(
         self,
-        window: GameWindow,
         game: "mystery.scenes.game.GameScene",
         char: Character,
     ):
-        self._window = window
         self._game = game
         self.char = char
         self.batch = Batch()
-        self.base_group = {
+        self.parent_group = {
             "back": Group(order=1),
             "char": Group(order=2),
             "fore": Group(order=3),
         }
+        self.child_group = []
         self.char.batch = self.batch
-        self.char.group = self.base_group["char"]
+        self.char.group = self.parent_group["char"]
         self.char.room = self
-        self.other_groups = []
         self.sprits = []
 
         self._collisions = []
@@ -60,8 +58,8 @@ class BaseRoom(EventDispatcher):
         map = TiledMap(tmx_file)
         for name, tiles in map.layers():
             parent, order = name.split("_")
-            group = Group(int(order), self.base_group[parent])
-            self.other_groups.append(group)
+            group = Group(int(order), self.parent_group[parent])
+            self.child_group.append(group)
             for tile in tiles:
                 image = tile.source.get_region(
                     tile.source_x, tile.source_y, tile.width, tile.height
@@ -86,10 +84,10 @@ class BaseRoom(EventDispatcher):
     def draw(self):
         char_pos = Vec3(*self.char.position, 0)
         center_pos = Vec3(
-            self._window.width // 2 - 32, self._window.height // 2 - 32, 0
+            self._game.window.width // 2 - 32, self._game.window.height // 2 - 32, 0
         )
         trans_mat = Mat4.from_translation(center_pos - char_pos)
-        with self._window.apply_view(trans_mat):
+        with self._game.window.apply_view(trans_mat):
             self.batch.draw()
 
     def on_room_enter(self, *args):

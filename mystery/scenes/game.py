@@ -2,7 +2,7 @@ from pyglet import clock
 from pyglet.graphics import Batch
 
 from mystery.character import Character
-from mystery.gui.keyhint import KeyHint
+from mystery.gui.hud import KeyHint
 from mystery.rooms import BaseRoom
 from mystery.scenes import Scene
 
@@ -11,9 +11,9 @@ class GameScene(Scene):
     def __init__(self, window: "mystery.scenes.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
-        self.character = Character(self.window)
-        self.key_hint = KeyHint(self.window, self.batch)
-        self.room = BaseRoom(self.window, self, self.character)
+        self.character = Character(self)
+        self.key_hint = KeyHint(self, self.batch)
+        self.room = BaseRoom(self, self.character)
 
     def on_draw(self):
         self.window.clear()

@@ -9,7 +9,6 @@ from pyglet.window import key
 
 from mystery import resmgr
 from mystery.resource.manager import FONT_NAME
-from mystery.scenes import GameWindow
 
 key_image = {}
 for name in [
@@ -30,11 +29,11 @@ for name in [
 class KeyHint:
     def __init__(
         self,
-        window: GameWindow,
+        game: "pyglet.scenes.game.GameScene",
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
     ):
-        self._window = window
+        self._game = game
         self._shape_group = Group(order=0, parent=group)
         self._hint_group1 = Group(order=1, parent=group)
         self._hint_group2 = Group(order=2, parent=group)
