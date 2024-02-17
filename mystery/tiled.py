@@ -9,9 +9,7 @@ from zlib import decompress as zlib_decompress
 from mystery import resmgr
 
 MapInfo = namedtuple("MapInfo", "version orientation render_order")
-Tile = namedtuple(
-    "Tile", "source width height source_x source_y dest_x dest_y collision"
-)
+Tile = namedtuple("Tile", "image dest_x dest_y collision")
 Object = namedtuple("Object", "name x y width height type arg properties")
 Layer = namedtuple("Layer", "name gids")
 SourceTile = namedtuple("SourceTile", "img_name img_size source_x source_y collision")
@@ -40,7 +38,7 @@ class TiledMap:
         return MapInfo(self._version, self._orientation, self._render_order)
 
     @property
-    def background(self) -> tuple[int, ...]:
+    def bgcolor(self) -> tuple[int, ...]:
         if self._bgcolor_converted is not None:
             return self._bgcolor_converted
         color = int(self._bgcolor[1:], base=16)
@@ -189,16 +187,8 @@ class TiledMap:
                     dst_y = map_height - tile_height - dst_y
                     src_y = img_height - tile_height - src_y
                 source = resmgr.loader.image(f"maps/tilesets/{img}")
-                tile = Tile(
-                    source,
-                    tile_width,
-                    tile_height,
-                    src_x,
-                    src_y,
-                    dst_x,
-                    dst_y,
-                    collision,
-                )
+                image = source.get_region(src_x, src_y, tile_width, tile_height)
+                tile = Tile(image, dst_x, dst_y, collision)
                 tiles.append(tile)
             yield name, tiles
 
@@ -237,6 +227,7 @@ class TiledMap:
                         elif ptype == "float":
                             pvalue = float(pvalue)
                         elif ptype == "bool":
+                            assert pvalue in ["true", "false"]
                             pvalue = pvalue == "true"
                         properties[pname] = pvalue
                 yield Object(oname, x, y, width, height, otype, arg, properties)

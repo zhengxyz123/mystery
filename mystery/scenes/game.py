@@ -13,7 +13,7 @@ class GameScene(Scene):
         self.batch = Batch()
         self.character = Character(self)
         self.key_hint = KeyHint(self, self.batch)
-        self.room = BaseRoom(self, self.character)
+        self.room = BaseRoom(self, "example", self.character)
 
     def on_draw(self):
         self.window.clear()

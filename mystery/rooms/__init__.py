@@ -15,14 +15,14 @@ from mystery.utils import point_in_polygon
 class BaseRoom(EventDispatcher):
     """An example room, shows how rooms work."""
 
-    _name = "example"
-
     def __init__(
         self,
         game: "mystery.scenes.game.GameScene",
+        name: str,
         char: Character,
     ):
         self._game = game
+        self._name = name
         self.char = char
         self.batch = Batch()
         self.parent_group = {
@@ -38,7 +38,6 @@ class BaseRoom(EventDispatcher):
 
         self._collisions = []
         self._spawn_points = {}
-        self._load_map()
 
     @property
     def name(self) -> str:
@@ -61,11 +60,8 @@ class BaseRoom(EventDispatcher):
             group = Group(int(order), self.parent_group[parent])
             self.child_group.append(group)
             for tile in tiles:
-                image = tile.source.get_region(
-                    tile.source_x, tile.source_y, tile.width, tile.height
-                )
                 sprite = Sprite(
-                    image,
+                    tile.image,
                     tile.dest_x,
                     tile.dest_y,
                     batch=self.batch,
@@ -91,7 +87,7 @@ class BaseRoom(EventDispatcher):
             self.batch.draw()
 
     def on_room_enter(self, *args):
-        pass
+        self._load_map()
 
     def on_rome_leave(self, *args):
         pass
