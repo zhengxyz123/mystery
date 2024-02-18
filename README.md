@@ -28,5 +28,7 @@ pip install pyinstaller==5.13.2
 ./build-release exec
 ```
 
+The reason why we must use an older version of PyInstaller now is shown [here](https://github.com/pyglet/pyglet/issues/1049).
+
 ## 中文繁简转换
 为减少**开发前期**的工作量，各繁体中文的本地化翻译都默认由简体中文通过`opencc`转换而成，如有错误请谅解。

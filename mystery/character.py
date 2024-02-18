@@ -141,6 +141,14 @@ class Character(EventDispatcher):
         self._bubble_sprite.group = self._group
 
     @property
+    def control_point(self) -> tuple[tuple[int, ...]]:
+        x, y = self.position
+        pos1 = (x + 20, y + 4)
+        pos2 = (x + 44, y + 4)
+        pos3 = (x + 32, y + 20)
+        return pos1, pos2, pos3
+
+    @property
     def room(self) -> "mystery.room.BaseRoom":
         return self._room
 
@@ -226,7 +234,7 @@ class Character(EventDispatcher):
             prev_pos = Vec2(*self.position)
             now_pos = prev_pos + dp
             if self._room and self._room._allow_move(now_pos):
-                self.position = tuple(now_pos)
+                self.position = now_pos[:]
 
 
 __all__ = "CharacterState", "CharacterDirection", "CharacterBubble", "Character"

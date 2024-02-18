@@ -1,4 +1,4 @@
-import time
+from typing import Optional
 
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
@@ -20,15 +20,16 @@ class BaseRoom(EventDispatcher):
         game: "mystery.scenes.game.GameScene",
         name: str,
         char: Character,
+        group: Optional[Group] = None,
     ):
         self._game = game
         self._name = name
         self.char = char
         self.batch = Batch()
         self.parent_group = {
-            "back": Group(order=1),
-            "char": Group(order=2),
-            "fore": Group(order=3),
+            "back": Group(order=1, parent=group),
+            "char": Group(order=2, parent=group),
+            "fore": Group(order=3, parent=group),
         }
         self.child_group = []
         self.char.batch = self.batch
@@ -36,7 +37,9 @@ class BaseRoom(EventDispatcher):
         self.char.room = self
         self.sprits = []
 
-        self._collisions = []
+        # One is a list, the other is a dict.
+        self._collisions_walkable = []
+        self._collisions_unwalkable = {}
         self._spawn_points = {}
 
     @property
@@ -44,10 +47,14 @@ class BaseRoom(EventDispatcher):
         return self._name
 
     def _allow_move(self, pos) -> bool:
-        pos1 = pos[0] + 20, pos[1] + 3
-        pos2 = pos1[0] + 24, pos1[1]
+        x, y = pos
+        pos1 = (x + 20, y + 4)
+        pos2 = (x + 44, y + 4)
+        for poly in self._collisions_unwalkable.values():
+            if point_in_polygon(poly, pos1) or point_in_polygon(poly, pos2):
+                return False
         check1, check2 = [], []
-        for poly in self._collisions:
+        for poly in self._collisions_walkable:
             check1.append(point_in_polygon(poly, pos1))
             check2.append(point_in_polygon(poly, pos2))
         return any(check1) and any(check2)
@@ -68,12 +75,17 @@ class BaseRoom(EventDispatcher):
                     group=group,
                 )
                 self.sprits.append(sprite)
-        for objs in map.objects("objects"):
-            if objs.type == "CollisionPolygon":
-                self._collisions.append(objs.properties["points"])
-            elif objs.type == "SpawnPoint":
-                name = objs.properties["sp_name"]
-                position = (objs.x, objs.y)
+        for obj in map.objects("objects"):
+            if obj.type == "CollisionPolygon":
+                if obj.properties["can_walk"]:
+                    self._collisions_walkable.append(obj.properties["points"])
+                else:
+                    self._collisions_unwalkable.setdefault(
+                        obj.properties["cp_name"], obj.properties["points"]
+                    )
+            elif obj.type == "SpawnPoint":
+                name = obj.properties["sp_name"]
+                position = (obj.x, obj.y)
                 self._spawn_points[name] = position
         self.char.position = self._spawn_points["start"]
 
