@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="4">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="6">
  <tileset firstgid="1" source="tilesets/terrain.tsx"/>
  <tileset firstgid="1025" source="tilesets/mask.tsx"/>
  <layer id="1" name="back_0" width="32" height="32">
@@ -27,25 +27,33 @@
    H4sIAAAAAAAAA+3Ntw0AMAzAsBSn/H9xfEW8UIBmzmhtFB15z6vafD6fz+fz+Xw+n8/nf/JPvoq++QMUE7P8ABAAAA==
   </data>
  </layer>
- <objectgroup id="6" name="objects">
-  <object id="1" name="sp_0" type="SpawnPoint" x="512" y="512">
+ <objectgroup id="1" name="objects">
+  <object id="1" name="sp_0" type="SPoint" x="512" y="512">
    <properties>
     <property name="sp_name" value="start"/>
    </properties>
    <point/>
   </object>
-  <object id="3" name="cp_1" type="CollisionPolygon" x="832" y="544">
-   <properties>
-    <property name="can_walk" type="bool" value="false"/>
-    <property name="cp_name" value="cup"/>
-   </properties>
-   <polygon points="0,0 -32,0 -32,-54 0,-54"/>
-  </object>
-  <object id="2" name="cp_0" type="CollisionPolygon" x="672" y="992">
+  <object id="2" name="cp_0" type="CRect" x="352" y="64" width="320" height="928">
    <properties>
     <property name="can_walk" type="bool" value="true"/>
    </properties>
-   <polygon points="0,0 0,-320 320,-320 320,-640 0,-640 0,-928 -320,-928 -320,-640 -640,-640 -640,-320 -320,-320 -320,0"/>
+  </object>
+  <object id="3" name="cp_1" type="CRect" x="32" y="352" width="320" height="320">
+   <properties>
+    <property name="can_walk" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="4" name="cp_2" type="CRect" x="672" y="352" width="320" height="320">
+   <properties>
+    <property name="can_walk" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="5" name="cp_3" type="CRect" x="800" y="488" width="32" height="56">
+   <properties>
+    <property name="can_walk" type="bool" value="false"/>
+    <property name="cr_name" value="cup"/>
+   </properties>
   </object>
  </objectgroup>
 </map>

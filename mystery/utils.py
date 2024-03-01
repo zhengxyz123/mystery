@@ -1,5 +1,7 @@
 from unicodedata import east_asian_width
 
+from mystery.tiled import Object
+
 
 def line_break_ascii(text: str, line_width: int, font_width: int = 24) -> str:
     return text
@@ -34,30 +36,27 @@ def line_break_cjk(text: str, line_width: int, font_width: int = 24) -> str:
     return breaked
 
 
-def point_in_polygon(
-    polygon: list[tuple[int | float, ...]], point: tuple[int | float, ...]
-) -> bool:
-    """Use raycasting to determine if a point is inside a polygon
+class Rect:
+    def __init__(self, x: int, y: int, width: int, height: int):
+        self._x = x
+        self._y = y
+        self._width = width
+        self._height = height
 
-    This function is an example implementation available under MIT License at:
-    https://www.algorithms-and-technologies.com/point_in_polygon/python
-    """
-    odd = False
-    i, j = -1, len(polygon) - 1
-    while i < len(polygon) - 1:
-        i = i + 1
-        if ((polygon[i][1] > point[1]) != (polygon[j][1] > point[1])) and (
-            point[0]
-            < (
-                (polygon[j][0] - polygon[i][0])
-                * (point[1] - polygon[i][1])
-                / (polygon[j][1] - polygon[i][1])
-            )
-            + polygon[i][0]
-        ):
-            odd = not odd
-        j = i
-    return odd
+    def __contains__(self, pos: tuple[int, int]) -> bool:
+        px, py = pos
+        return (
+            self._x <= px <= self._x + self._width
+            and self._y <= py <= self._y + self._height
+        )
+
+    def __repr__(self) -> str:
+        return f"Rect(x={self._x}, y={self._y}, w={self._width}, h={self._height})"
+
+    @classmethod
+    def from_tmx_obj(cls, obj: Object):
+        rect = cls(obj.x, obj.y, obj.width, obj.height)
+        return rect
 
 
-__all__ = "line_break_ascii", "line_break_cjk", "point_in_polygon"
+__all__ = "line_break_ascii", "line_break_cjk", "Rect"

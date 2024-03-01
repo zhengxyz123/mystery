@@ -3,13 +3,12 @@ from typing import Optional
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.math import Mat4, Vec3
-from pyglet.shapes import Circle
 from pyglet.sprite import Sprite
 
 from mystery.character import Character
 from mystery.scenes import GameWindow
 from mystery.tiled import TiledMap
-from mystery.utils import point_in_polygon
+from mystery.utils import Rect
 
 
 class BaseRoom(EventDispatcher):
@@ -46,17 +45,17 @@ class BaseRoom(EventDispatcher):
     def name(self) -> str:
         return self._name
 
-    def _allow_move(self, pos) -> bool:
+    def allow_move(self, pos: tuple[int, int]) -> bool:
         x, y = pos
         pos1 = (x + 20, y + 4)
         pos2 = (x + 44, y + 4)
-        for poly in self._collisions_unwalkable.values():
-            if point_in_polygon(poly, pos1) or point_in_polygon(poly, pos2):
+        for rect in self._collisions_unwalkable.values():
+            if pos1 in rect or pos2 in rect:
                 return False
         check1, check2 = [], []
-        for poly in self._collisions_walkable:
-            check1.append(point_in_polygon(poly, pos1))
-            check2.append(point_in_polygon(poly, pos2))
+        for rect in self._collisions_walkable:
+            check1.append(pos1 in rect)
+            check2.append(pos2 in rect)
         return any(check1) and any(check2)
 
     def _load_map(self):
@@ -76,14 +75,14 @@ class BaseRoom(EventDispatcher):
                 )
                 self.sprits.append(sprite)
         for obj in map.objects("objects"):
-            if obj.type == "CollisionPolygon":
+            if obj.type == "CRect":
                 if obj.properties["can_walk"]:
-                    self._collisions_walkable.append(obj.properties["points"])
+                    self._collisions_walkable.append(Rect.from_tmx_obj(obj))
                 else:
                     self._collisions_unwalkable.setdefault(
-                        obj.properties["cp_name"], obj.properties["points"]
+                        obj.properties["cr_name"], Rect.from_tmx_obj(obj)
                     )
-            elif obj.type == "SpawnPoint":
+            elif obj.type == "SPoint":
                 name = obj.properties["sp_name"]
                 position = (obj.x, obj.y)
                 self._spawn_points[name] = position
