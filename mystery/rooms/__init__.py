@@ -59,8 +59,7 @@ class BaseRoom(EventDispatcher):
         return any(check1) and any(check2)
 
     def _load_map(self):
-        tmx_file = f"maps/{self._name}.tmx"
-        map = TiledMap(tmx_file)
+        map = TiledMap(f"maps/{self._name}.tmx")
         for name, tiles in map.layers():
             parent, order = name.split("_")
             group = Group(int(order), self.parent_group[parent])
@@ -79,14 +78,11 @@ class BaseRoom(EventDispatcher):
                 if obj.properties["can_walk"]:
                     self._collisions_walkable.append(Rect.from_tmx_obj(obj))
                 else:
-                    self._collisions_unwalkable.setdefault(
-                        obj.properties["cr_name"], Rect.from_tmx_obj(obj)
-                    )
+                    name = obj.properties["cr_name"]
+                    self._collisions_unwalkable[name] = Rect.from_tmx_obj(obj)
             elif obj.type == "SPoint":
                 name = obj.properties["sp_name"]
-                position = (obj.x, obj.y)
-                self._spawn_points[name] = position
-        self.char.position = self._spawn_points["start"]
+                self._spawn_points[name] = (obj.x, obj.y)
 
     def draw(self):
         char_pos = Vec3(*self.char.position, 0)
@@ -99,6 +95,7 @@ class BaseRoom(EventDispatcher):
 
     def on_room_enter(self, *args):
         self._load_map()
+        self.char.position = self._spawn_points["start"]
 
     def on_rome_leave(self, *args):
         pass

@@ -37,6 +37,8 @@ def line_break_cjk(text: str, line_width: int, font_width: int = 24) -> str:
 
 
 class Rect:
+    """A simple rectangle for collision test."""
+
     def __init__(self, x: int, y: int, width: int, height: int):
         self._x = x
         self._y = y
