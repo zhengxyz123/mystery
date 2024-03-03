@@ -141,7 +141,7 @@ class Character(EventDispatcher):
         self._bubble_sprite.group = self._group
 
     @property
-    def control_point(self) -> tuple[tuple[int, ...]]:
+    def control_point(self) -> tuple[tuple[int, int]]:
         x, y = self.position
         pos1 = (x + 20, y + 4)
         pos2 = (x + 32, y + 4)
@@ -224,7 +224,9 @@ class Character(EventDispatcher):
                 self._state = CharacterState.IDLE
 
     def update(self, dt: float):
-        if self._prev_state != self._state or self._prev_direction != self._direction:
+        if self._state != CharacterState.CTRLED and (
+            self._prev_state != self._state or self._prev_direction != self._direction
+        ):
             state = self._prev_state = self._state.value
             direction = self._prev_direction = self._direction.value
             self._char_sprite.image = char_anime[state][direction]

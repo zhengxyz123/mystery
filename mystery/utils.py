@@ -60,5 +60,13 @@ class Rect:
         rect = cls(obj.x, obj.y, obj.width, obj.height)
         return rect
 
+    @property
+    def area(self) -> tuple[int, ...]:
+        return self._x, self._y, self._width, self._height
+
+    @area.setter
+    def area(self, area: tuple[int, ...]):
+        self._x, self._y, self._width, self._height = area
+
 
 __all__ = "line_break_ascii", "line_break_cjk", "Rect"

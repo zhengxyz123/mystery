@@ -4,6 +4,7 @@
 datas = [("mystery/assets", "assets")]
 
 hiddenimports = [
+    "mystery.rooms.start",
     "mystery.scenes.game",
     "mystery.scenes.settings",
     "mystery.scenes.settings.language",
