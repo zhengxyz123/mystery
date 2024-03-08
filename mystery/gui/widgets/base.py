@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from pyglet.gui import WidgetBase as PygletWidgetBase
 
 
@@ -25,11 +23,11 @@ class WidgetBase(PygletWidgetBase):
         self.dispatch_event("on_reposition", self)
 
     @property
-    def position(self) -> Tuple[int, int]:
+    def position(self) -> tuple[int, int]:
         return self._x, self._y
 
     @position.setter
-    def position(self, values: Tuple[int, int]):
+    def position(self, values: tuple[int, int]):
         self._x, self._y = values
         self._update_position()
         self.dispatch_event("on_reposition", self)

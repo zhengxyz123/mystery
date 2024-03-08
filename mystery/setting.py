@@ -25,7 +25,12 @@ class Setting(UserDict):
         self.save()
 
     def save(self):
-        dump(self.data, open(self._file, "w+", encoding="utf-8"), ensure_ascii=False)
+        dump(
+            self.data,
+            open(self._file, "w+", encoding="utf-8"),
+            ensure_ascii=False,
+            indent=4,
+        )
 
 
 __all__ = ("Setting",)

@@ -10,8 +10,8 @@ from mystery.setting import Setting
 version = "0.0.1"
 
 # Check version of dependencies.
-if pyglet_ver != "2.0.12":
-    print(f"This game must use pyglet 2.0.12, but {pyglet_ver} found.")
+if pyglet_ver != "2.0.14":
+    print(f"This game must use pyglet 2.0.14, but {pyglet_ver} found.")
     exit(1)
 
 data_path = Path(get_data_path("mystery"))

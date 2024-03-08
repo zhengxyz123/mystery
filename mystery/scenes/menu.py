@@ -47,8 +47,8 @@ class MenuScene(Scene):
             batch=self.batch,
             group=self.fore_group,
         )
-        self.saves_button = TextButton(
-            self.window.resource.translate("menu.saves"),
+        self.save_button = TextButton(
+            self.window.resource.translate("menu.save"),
             self.window.width // 2 - 150,
             0.8 * self.window.height // 2 - 30,
             300,
@@ -67,8 +67,9 @@ class MenuScene(Scene):
             group=self.fore_group,
         )
         self.game_button.push_handlers(on_click=self.start)
+        self.save_button.push_handlers(on_click=self.save)
         self.settings_button.push_handlers(on_click=self.settings)
-        self.frame.add_widget(self.game_button, self.saves_button, self.settings_button)
+        self.frame.add_widget(self.game_button, self.save_button, self.settings_button)
 
     def _animate(self, dt):
         if self.background.opacity <= 10:
@@ -84,6 +85,12 @@ class MenuScene(Scene):
     def start(self):
         self.fore_group.visible = False
         clock.schedule_once(self._animate, 1 / self.window.setting["fps"])
+
+    def save(self):
+        if not self.window.has_scene("save"):
+            next_scene = import_module("mystery.scenes.save").SaveLoadScene
+            self.window.add_scene("save.load", next_scene)
+        self.window.switch_scene("save.load")
 
     def settings(self):
         if not self.window.has_scene("settings.main"):
@@ -103,12 +110,12 @@ class MenuScene(Scene):
             self.background.scale = height / self.background.image.height
         self.title.position = (width // 2, 0.8 * height, 0)
         self.game_button.position = (width // 2 - 150, 0.8 * height // 2 + 40)
-        self.saves_button.position = (width // 2 - 150, 0.8 * height // 2 - 30)
+        self.save_button.position = (width // 2 - 150, 0.8 * height // 2 - 30)
         self.settings_button.position = (width // 2 - 150, 0.8 * height // 2 - 100)
 
     def on_language_change(self):
         self.game_button.text = self.window.resource.translate("menu.start_game")
-        self.saves_button.text = self.window.resource.translate("menu.saves")
+        self.save_button.text = self.window.resource.translate("menu.save")
         self.settings_button.text = self.window.resource.translate("menu.settings")
 
     def on_scene_leave(self):

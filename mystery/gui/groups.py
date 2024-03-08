@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 from pyglet import gl
 from pyglet.graphics import Group
@@ -24,11 +24,11 @@ class ScissorGroup(Group):
         self._width, self._height = width, height
 
     @property
-    def area(self) -> Tuple[int, ...]:
+    def area(self) -> tuple[int, ...]:
         return self._x, self._y, self._width, self._height
 
     @area.setter
-    def area(self, area: Tuple[int, ...]):
+    def area(self, area: tuple[int, ...]):
         self._x, self._y, self._width, self._height = area
 
     def set_state(self):

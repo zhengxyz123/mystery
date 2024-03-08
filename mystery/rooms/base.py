@@ -26,7 +26,7 @@ class BaseRoom(EventDispatcher):
     ):
         self._game = game
         self._name = name
-        self._loaded = False
+        self._map_loaded = False
         self.char = char
         self.batch = Batch()
         self.parent_group = {
@@ -63,7 +63,7 @@ class BaseRoom(EventDispatcher):
         return any(check1) and any(check2)
 
     def _load_map(self):
-        if self._loaded:
+        if self._map_loaded:
             return
         map = TiledMap(f"maps/{self._name}.tmx")
         for name, tiles in map.layers():
@@ -89,7 +89,7 @@ class BaseRoom(EventDispatcher):
             elif obj.type == "SPoint":
                 name = obj.properties["sp_name"]
                 self._spawn_points[name] = (obj.x, obj.y)
-        self._loaded = True
+        self._map_loaded = True
 
     def draw(self):
         char_pos = Vec3(*self.char.position, 0)
