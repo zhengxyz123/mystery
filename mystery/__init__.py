@@ -1,8 +1,13 @@
 from locale import getdefaultlocale
+from logging import getLogger
 from pathlib import Path
+
+# Disable pytmx's logger.
+getLogger("pytmx").setLevel(999)
 
 from pyglet import version as pyglet_ver
 from pyglet.resource import get_data_path, get_settings_path
+from pytmx import pytmx_ver
 
 from mystery.resource import ResourceManager
 from mystery.setting import Setting
@@ -12,6 +17,9 @@ version = "0.0.1"
 # Check version of dependencies.
 if pyglet_ver != "2.0.14":
     print(f"This game must use pyglet 2.0.14, but {pyglet_ver} found.")
+    exit(1)
+if pytmx_ver != (3, 32):
+    print("This game must use pytmx 3.32, but {}.{} found.".format(*pytmx_ver))
     exit(1)
 
 data_path = Path(get_data_path("mystery"))

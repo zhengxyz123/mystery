@@ -4,10 +4,9 @@ from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.math import Mat4, Vec3
 from pyglet.sprite import Sprite
+from pytmx import TiledTileLayer
 
 from mystery.character import Character
-from mystery.scenes import GameWindow
-from mystery.tiled import TiledMap
 from mystery.utils import Rect
 
 
@@ -65,21 +64,23 @@ class BaseRoom(EventDispatcher):
     def _load_map(self):
         if self._map_loaded:
             return
-        map = TiledMap(f"maps/{self._name}.tmx")
-        for name, tiles in map.layers():
-            parent, order = name.split("_")
+        map = self._game.window.resource.map(self._name)
+        tw, th = map.tilewidth, map.tileheight
+        for layer in map.layers:
+            if not isinstance(layer, TiledTileLayer):
+                continue
+            parent, order = layer.name.split("_")
             group = Group(int(order), self.parent_group[parent])
             self.child_group.append(group)
-            for tile in tiles:
+            h = layer.height - 1
+            for tile in layer.tiles():
+                x, y, image = tile
                 sprite = Sprite(
-                    tile.image,
-                    tile.dest_x,
-                    tile.dest_y,
-                    batch=self.batch,
-                    group=group,
+                    image, x * tw, (h - y) * th, batch=self.batch, group=group
                 )
                 self.sprits.append(sprite)
-        for obj in map.objects("objects"):
+        for obj in map.objects:
+            obj.y = (map.tileheight * map.height) - obj.y - obj.height
             if obj.type == "CRect":
                 if obj.properties["can_walk"]:
                     self._collisions_walkable.append(Rect.from_tmx_obj(obj))

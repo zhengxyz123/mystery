@@ -4,19 +4,19 @@ from mystery.gui.widgets import WidgetBase
 class WidgetFrame:
     """The Frame object, rewritten from `pyglet.gui.frame.Frame`."""
 
-    def __init__(self, window: "mystery.scenes.GameWindow", cell_size=128, order=0):
+    def __init__(self, window: "mystery.scenes.GameWindow", cell_size=128):
         self._window = window
         self._cell_size = cell_size
         self._cells: dict[tuple[int, int], set[WidgetBase]] = {}
         self._active_widgets: set[WidgetBase] = set()
-        self._order = order
+        self._order = 0
         self._enable = False
         self._mouse_pos = 0, 0
 
     def _hash(self, x: int, y: int) -> tuple[int, int]:
         return int(x / self._cell_size), int(y / self._cell_size)
 
-    def _on_reposition_handler(self, widget):
+    def _on_reposition_handler(self, widget: WidgetBase):
         self.remove_widget(widget)
         self.add_widget(widget)
 
@@ -48,6 +48,7 @@ class WidgetFrame:
             for all_widgets in self._cells.values():
                 if widget in all_widgets:
                     all_widgets.remove(widget)
+                    widget.set_handler("on_reposition", lambda w: None)
 
     def on_mouse_press(self, x, y, buttons, modifiers):
         for widget in self._cells.get(self._hash(x, y), set()):

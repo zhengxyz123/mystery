@@ -1,7 +1,5 @@
 from unicodedata import east_asian_width
 
-from mystery.tiled import Object
-
 
 def line_break_ascii(text: str, line_width: int, font_width: int = 24) -> str:
     return text
@@ -10,9 +8,9 @@ def line_break_ascii(text: str, line_width: int, font_width: int = 24) -> str:
 def line_break_cjk(text: str, line_width: int, font_width: int = 24) -> str:
     # Automatically wrap paragraph in `text` so that the width of each line
     # does not exceed `line_width`. `font_width` is the width of a full-width
-    # CJK character, such as "あ" or "中".
+    # CJK character, such as "あ" and "中".
     if text == "":
-        return text
+        return ""
     breaked = text[0]
     fw, fwh = font_width, font_width // 2
     now_width = fw if east_asian_width(text[0]) in "FW" else fwh
@@ -56,7 +54,7 @@ class Rect:
         return f"Rect(x={self._x}, y={self._y}, w={self._width}, h={self._height})"
 
     @classmethod
-    def from_tmx_obj(cls, obj: Object):
+    def from_tmx_obj(cls, obj):
         rect = cls(obj.x, obj.y, obj.width, obj.height)
         return rect
 

@@ -102,13 +102,6 @@ class GameWindow(Window):
             self._scenes[self._now].dispatch_event("on_language_change")
             self._scenes[self._now].language = self.resource.language
         self._scenes[self._now].dispatch_event("on_resize", self.width, self.height)
-        # Use a little trick to move the mouse slightly.
-        # If the scene switches immediately after the button is pressed
-        # (actually released), the button will remain hover until the
-        # next time the scene switches back to the scene while moving
-        # the mouse, and the state of the button will be recalculated.
-        # By using this trick, the state of widgets can be recalculated
-        # without physically moving the mouse.
         self._scenes[self._now].frame.on_mouse_motion(
             self._mouse_x, self._mouse_y, 1, 1
         )
