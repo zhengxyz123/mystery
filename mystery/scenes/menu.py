@@ -74,10 +74,16 @@ class MenuScene(Scene):
     def _animate(self, dt):
         if self.background.opacity <= 10:
             self.background.opacity = 0
-            if not self.window.has_scene("start"):
-                next_scene = import_module("mystery.scenes.start").StartScene
-                self.window.add_scene("start", next_scene)
-            self.window.switch_scene("start")
+            if self.window.setting.get("skip_start_scene", False):
+                if not self.window.has_scene("game"):
+                    game_scene = import_module("mystery.scenes.game").GameScene
+                    self.window.add_scene("game", game_scene)
+                self.window.switch_scene("game")
+            else:
+                if not self.window.has_scene("start"):
+                    start_scene = import_module("mystery.scenes.start").StartScene
+                    self.window.add_scene("start", start_scene)
+                self.window.switch_scene("start")
         else:
             self.background.opacity -= dt * 120
             clock.schedule_once(self._animate, 1 / self.window.setting["fps"])

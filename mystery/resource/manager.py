@@ -35,7 +35,7 @@ class ResourceManager:
         self._translation_now = {}
 
         # Create temporary directory for *.tmx files.
-        self._tmpdir = TemporaryDirectory(prefix="mystery")
+        self._tmpdir = TemporaryDirectory(suffix=".mystery")
         atexit_register(self._tmpdir.cleanup)
         self.copy_to_tempdir()
 
@@ -92,7 +92,7 @@ class ResourceManager:
     def info(self, key: str):
         return self._translation_now["language.info"].get(key, "")
 
-    def map(self, name: str) -> TiledMap:
+    def tiled_map(self, name: str) -> TiledMap:
         filename = Path(self._tmpdir.name) / f"{name}.tmx"
         kwargs = {
             "image_loader": self._image_loader,

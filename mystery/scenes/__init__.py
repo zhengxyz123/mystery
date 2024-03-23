@@ -8,7 +8,7 @@ from pyglet.image import get_buffer_manager
 from pyglet.math import Mat4
 from pyglet.window import Window, key
 
-from mystery import data_path, resmgr, setting
+from mystery import data_path, game_setting, resmgr
 from mystery.gui import WidgetFrame
 
 
@@ -49,7 +49,7 @@ class GameWindow(Window):
         self._scenes: dict[str, Scene] = {}
         self._now = ""
         self.resource = resmgr
-        self.setting = setting
+        self.setting = game_setting
 
     @property
     def scene(self) -> str:

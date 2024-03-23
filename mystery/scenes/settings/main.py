@@ -31,16 +31,25 @@ class SettingsScene(Scene):
         self.buttons_frame = AdvancedFrame(
             self.window.resource.translate("settings.title"),
             self.window.width // 2 - 140,
-            self.window.height // 2 - 95,
+            self.window.height // 2 - 135,
             280,
-            268,
+            319,
             batch=self.batch,
             group=self.mid_group,
+        )
+        self.game_button = TextButton(
+            self.window.resource.translate("settings.game"),
+            self.window.width // 2 - 120,
+            self.window.height // 2 + 62,
+            240,
+            55,
+            batch=self.batch,
+            group=self.fore_group,
         )
         self.graphic_button = TextButton(
             self.window.resource.translate("settings.graphic"),
             self.window.width // 2 - 120,
-            self.window.height // 2 + 32,
+            self.window.height // 2 + 2,
             240,
             55,
             batch=self.batch,
@@ -49,7 +58,7 @@ class SettingsScene(Scene):
         self.sound_button = TextButton(
             self.window.resource.translate("settings.sound"),
             self.window.width // 2 - 120,
-            self.window.height // 2 - 28,
+            self.window.height // 2 - 58,
             240,
             55,
             batch=self.batch,
@@ -58,7 +67,7 @@ class SettingsScene(Scene):
         self.language_button = TextButton(
             self.window.resource.translate("settings.language"),
             self.window.width // 2 - 120,
-            self.window.height // 2 - 88,
+            self.window.height // 2 - 118,
             240,
             55,
             batch=self.batch,
@@ -70,6 +79,7 @@ class SettingsScene(Scene):
         self.language_button.push_handlers(on_click=lambda: self.goto("language"))
         self.frame.add_widget(
             self.buttons_frame,
+            self.game_button,
             self.graphic_button,
             self.sound_button,
             self.language_button,
@@ -93,13 +103,15 @@ class SettingsScene(Scene):
             self.background.scale = width / self.background.image.width
         else:
             self.background.scale = height / self.background.image.height
-        self.buttons_frame.position = (width // 2 - 140, height // 2 - 110)
-        self.graphic_button.position = (width // 2 - 120, height // 2 + 32)
-        self.sound_button.position = (width // 2 - 120, height // 2 - 28)
-        self.language_button.position = (width // 2 - 120, height // 2 - 88)
+        self.buttons_frame.position = (width // 2 - 140, height // 2 - 135)
+        self.game_button.position = (width // 2 - 120, height // 2 + 62)
+        self.graphic_button.position = (width // 2 - 120, height // 2 + 2)
+        self.sound_button.position = (width // 2 - 120, height // 2 - 58)
+        self.language_button.position = (width // 2 - 120, height // 2 - 118)
 
     def on_language_change(self):
         self.buttons_frame.title = self.window.resource.translate("settings.title")
+        self.game_button.text = self.window.resource.translate("settings.game")
         self.graphic_button.text = self.window.resource.translate("settings.graphic")
         self.sound_button.text = self.window.resource.translate("settings.sound")
         self.language_button.text = self.window.resource.translate("settings.language")

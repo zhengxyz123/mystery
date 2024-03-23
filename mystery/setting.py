@@ -17,11 +17,14 @@ class Setting(UserDict):
     def _check_setting(self):
         if self.data.get("fps", 0) not in [30, 60, 90, 120]:
             self.data["fps"] = 60
+        if self.data.get("skip_start_scene", False) not in [True, False]:
+            self.data["skip_start_scene"] = False
 
     def _init_setting(self):
         self.data = {}
         self.data["fps"] = 60
         self.data["lang"] = "auto"
+        self.data["skip_start_scene"] = False
         self.save()
 
     def save(self):

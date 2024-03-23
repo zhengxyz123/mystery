@@ -22,6 +22,8 @@ class GameScene(Scene):
             module = import_module(f"mystery.rooms.{name}")
             room = getattr(module, f"{name.capitalize()}Room")
             self._cached_room[name] = room(self, self.character)
+        if self._now_room is not None:
+            self._now_room.dispatch_event("on_room_leave")
         self._now_room = self._cached_room[name]
         self.character.room = self._now_room
         self._now_room.dispatch_event("on_room_enter")
@@ -36,7 +38,6 @@ class GameScene(Scene):
         self.window.push_handlers(self.character)
         self.window.push_handlers(self.key_hint)
         clock.schedule_interval(self.character.update, 4 / self.window.setting["fps"])
-        self.key_hint.reset()
         self.switch_room("start")
 
     def on_scene_leave(self):

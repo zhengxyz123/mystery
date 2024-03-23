@@ -6,6 +6,7 @@ from pyglet.graphics import Batch, Group
 from pyglet.gui.widgets import WidgetBase as PygletWidgetBase
 from pyglet.shapes import Rectangle, ShapeBase
 from pyglet.sprite import Sprite
+from pyglet.window import mouse
 
 from mystery.gui.groups import ScissorGroup
 from mystery.gui.widgets import WidgetBase
@@ -286,7 +287,12 @@ class ScrollBar(WidgetBase):
         self._fbar.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
-        if self._visiable and self._check_hit(x, y) and (x, y) in self._bbar:
+        if (
+            self._visiable
+            and self._check_hit(x, y)
+            and (x, y) in self._bbar
+            and buttons & mouse.LEFT
+        ):
             self._pressd = True
             self._bbar.color = self.bar_color["pressed"][3:]
             self._fbar.color = self.bar_color["pressed"][:3]

@@ -70,8 +70,9 @@ class WidgetFrame:
             widget.on_mouse_scroll(x, y, scroll_x, scroll_y)
 
     def on_mouse_motion(self, x, y, dx, dy):
-        for widgets in self._cells.values():
-            [widget.on_mouse_motion(x, y, dx, dy) for widget in widgets]
+        for cell in self._cells.values():
+            for widget in cell:
+                widget.on_mouse_motion(x, y, dx, dy)
         self._mouse_pos = x, y
 
     def on_text(self, text):

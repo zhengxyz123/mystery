@@ -6,7 +6,7 @@ from traceback import format_exc, print_exc
 from pyglet import app, clock, gl
 from pyglet.image import Texture
 
-from mystery import data_path, setting, version
+from mystery import data_path, game_setting, version
 from mystery.scenes import GameWindow
 from mystery.scenes.menu import MenuScene
 
@@ -41,7 +41,7 @@ def start():
         window = GameWindow(768, 576, resizable=True)
         window.add_scene("menu", MenuScene)
         window.switch_scene("menu")
-        clock.schedule_interval(window.draw, 1 / setting["fps"])
+        clock.schedule_interval(window.draw, 1 / game_setting["fps"])
         app.run()
     except:
         record_error()

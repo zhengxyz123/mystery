@@ -33,13 +33,13 @@ for subpath in ["log", "saves", "screenshots"]:
 # Create settings path.
 if not settings_path.exists():
     settings_path.mkdir()
-setting = Setting(settings_path)
+game_setting = Setting(settings_path)
 
 resmgr = ResourceManager()
-if setting["lang"] == "auto":
+if game_setting["lang"] == "auto":
     lang_code = getdefaultlocale()[0].lower()
 else:
-    lang_code = setting.get("lang", "en_us")
+    lang_code = game_setting.get("lang", "en_us")
 resmgr.language = lang_code
 
 __all__ = "version", "data_path", "setting", "resmgr"

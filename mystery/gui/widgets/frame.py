@@ -4,6 +4,7 @@ from typing import Optional
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 from pyglet.text import Label
+from pyglet.window import mouse
 
 from mystery import resmgr
 from mystery.gui.widgets import WidgetBase
@@ -156,7 +157,7 @@ class AdvancedFrame(WidgetBase):
         self._icon_sprite.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
-        if not self._check_hit(x, y):
+        if not self._check_hit(x, y) or not buttons & mouse.LEFT:
             return
         self._pressed = True
         self._button_sprite.image = button_image["pressed"]

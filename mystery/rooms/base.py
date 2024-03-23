@@ -64,9 +64,9 @@ class BaseRoom(EventDispatcher):
     def _load_map(self):
         if self._map_loaded:
             return
-        map = self._game.window.resource.map(self._name)
-        tw, th = map.tilewidth, map.tileheight
-        for layer in map.layers:
+        tiled_map = self._game.window.resource.tiled_map(self._name)
+        tw, th = tiled_map.tilewidth, tiled_map.tileheight
+        for layer in tiled_map.layers:
             if not isinstance(layer, TiledTileLayer):
                 continue
             parent, order = layer.name.split("_")
@@ -79,8 +79,8 @@ class BaseRoom(EventDispatcher):
                     image, x * tw, (h - y) * th, batch=self.batch, group=group
                 )
                 self.sprits.append(sprite)
-        for obj in map.objects:
-            obj.y = (map.tileheight * map.height) - obj.y - obj.height
+        for obj in tiled_map.objects:
+            obj.y = (tiled_map.tileheight * tiled_map.height) - obj.y - obj.height
             if obj.type == "CRect":
                 if obj.properties["can_walk"]:
                     self._collisions_walkable.append(Rect.from_tmx_obj(obj))

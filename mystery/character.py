@@ -46,7 +46,8 @@ for state, seq in {"run": run_seq, "walk": walk_seq}.items():
 for i, state in enumerate(["question", "exclamation", "dots", "love"]):
     all_frames = []
     for j in range(8):
-        frame = AnimationFrame(bubble_seq[(i, j)], 0.25 if j < 7 else 0.5)
+        duration = 0.1 if j < 7 else 1
+        frame = AnimationFrame(bubble_seq[(i, j)], duration)
         all_frames.append(frame)
     bubble_anime[state] = Animation(all_frames)
 

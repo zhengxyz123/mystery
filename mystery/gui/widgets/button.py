@@ -4,6 +4,7 @@ from typing import Optional
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 from pyglet.text import Label
+from pyglet.window import mouse
 
 from mystery import resmgr
 from mystery.gui.widgets import WidgetBase
@@ -112,7 +113,7 @@ class DecoratedButton(WidgetBase):
         self._label.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
-        if not self.enabled or not self._check_hit(x, y):
+        if not self.enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
             return
         for where in ["left", "middle", "right"]:
             self._sprites[where].image = decorated_button_image[f"pressed_{where}"]
@@ -233,7 +234,7 @@ class TextButton(WidgetBase):
         self._label.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
-        if not self.enabled or not self._check_hit(x, y):
+        if not self.enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
             return
         for where in ["left", "middle", "right"]:
             self._sprites[where].image = button_image[f"pressed_{where}"]
