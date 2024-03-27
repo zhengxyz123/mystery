@@ -7,4 +7,5 @@ lib/
 
 lib64
 mystery.pyz
+mystery-*.zip
 pyvenv.cfg

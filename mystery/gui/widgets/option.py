@@ -4,6 +4,7 @@ from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.shapes import Rectangle
 from pyglet.text import Label
+from pyglet.window import mouse
 
 from mystery.gui.widgets import WidgetBase
 from mystery.resource.manager import FONT_NAME
@@ -147,7 +148,7 @@ class LanguageSelectOption(OptionBase):
         self._label.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
-        if not self.enabled or not self._check_hit(x, y):
+        if not self.enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
             return
         self._label.color = GRAY
         self._pressed = True

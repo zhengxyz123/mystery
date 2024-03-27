@@ -7,11 +7,12 @@ getLogger("pytmx").setLevel(999)
 
 from pyglet import version as pyglet_ver
 from pyglet.resource import get_data_path, get_settings_path
-from pytmx import pytmx_ver
+from pytmx import __version__ as pytmx_ver
 
 from mystery.resource import ResourceManager
 from mystery.setting import Setting
 
+# build.py: version
 version = "0.0.1"
 
 # Check version of dependencies.

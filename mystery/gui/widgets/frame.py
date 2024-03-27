@@ -125,6 +125,11 @@ class AdvancedFrame(WidgetBase):
         self._label.position = (self.x + 12, self.y + h + ho + 96, 0)
 
     @property
+    def aabb(self) -> tuple[int, ...]:
+        x, y, _ = self._button_sprite.position
+        return x, y, x + 28, y + 28
+
+    @property
     def group(self) -> Group:
         return self._frame_group.parent
 

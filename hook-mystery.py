@@ -1,7 +1,10 @@
 # "Hook" file for PyInstaller to easily pack the game with
 # assets and dynamic-imported modules.
 
-datas = [("mystery/assets", "assets")]
+from pathlib import Path
+
+assets_path = Path(__file__).parent / "mystery" / "assets"
+datas = [(assets_path, "assets")]
 
 hiddenimports = [
     "mystery.rooms.start",
