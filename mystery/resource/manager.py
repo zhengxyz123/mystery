@@ -27,17 +27,20 @@ class ResourceManager:
     def __init__(self):
         if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
             path = "assets"
+            self._frozen = True
         else:
             path = "mystery/assets"
+            self._frozen = False
         self.loader = Loader(path)
         self._lang = "en_us"
         self._translation_en_us = load(self.loader.file("i18n/en_us.json", mode="r"))
         self._translation_now = {}
 
         # Create temporary directory for *.tmx files.
-        self._tmpdir = TemporaryDirectory(suffix=".mystery")
-        atexit_register(self._tmpdir.cleanup)
-        self.copy_to_tempdir()
+        if not self._frozen:
+            self._tmpdir = TemporaryDirectory(suffix=".mystery")
+            atexit_register(self._tmpdir.cleanup)
+            self.copy_to_tempdir()
 
         # Load uninstalled font.
         if not have_font("Unifont"):
@@ -93,7 +96,10 @@ class ResourceManager:
         return self._translation_now["language.info"].get(key, "")
 
     def tiled_map(self, name: str) -> TiledMap:
-        filename = Path(self._tmpdir.name) / f"{name}.tmx"
+        if self._frozen:
+            filename = Path(sys._MEIPASS) / "assets" / "maps" / f"{name}.tmx"
+        else:
+            filename = Path(self._tmpdir.name) / f"{name}.tmx"
         kwargs = {
             "image_loader": self._image_loader,
             "invert_y": True,

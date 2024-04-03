@@ -22,8 +22,8 @@ parser.add_argument(
     help=dedent(
         """\
         what kind of file to build:
-          - exec: create executable file using PyInstaller
-          - pyz: generate zip archive using zipapp
+        - exec: create executable file using PyInstaller
+        - pyz: generate zip archive using zipapp
         """
     ),
     choices=["exec", "pyz"],
@@ -31,25 +31,22 @@ parser.add_argument(
 )
 
 
+def get_version():
+    mystery_src = Path(__file__).parent / "mystery"
+    with (mystery_src / "__init__.py").open("r") as f:
+        for line in f.readlines():
+            if line.startswith("version = "):
+                start = line.find('"')
+                end = line.find('"', start + 1)
+                return line[start + 1 : end]
+    return "0.0.0"
+
+
 def check():
     build_py_path = Path(__file__).parent
     if not (build_py_path / "mystery" / "utils.py").is_file():
         print("Source code not found.")
         exit(1)
-
-
-def get_version():
-    mystery_src = Path(__file__).parent / "mystery"
-    with (mystery_src / "__init__.py").open("r") as f:
-        found = False
-        for line in f.readlines():
-            if found:
-                start = line.find('"')
-                end = line.find('"', start + 1)
-                return line[start + 1 : end]
-            if line.strip() == "# build.py: version":
-                found = True
-    return "0.0.0"
 
 
 def build_executable():
@@ -75,21 +72,12 @@ def build_executable():
         print(f"PyInstaller returned non-zero exit status {result.returncode}.")
         exit(1)
     mystery_ver = get_version()
-    if sys.platform == "linux":
-        archive_name = "mystery-{}_{}_{}{}_{}_py{}".format(
-            mystery_ver,
-            platform.system(),
-            *platform.libc_ver(),
-            platform.machine(),
-            platform.python_version(),
-        )
-    else:
-        archive_name = "mystery-{}_{}_{}_py{}".format(
-            mystery_ver,
-            platform.system(),
-            platform.machine(),
-            platform.python_version(),
-        )
+    archive_name = "mystery-{}_{}_{}_py{}".format(
+        mystery_ver,
+        platform.system(),
+        platform.machine(),
+        platform.python_version(),
+    )
     shutil.make_archive(archive_name, "zip", base_path / "dist" / "mystery")
     os.remove(Path.cwd() / "mystery.spec")
     shutil.rmtree(Path.cwd() / "build", ignore_errors=True)
