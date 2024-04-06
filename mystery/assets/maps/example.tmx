@@ -34,22 +34,22 @@
    </properties>
    <point/>
   </object>
-  <object id="2" name="cp_0" type="CRect" x="352" y="64" width="320" height="928">
+  <object id="2" name="cr_0" type="CRect" x="352" y="64" width="320" height="928">
    <properties>
     <property name="can_walk" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="3" name="cp_1" type="CRect" x="32" y="352" width="320" height="320">
+  <object id="3" name="cr_1" type="CRect" x="32" y="352" width="320" height="320">
    <properties>
     <property name="can_walk" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="4" name="cp_2" type="CRect" x="672" y="352" width="320" height="320">
+  <object id="4" name="cr_2" type="CRect" x="672" y="352" width="320" height="320">
    <properties>
     <property name="can_walk" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="5" name="cp_3" type="CRect" x="800" y="488" width="32" height="56">
+  <object id="5" name="cr_3" type="CRect" x="800" y="488" width="32" height="56">
    <properties>
     <property name="can_walk" type="bool" value="false"/>
     <property name="cr_name" value="cup"/>

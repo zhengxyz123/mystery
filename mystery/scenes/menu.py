@@ -85,7 +85,7 @@ class MenuScene(Scene):
                     self.window.add_scene("start", start_scene)
                 self.window.switch_scene("start")
         else:
-            self.background.opacity -= dt * 120
+            self.background.opacity -= int(dt * 120)
             clock.schedule_once(self._animate, 1 / self.window.setting["fps"])
 
     def start(self):

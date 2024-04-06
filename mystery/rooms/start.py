@@ -15,6 +15,10 @@ class StartRoom(BaseRoom):
     ):
         super().__init__(game, "example", char, group)
 
+    def interact(self):
+        if self.check_collide("cup"):
+            pass
+
     def on_room_enter(self, *args):
         self._load_map()
         self.char.position = self._spawn_points["start"]

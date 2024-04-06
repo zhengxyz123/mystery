@@ -144,11 +144,11 @@ class Character(EventDispatcher):
     @property
     def control_point(self) -> tuple[tuple[int, int]]:
         x, y = self.position
-        pos1 = (x + 20, y + 4)
-        pos2 = (x + 32, y + 4)
-        pos3 = (x + 44, y + 4)
-        pos4 = (x + 32, y + 20)
-        return pos1, pos2, pos3, pos4
+        pos0 = (x + 16, y + 4)  # left
+        pos1 = (x + 32, y + 0)  # middle
+        pos2 = (x + 48, y + 4)  # right
+        pos3 = (x + 32, y + 20)  # up
+        return pos0, pos1, pos2, pos3
 
     @property
     def room(self) -> "mystery.room.BaseRoom":
@@ -216,7 +216,9 @@ class Character(EventDispatcher):
     def on_key_release(self, symbol, modifiers):
         if self._state == CharacterState.CTRLED:
             return
-        if symbol == key.LSHIFT:
+        if symbol == key.SPACE:
+            self._room.interact()
+        elif symbol == key.LSHIFT:
             self._runnable = False
             if self._state == CharacterState.RUN:
                 self._state = CharacterState.WALK

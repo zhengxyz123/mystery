@@ -6,7 +6,7 @@ from pyglet.math import Mat4, Vec3
 from pyglet.sprite import Sprite
 from pytmx import TiledTileLayer
 
-from mystery.character import Character
+from mystery.character import Character, CharacterDirection
 from mystery.utils import Rect
 
 
@@ -61,6 +61,26 @@ class BaseRoom(EventDispatcher):
             check2.append(pos2 in rect)
         return any(check1) and any(check2)
 
+    def check_collide(self, which: str) -> bool:
+        """Check whether a character can intercat with a collision box.
+
+        `which` is a key in `BaseRoom._collisions_unwalkable`.
+        """
+        char_dir = self.char.direction
+        points = self.char.control_point
+        rect = self._collisions_unwalkable[which]
+        t = tuple((point in rect for point in points))
+        if t == (True, False, False, False):
+            return char_dir == CharacterDirection.LEFT
+        elif t == (False, False, True, False):
+            return char_dir == CharacterDirection.RIGHT
+        elif t == (False, False, False, True):
+            return char_dir == CharacterDirection.UP
+        elif t[1] and not t[3]:
+            return char_dir == CharacterDirection.DOWN
+        else:
+            return False
+
     def _load_map(self):
         if self._map_loaded:
             return
@@ -100,6 +120,9 @@ class BaseRoom(EventDispatcher):
         trans_mat = Mat4.from_translation(center_pos - char_pos)
         with self._game.window.apply_view(trans_mat):
             self.batch.draw()
+
+    def interact(self):
+        pass
 
     def on_room_enter(self, *args):
         pass
