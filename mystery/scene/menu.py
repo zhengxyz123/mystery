@@ -5,11 +5,11 @@ from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 
 from mystery.gui.widgets import TextButton
-from mystery.scenes import Scene
+from mystery.scene import Scene
 
 
 class MenuScene(Scene):
-    def __init__(self, window: "mystery.scenes.GameWindow"):
+    def __init__(self, window: "mystery.scene.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
         self.back_group = Group(order=0)
@@ -76,12 +76,12 @@ class MenuScene(Scene):
             self.background.opacity = 0
             if self.window.setting.get("skip_start_scene", False):
                 if not self.window.has_scene("game"):
-                    game_scene = import_module("mystery.scenes.game").GameScene
+                    game_scene = import_module("mystery.scene.game").GameScene
                     self.window.add_scene("game", game_scene)
                 self.window.switch_scene("game")
             else:
                 if not self.window.has_scene("start"):
-                    start_scene = import_module("mystery.scenes.start").StartScene
+                    start_scene = import_module("mystery.scene.start").StartScene
                     self.window.add_scene("start", start_scene)
                 self.window.switch_scene("start")
         else:
@@ -94,13 +94,13 @@ class MenuScene(Scene):
 
     def save(self):
         if not self.window.has_scene("save"):
-            next_scene = import_module("mystery.scenes.save").SaveLoadScene
+            next_scene = import_module("mystery.scene.save").SaveLoadScene
             self.window.add_scene("save.load", next_scene)
         self.window.switch_scene("save.load")
 
     def settings(self):
         if not self.window.has_scene("settings.main"):
-            next_scene = import_module("mystery.scenes.settings.main").SettingsScene
+            next_scene = import_module("mystery.scene.settings.main").SettingsScene
             self.window.add_scene("settings.main", next_scene)
         self.window.switch_scene("settings.main")
 

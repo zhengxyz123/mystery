@@ -3,7 +3,8 @@ from typing import Optional
 from pyglet.graphics import Group
 
 from mystery.character import Character, CharacterDirection
-from mystery.rooms.base import BaseRoom
+from mystery.entity.cup import CupEntity
+from mystery.room.base import BaseRoom
 
 
 class StartRoom(BaseRoom):
@@ -14,10 +15,11 @@ class StartRoom(BaseRoom):
         group: Optional[Group] = None,
     ):
         super().__init__(game, "example", char, group)
+        self.cup = CupEntity(self._game)
 
     def interact(self):
         if self.check_collide("cup"):
-            pass
+            self.cup.dispatch_event("on_interact")
 
     def on_room_enter(self, *args):
         self._load_map()

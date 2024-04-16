@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Optional, Tuple
+from typing import Optional
 
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
@@ -191,11 +191,11 @@ class Character(EventDispatcher):
             self._bubble_sprite.visible = True
 
     @property
-    def position(self) -> Tuple[int]:
+    def position(self) -> tuple[int]:
         return self._char_sprite.position[:2]
 
     @position.setter
-    def position(self, pos: Tuple[int]):
+    def position(self, pos: tuple[int]):
         x, y, *_ = pos
         self._char_sprite.position = (x, y, 0)
         self._bubble_sprite.position = (x + 30, y + 50, 0)
@@ -203,8 +203,6 @@ class Character(EventDispatcher):
     def on_key_press(self, symbol, modifiers):
         if self._state == CharacterState.CTRLED:
             return
-        if symbol == key.ESCAPE:
-            self._game.window.switch_scene("menu")
         elif symbol == key.LSHIFT:
             self._runnable = True
         elif key.LEFT <= symbol <= key.DOWN:
@@ -216,7 +214,9 @@ class Character(EventDispatcher):
     def on_key_release(self, symbol, modifiers):
         if self._state == CharacterState.CTRLED:
             return
-        if symbol == key.SPACE:
+        if symbol == key.ESCAPE:
+            self._game.window.switch_scene("menu")
+        elif symbol == key.SPACE:
             self._room.interact()
         elif symbol == key.LSHIFT:
             self._runnable = False

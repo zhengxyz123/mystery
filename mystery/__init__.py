@@ -1,4 +1,4 @@
-from locale import getdefaultlocale
+from locale import getlocale
 from logging import getLogger
 from pathlib import Path
 
@@ -37,7 +37,7 @@ game_setting = Setting(settings_path)
 
 resmgr = ResourceManager()
 if game_setting["lang"] == "auto":
-    lang_code = getdefaultlocale()[0].lower()
+    lang_code = getlocale()[0].lower()
 else:
     lang_code = game_setting.get("lang", "en_us")
 resmgr.language = lang_code

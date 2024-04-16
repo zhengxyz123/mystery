@@ -2,9 +2,9 @@
 
 import argparse
 import os
+import platform
 import shutil
 import subprocess
-import platform
 import sys
 import zipapp
 from pathlib import Path
@@ -29,6 +29,18 @@ parser.add_argument(
     choices=["exec", "pyz"],
     metavar="type",
 )
+parser.add_argument(
+    "-c",
+    "--compressed",
+    action="store_true",
+    help="compress pyz file",
+)
+parser.add_argument(
+    "-p",
+    "--pack",
+    action="store_true",
+    help="pack executable files into a zip file",
+)
 
 
 def get_version():
@@ -49,7 +61,7 @@ def check():
         exit(1)
 
 
-def build_executable():
+def build_executable(pack_into_zip: bool = False):
     base_path = Path(__file__).parent
     if (pyi_exe := shutil.which("pyinstaller")) is None:
         print("PyInstaller was not installed.")
@@ -71,20 +83,21 @@ def build_executable():
     if result.returncode != 0:
         print(f"PyInstaller returned non-zero exit status {result.returncode}.")
         exit(1)
-    mystery_ver = get_version()
-    archive_name = "mystery-{}_{}_{}_py{}".format(
-        mystery_ver,
-        platform.system(),
-        platform.machine(),
-        platform.python_version(),
-    )
-    shutil.make_archive(archive_name, "zip", base_path / "dist" / "mystery")
+    if pack_into_zip:
+        mystery_ver = get_version()
+        archive_name = "mystery-{}_{}_{}_py{}".format(
+            mystery_ver,
+            platform.system(),
+            platform.machine(),
+            platform.python_version(),
+        )
+        shutil.make_archive(archive_name, "zip", base_path / "dist" / "mystery")
+        shutil.rmtree(Path.cwd() / "dist", ignore_errors=True)
     os.remove(Path.cwd() / "mystery.spec")
     shutil.rmtree(Path.cwd() / "build", ignore_errors=True)
-    shutil.rmtree(Path.cwd() / "dist", ignore_errors=True)
 
 
-def build_pyz():
+def build_pyz(compressed: bool = False):
     base_path = Path(__file__).parent
     shutil.copytree(
         base_path / "mystery",
@@ -109,11 +122,11 @@ def build_pyz():
         print(f"pip returned non-zero exit status {result.returncode}.")
         exit(1)
     zipapp.create_archive(
-        base_path / "cache",
+        base_path / "build",
         base_path / "mystery.pyz",
         interpreter="/usr/bin/env python3",
         main="mystery.__main__:start",
-        compressed=True,
+        compressed=compressed,
     )
     shutil.rmtree(base_path / "build", ignore_errors=True)
 
@@ -122,6 +135,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     check()
     if args.type == "exec":
-        build_executable()
+        build_executable(pack_into_zip=args.pack)
     else:
-        build_pyz()
+        build_pyz(compressed=args.compressed)

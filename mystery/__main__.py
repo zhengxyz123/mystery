@@ -7,8 +7,8 @@ from pyglet import app, clock, gl
 from pyglet.image import Texture
 
 from mystery import data_path, game_setting, version
-from mystery.scenes import GameWindow
-from mystery.scenes.menu import MenuScene
+from mystery.scene import GameWindow
+from mystery.scene.menu import MenuScene
 
 
 def record_error():

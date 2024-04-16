@@ -10,7 +10,7 @@ from mystery.gui.widgets import (
     ScrollBar,
 )
 from mystery.resource.manager import SUPPORTED_LANG
-from mystery.scenes import Scene
+from mystery.scene import Scene
 
 
 class LanguageSettingScene(Scene):

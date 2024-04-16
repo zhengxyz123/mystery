@@ -2,11 +2,11 @@ from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 
 from mystery.gui.widgets import AdvancedFrame
-from mystery.scenes import Scene
+from mystery.scene import Scene
 
 
 class SaveLoadScene(Scene):
-    def __init__(self, window: "mystery.scenes.GameWindow"):
+    def __init__(self, window: "mystery.scene.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
         self.back_group = Group(order=0)

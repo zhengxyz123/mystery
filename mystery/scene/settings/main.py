@@ -4,7 +4,7 @@ from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 
 from mystery.gui.widgets import AdvancedFrame, TextButton
-from mystery.scenes import Scene
+from mystery.scene import Scene
 
 
 class SettingsScene(Scene):
@@ -88,7 +88,7 @@ class SettingsScene(Scene):
     def goto(self, name: str):
         scene_name = f"settings.{name}"
         if not self.window.has_scene(scene_name):
-            module = import_module(f"mystery.scenes.settings.{name}")
+            module = import_module(f"mystery.scene.settings.{name}")
             next_scene = getattr(module, f"{name.title()}SettingScene")
             self.window.add_scene(scene_name, next_scene)
         self.window.switch_scene(scene_name)

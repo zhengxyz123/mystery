@@ -7,11 +7,11 @@ from pyglet.window import key, mouse
 from mystery import utils
 from mystery.gui.widgets import MessageBox
 from mystery.resource.manager import FONT_NAME
-from mystery.scenes import Scene
+from mystery.scene import Scene
 
 
 class StartScene(Scene):
-    def __init__(self, window: "mystery.scenes.GameWindow"):
+    def __init__(self, window: "mystery.scene.GameWindow"):
         super().__init__(window)
         self.batch = Batch()
         self.mb_group = Group(order=0)
@@ -53,7 +53,7 @@ class StartScene(Scene):
     def _next_plot(self):
         if self.now_plot + 1 >= len(self.plot):
             if not self.window.has_scene("game"):
-                game_scene = import_module("mystery.scenes.game").GameScene
+                game_scene = import_module("mystery.scene.game").GameScene
                 self.window.add_scene("game", game_scene)
             self.window.switch_scene("game")
         if self.now_plot + 1 < len(self.plot):

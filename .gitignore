@@ -4,6 +4,7 @@ build/
 dist/
 include/
 lib/
+lib64/
 
 lib64
 mystery.pyz
