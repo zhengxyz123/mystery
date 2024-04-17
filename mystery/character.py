@@ -78,7 +78,7 @@ class CharacterState(StrEnum):
 class Character(EventDispatcher):
     def __init__(
         self,
-        game: "mystery.scenes.game.GameScene",
+        game: "mystery.scene.game.GameScene",
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
     ):

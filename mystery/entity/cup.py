@@ -2,14 +2,17 @@ from pyglet.window import key
 
 from mystery.character import CharacterState
 from mystery.entity.base import EntityBase
+from mystery.scene.game import GameScene
 
 
 class CupEntity(EntityBase):
-    def __init__(self, game: "mystery.scene.game.GameScene"):
+    def __init__(self, game: GameScene):
         super().__init__(game)
         self._interacting = False
 
     def on_interact(self):
+        if self._interacting:
+            return
         self._interacting = True
         self.game.character.state = CharacterState.CTRLED
         self.game.window.remove_handlers(self.game.character)

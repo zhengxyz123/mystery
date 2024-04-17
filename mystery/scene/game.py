@@ -6,11 +6,11 @@ from pyglet.graphics import Batch
 
 from mystery.character import Character
 from mystery.gui.hud import KeyHint
-from mystery.scene import Scene
+from mystery.scene import GameWindow, Scene
 
 
 class GameScene(Scene):
-    def __init__(self, window: "mystery.scene.GameWindow"):
+    def __init__(self, window: GameWindow):
         super().__init__(window)
         self.batch = Batch()
         self.character = Character(self)

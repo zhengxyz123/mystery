@@ -7,11 +7,11 @@ from pyglet.window import key, mouse
 from mystery import utils
 from mystery.gui.widgets import MessageBox
 from mystery.resource.manager import FONT_NAME
-from mystery.scene import Scene
+from mystery.scene import GameWindow, Scene
 
 
 class StartScene(Scene):
-    def __init__(self, window: "mystery.scene.GameWindow"):
+    def __init__(self, window: GameWindow):
         super().__init__(window)
         self.batch = Batch()
         self.mb_group = Group(order=0)

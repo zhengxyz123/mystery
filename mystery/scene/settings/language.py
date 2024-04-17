@@ -10,11 +10,11 @@ from mystery.gui.widgets import (
     ScrollBar,
 )
 from mystery.resource.manager import SUPPORTED_LANG
-from mystery.scene import Scene
+from mystery.scene import GameWindow, Scene
 
 
 class LanguageSettingScene(Scene):
-    def __init__(self, window: "mystery.scenes.GameWindow"):
+    def __init__(self, window: GameWindow):
         super().__init__(window)
         self.batch = Batch()
         self.back_group = Group(order=0)

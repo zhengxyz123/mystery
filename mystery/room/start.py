@@ -5,12 +5,13 @@ from pyglet.graphics import Group
 from mystery.character import Character, CharacterDirection
 from mystery.entity.cup import CupEntity
 from mystery.room.base import BaseRoom
+from mystery.scene.game import GameScene
 
 
 class StartRoom(BaseRoom):
     def __init__(
         self,
-        game: "mystery.scenes.game.GameScene",
+        game: GameScene,
         char: Character,
         group: Optional[Group] = None,
     ):

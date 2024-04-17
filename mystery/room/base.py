@@ -7,6 +7,7 @@ from pyglet.sprite import Sprite
 from pytmx import TiledTileLayer
 
 from mystery.character import Character, CharacterDirection
+from mystery.scene.game import GameScene
 from mystery.utils import Rect
 
 
@@ -18,7 +19,7 @@ class BaseRoom(EventDispatcher):
 
     def __init__(
         self,
-        game: "mystery.scenes.game.GameScene",
+        game: GameScene,
         name: str,
         char: Character,
         group: Optional[Group] = None,

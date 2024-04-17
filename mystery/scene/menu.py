@@ -5,11 +5,11 @@ from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 
 from mystery.gui.widgets import TextButton
-from mystery.scene import Scene
+from mystery.scene import GameWindow, Scene
 
 
 class MenuScene(Scene):
-    def __init__(self, window: "mystery.scene.GameWindow"):
+    def __init__(self, window: GameWindow):
         super().__init__(window)
         self.batch = Batch()
         self.back_group = Group(order=0)
