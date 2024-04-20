@@ -66,11 +66,7 @@ class MessageBox(WidgetBase):
     @text.setter
     def text(self, value: str):
         self._text = value
-        self._label.text = self._line_break_func(self._text, self._label.width)
-
-    def _line_break_func(self, s: str, width: int) -> str:
-        func = getattr(utils, f"line_break_{resmgr.info('line_break_func')}")
-        return func(s, width)
+        self._label.text = utils.line_break_func(self._text, self._label.width)
 
     def _update_position(self):
         image = self._sprites["left"].image
@@ -99,7 +95,7 @@ class MessageBox(WidgetBase):
 
     def resize(self):
         self.width, self.height = self._window.width - 20, 78 * 2
-        text = self._line_break_func(self._text, self._label.width)
+        text = utils.line_break_func(self._text, self._label.width)
         self._label.text = text
 
 

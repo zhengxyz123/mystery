@@ -1,14 +1,17 @@
+from textwrap import wrap
 from unicodedata import east_asian_width
 
+from mystery import resmgr
 
-def line_break_ascii(text: str, line_width: int, font_width: int = 24) -> str:
-    return text
+
+def line_break_en(text: str, line_width: int, font_width: int = 24) -> str:
+    if text == "":
+        return ""
+    breaked = wrap(text, (line_width - 1) // font_width * 2)
+    return "\n".join(breaked)
 
 
 def line_break_cjk(text: str, line_width: int, font_width: int = 24) -> str:
-    # Automatically wrap paragraph in `text` so that the width of each line
-    # does not exceed `line_width`. `font_width` is the width of a full-width
-    # CJK character, such as "あ" and "中".
     if text == "":
         return ""
     breaked = text[0]
@@ -32,6 +35,17 @@ def line_break_cjk(text: str, line_width: int, font_width: int = 24) -> str:
             breaked += this
             now_width += cw2
     return breaked
+
+
+def line_break_func(text: str, line_width: int, font_width: int = 24) -> str:
+    lang2func = {
+        "en": line_break_en,
+        "cjk": line_break_cjk,
+    }
+    if (func := resmgr.info("line_break_func")) in lang2func:
+        return lang2func[func](text, line_width, font_width)
+    else:
+        return line_break_ascii(text, line_width, font_width)
 
 
 class Rect:
@@ -67,4 +81,4 @@ class Rect:
         self._x, self._y, self._width, self._height = area
 
 
-__all__ = "line_break_ascii", "line_break_cjk", "Rect"
+__all__ = "line_break_ascii", "line_break_cjk", "line_break_func", "Rect"
