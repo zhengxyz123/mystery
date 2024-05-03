@@ -1,12 +1,34 @@
-__pycache__/
-bin/
-build/
-dist/
-include/
-lib/
-lib64/
+# python
+__pycache__
+*.py[cod]
 
+# virtualenvs
+bin
+include
+lib
 lib64
-mystery.pyz
-mystery-*.zip
 pyvenv.cfg
+/env
+/.env
+/.venv2
+/.venv3
+
+# build
+build
+dist
+*.spec
+
+# IDEs and editors
+.idea
+.vscode
+*~
+*.bak
+*.cache
+
+# platform specific
+.DS_Store
+*.swp
+
+# output
+*.pyz
+*.zip

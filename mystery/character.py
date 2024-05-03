@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
@@ -151,11 +151,11 @@ class Character(EventDispatcher):
         return pos0, pos1, pos2, pos3
 
     @property
-    def room(self) -> "mystery.room.BaseRoom":
+    def room(self) -> "mystery.room.base.BaseRoom":
         return self._room
 
     @room.setter
-    def room(self, room: "mystery.room.BaseRoom"):
+    def room(self, room: "mystery.room.base.BaseRoom"):
         self._room = room
 
     @property
@@ -191,11 +191,11 @@ class Character(EventDispatcher):
             self._bubble_sprite.visible = True
 
     @property
-    def position(self) -> tuple[int]:
+    def position(self) -> tuple[int, int]:
         return self._char_sprite.position[:2]
 
     @position.setter
-    def position(self, pos: tuple[int]):
+    def position(self, pos: tuple[int, int]):
         x, y, *_ = pos
         self._char_sprite.position = (x, y, 0)
         self._bubble_sprite.position = (x + 30, y + 50, 0)

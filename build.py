@@ -57,14 +57,14 @@ def get_version():
 def check():
     build_py_path = Path(__file__).parent
     if not (build_py_path / "mystery" / "utils.py").is_file():
-        print("Source code not found.")
+        print("source code does not found")
         exit(1)
 
 
 def build_executable(pack_into_zip: bool = False):
     base_path = Path(__file__).parent
     if (pyi_exe := shutil.which("pyinstaller")) is None:
-        print("PyInstaller was not installed.")
+        print("PyInstaller is not installed")
         exit(1)
     command = [
         pyi_exe,
@@ -81,15 +81,15 @@ def build_executable(pack_into_zip: bool = False):
         command.extend(["-w"])
     result = subprocess.run(command, check=False)
     if result.returncode != 0:
-        print(f"PyInstaller returned non-zero exit status {result.returncode}.")
+        print(f"PyInstaller has returned a non-zero exit status {result.returncode}")
         exit(1)
     if pack_into_zip:
         mystery_ver = get_version()
-        archive_name = "mystery-{}_{}_{}_py{}".format(
+        archive_name = "mystery-{}_{}_{}_py{}.{}".format(
             mystery_ver,
-            platform.system(),
+            platform.system().lower(),
             platform.machine(),
-            platform.python_version(),
+            *platform.python_version_tuple()[:2],
         )
         shutil.make_archive(archive_name, "zip", base_path / "dist" / "mystery")
         shutil.rmtree(Path.cwd() / "dist", ignore_errors=True)
@@ -119,7 +119,7 @@ def build_pyz(compressed: bool = False):
         check=False,
     )
     if result.returncode != 0:
-        print(f"pip returned non-zero exit status {result.returncode}.")
+        print(f"pip has returned a non-zero exit status {result.returncode}")
         exit(1)
     zipapp.create_archive(
         base_path / "build",
