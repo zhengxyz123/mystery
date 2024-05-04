@@ -82,10 +82,9 @@ class DecoratedButton(WidgetBase):
         )
 
     def _update_position(self):
-        self._button.x = self._x
-        self._button.y = self._y
-        self._button.width = self._width
-        self._button.height = self._height
+        self._button.update(
+            x=self._x, y=self._y, width=self._width, height=self._height
+        )
         self._label.position = (
             self._x + self._width // 2,
             self._y + self._height // 2,
@@ -199,10 +198,9 @@ class TextButton(WidgetBase):
         )
 
     def _update_position(self):
-        self._button.x = self._x
-        self._button.y = self._y
-        self._button.width = self._width
-        self._button.height = self._height
+        self._button.update(
+            x=self._x, y=self._y, width=self._width, height=self._height
+        )
         self._label.position = (
             self._x + self._width // 2,
             self._y + self._height // 2,

@@ -7,6 +7,7 @@ from pyglet.text import Label
 from pyglet.window import mouse
 
 from mystery import resmgr
+from mystery.gui.patch import NinePatch
 from mystery.gui.widgets import WidgetBase
 from mystery.resource import texture_region
 from mystery.resource.manager import FONT_NAME
@@ -64,13 +65,24 @@ class AdvancedFrame(WidgetBase):
         self._button_sprite.scale = 2
         self._icon_sprite = Sprite(icon_image, batch=batch, group=self._icon_group)
         self._icon_sprite.scale = 2
-        self._frame_sprites = {"top": {}, "middle": {}, "bottom": {}}
-        for i in ["top", "middle", "bottom"]:
-            for j in ["left", "middle", "right"]:
-                self._frame_sprites[i][j] = Sprite(
-                    advanced_frame_image[i][j], batch=batch, group=self._frame_group
-                )
-                self._frame_sprites[i][j].scale = 2
+        self._frame = NinePatch(
+            self._x,
+            self._y,
+            self._width,
+            self._height,
+            advanced_frame_image["top"]["left"],
+            advanced_frame_image["top"]["middle"],
+            advanced_frame_image["top"]["right"],
+            advanced_frame_image["middle"]["left"],
+            advanced_frame_image["middle"]["middle"],
+            advanced_frame_image["middle"]["right"],
+            advanced_frame_image["bottom"]["left"],
+            advanced_frame_image["bottom"]["middle"],
+            advanced_frame_image["bottom"]["right"],
+            batch=batch,
+            group=self._frame_group,
+        )
+        self._frame.scale = 2
         self._label = Label(
             title,
             font_name=FONT_NAME,
@@ -84,45 +96,17 @@ class AdvancedFrame(WidgetBase):
         return dist(self._button_center, (x, y)) <= 14
 
     def _update_position(self):
-        image_top = self._frame_sprites["top"]["left"].image
-        image_other = self._frame_sprites["middle"]["middle"].image
-        wt, ht = image_top.width * 2, image_top.height * 2
-        wo, ho = image_other.width * 2, image_other.height * 2
-        w = self.width - wt * 2
-        h = self.height - ht - ho
-
-        self._frame_sprites["top"]["middle"].width = w
-        self._frame_sprites["middle"]["left"].height = h
-        self._frame_sprites["middle"]["middle"].width = w
-        self._frame_sprites["middle"]["middle"].height = h
-        self._frame_sprites["middle"]["right"].height = h
-        self._frame_sprites["bottom"]["middle"].width = w
-
-        self._frame_sprites["bottom"]["left"].position = (self.x, self.y, 0)
-        self._frame_sprites["bottom"]["middle"].position = (self.x + wo, self.y, 0)
-        self._frame_sprites["bottom"]["right"].position = (self.x + w + wo, self.y, 0)
-        self._frame_sprites["middle"]["left"].position = (self.x, self.y + ho, 0)
-        self._frame_sprites["middle"]["middle"].position = (self.x + wo, self.y + ho, 0)
-        self._frame_sprites["middle"]["right"].position = (
-            self.x + w + wo,
-            self.y + ho,
+        self._frame.update(x=self._x, y=self._y, width=self._width, height=self._height)
+        wc, hc = self._frame[(0, 0)].width, self._frame[(0, 0)].height
+        wm, hm = self._frame[(1, 1)].width, self._frame[(1, 1)].height
+        self._button_sprite.position = (
+            self._x + self._width - wc + 14,
+            self._y + self._height - hc + 78,
             0,
         )
-        self._frame_sprites["top"]["left"].position = (self.x, self.y + h + ho, 0)
-        self._frame_sprites["top"]["middle"].position = (
-            self.x + wo,
-            self.y + h + ho,
-            0,
-        )
-        self._frame_sprites["top"]["right"].position = (
-            self.x + w + wo,
-            self.y + h + ho,
-            0,
-        )
-        self._button_sprite.position = (self.x + w + wo + 14, self.y + h + ho + 78, 0)
         self._icon_sprite.position = self._button_sprite.position
         self._button_center = (self._button_sprite.x + 14, self._button_sprite.y + 14)
-        self._label.position = (self.x + 12, self.y + h + ho + 96, 0)
+        self._label.position = (self._x + 12, self._y + self._height - hc + 96, 0)
 
     @property
     def aabb(self) -> tuple[int, ...]:
@@ -138,9 +122,7 @@ class AdvancedFrame(WidgetBase):
         self._frame_group = Group(order=0, parent=group)
         self._widgets_group = Group(order=1, parent=group)
         self._icon_group = Group(order=2, parent=group)
-        for i in ["top", "middle", "bottom"]:
-            for j in ["left", "middle", "right"]:
-                self._frame_sprites[i][j].group = self._frame_group
+        self._frame.group = self._frame_group
         self._label.group = self._widgets_group
         self._button_sprite.group = self._widgets_group
         self._icon_sprite.group = self._icon_group
@@ -154,9 +136,7 @@ class AdvancedFrame(WidgetBase):
         self._label.text = text
 
     def draw(self):
-        for i in ["top", "middle", "bottom"]:
-            for j in ["left", "middle", "right"]:
-                self._frame_sprites[i][j].draw()
+        self._frame.draw()
         self._label.draw()
         self._button_sprite.draw()
         self._icon_sprite.draw()
@@ -204,63 +184,38 @@ class SimpleFrame(WidgetBase):
         group: Optional[Group] = None,
     ):
         super().__init__(x, y, width, height)
-        self._frame_sprites = {"top": {}, "middle": {}, "bottom": {}}
-        for i in ["top", "middle", "bottom"]:
-            for j in ["left", "middle", "right"]:
-                self._frame_sprites[i][j] = Sprite(
-                    simple_frame_image[i][j], batch=batch, group=group
-                )
-                self._frame_sprites[i][j].scale = 2
+        self._frame = NinePatch(
+            self._x,
+            self._y,
+            self._width,
+            self._height,
+            simple_frame_image["top"]["left"],
+            simple_frame_image["top"]["middle"],
+            simple_frame_image["top"]["right"],
+            simple_frame_image["middle"]["left"],
+            simple_frame_image["middle"]["middle"],
+            simple_frame_image["middle"]["right"],
+            simple_frame_image["bottom"]["left"],
+            simple_frame_image["bottom"]["middle"],
+            simple_frame_image["bottom"]["right"],
+            batch=batch,
+            group=group,
+        )
+        
 
     def _update_position(self):
-        image = self._frame_sprites["top"]["left"].image
-        dw, dh = image.width, image.height
-        w = self.width - dw * 2
-        h = self.height - dh * 2
-
-        self._frame_sprites["top"]["middle"].width = w
-        self._frame_sprites["middle"]["left"].height = h
-        self._frame_sprites["middle"]["middle"].width = w
-        self._frame_sprites["middle"]["middle"].height = h
-        self._frame_sprites["middle"]["right"].height = h
-        self._frame_sprites["bottom"]["middle"].width = w
-
-        self._frame_sprites["bottom"]["left"].position = (self.x, self.y, 0)
-        self._frame_sprites["bottom"]["middle"].position = (self.x + dw, self.y, 0)
-        self._frame_sprites["bottom"]["right"].position = (self.x + dw + w, self.y, 0)
-        self._frame_sprites["middle"]["left"].position = (self.x, self.y + dh, 0)
-        self._frame_sprites["middle"]["middle"].position = (self.x + dw, self.y + dh, 0)
-        self._frame_sprites["middle"]["right"].position = (
-            self.x + w + dw,
-            self.y + dh,
-            0,
-        )
-        self._frame_sprites["top"]["left"].position = (self.x, self.y + h + dh, 0)
-        self._frame_sprites["top"]["middle"].position = (
-            self.x + dw,
-            self.y + h + dh,
-            0,
-        )
-        self._frame_sprites["top"]["right"].position = (
-            self.x + w + dw,
-            self.y + h + dh,
-            0,
-        )
+        self._frame.update(x=self._x, y=self._y, width=self._width, height=self._height)
 
     @property
     def group(self) -> Group:
-        return self._frame_sprites["top"]["left"].group
+        return self._frame.group
 
     @group.setter
     def group(self, group: Group):
-        for i in ["top", "middle", "bottom"]:
-            for j in ["left", "middle", "right"]:
-                self._frame_sprites[i][j].group = group
+        self._frame.group = group
 
     def draw(self):
-        for i in ["top", "middle", "bottom"]:
-            for j in ["left", "middle", "right"]:
-                self._frame_sprites[i][j].draw()
+        self._frame.draw()
 
 
 __all__ = "SimpleFrame", "AdvancedFrame"
