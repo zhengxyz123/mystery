@@ -2,11 +2,13 @@ from math import ceil, floor
 from typing import Optional
 
 from pyglet.graphics import Batch, Group
+from pyglet.image import AbstractImage
 from pyglet.sprite import Sprite
 from pyglet.text import Label
 from pyglet.window import mouse
 
 from mystery import resmgr
+from mystery.gui.patch import ThreePatch
 from mystery.gui.widgets import WidgetBase
 from mystery.resource import texture_region
 from mystery.resource.manager import FONT_NAME
@@ -45,16 +47,17 @@ class DecoratedButton(WidgetBase):
         group: Optional[Group] = None,
     ):
         super().__init__(x, y, width, 48)
-        self._sprites_group = Group(order=0, parent=group)
+        self._button_group = Group(order=0, parent=group)
         self._label_group = Group(order=1, parent=group)
-        self._sprites = {}
-        for where in ["left", "middle", "right"]:
-            self._sprites[where] = Sprite(
-                decorated_button_image[f"normal_{where}"],
-                batch=batch,
-                group=self._sprites_group,
-            )
-            self._sprites[where].scale = 2
+        self._button = ThreePatch(
+            self._x,
+            self._y,
+            self._width,
+            self._height,
+            *self._get_images("normal"),
+            batch=batch,
+            group=self._button_group,
+        )
         self._label = Label(
             text,
             x=self._x + self._width // 2,
@@ -70,29 +73,34 @@ class DecoratedButton(WidgetBase):
         )
         self._pressed = False
 
-    def _update_position(self):
-        image = decorated_button_image["normal_left"]
-        wi, hi = image.width, image.height
-        w, h = self.width, self.height
-        ws = floor((wi * h) / hi)
-        wm = ceil(w - 2 * ws)
+    def _get_images(self, status: str) -> tuple[AbstractImage, ...]:
+        assert status in ["normal", "pressed"]
+        return (
+            decorated_button_image[f"{status}_left"],
+            decorated_button_image[f"{status}_middle"],
+            decorated_button_image[f"{status}_right"],
+        )
 
-        self._sprites["middle"].width = wm
-        self._sprites["left"].position = (self._x, self._y, 0)
-        self._sprites["middle"].position = (self._x + ws, self._y, 0)
-        self._sprites["right"].position = (self._x + ws + wm, self._y, 0)
-        self._label.position = (self._x + w // 2, self._y + h // 2, 0)
+    def _update_position(self):
+        self._button.x = self._x
+        self._button.y = self._y
+        self._button.width = self._width
+        self._button.height = self._height
+        self._label.position = (
+            self._x + self._width // 2,
+            self._y + self._height // 2,
+            0,
+        )
 
     @property
     def group(self) -> Group:
-        return self._sprites_group.parent
+        return self._button_group.parent
 
     @group.setter
     def group(self, group: Group):
-        self._sprites_group = Group(order=0, parent=group)
+        self._button_group = Group(order=0, parent=group)
         self._label_group = Group(order=1, parent=group)
-        for sprite in self._sprites.values():
-            sprite.group = self._sprites_group
+        self._button.group = self._button_group
         self._label.group = self._label_group
 
     @property
@@ -108,23 +116,20 @@ class DecoratedButton(WidgetBase):
         return self._pressed
 
     def draw(self):
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].draw()
+        self._button.draw()
         self._label.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
         if not self.enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
             return
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].image = decorated_button_image[f"pressed_{where}"]
+        self._button[:] = self._get_images("pressed")
         self._pressed = True
 
     def on_mouse_release(self, x, y, buttons, modifiers):
         if not self.enabled or not self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].image = decorated_button_image[f"normal_{where}"]
+        self._button[:] = self._get_images("normal")
         self._pressed = False
         self.dispatch_event("on_click")
 
@@ -132,15 +137,13 @@ class DecoratedButton(WidgetBase):
         if not self.enabled or self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].image = decorated_button_image[f"normal_{where}"]
+        self._button[:] = self._get_images("normal")
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if not self.enabled or self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].image = decorated_button_image[f"normal_{where}"]
+        self._button[:] = self._get_images("normal")
 
 
 DecoratedButton.register_event_type("on_click")
@@ -161,15 +164,17 @@ class TextButton(WidgetBase):
         group: Optional[Group] = None,
     ):
         super().__init__(x, y, width, height)
-        self._sprites_group = Group(order=0, parent=group)
+        self._button_group = Group(order=0, parent=group)
         self._label_group = Group(order=1, parent=group)
-        self._sprites = {}
-        for where in ["left", "middle", "right"]:
-            self._sprites[where] = Sprite(
-                button_image[f"normal_{where}"],
-                batch=batch,
-                group=self._sprites_group,
-            )
+        self._button = ThreePatch(
+            self._x,
+            self._y,
+            self._width,
+            self._height,
+            *self._get_images("normal"),
+            batch=batch,
+            group=self._button_group,
+        )
         self._label = Label(
             text,
             x=self._x + self._width // 2,
@@ -185,35 +190,34 @@ class TextButton(WidgetBase):
         )
         self._pressed = False
 
+    def _get_images(self, status: str) -> tuple[AbstractImage, ...]:
+        assert status in ["normal", "hover", "pressed"]
+        return (
+            button_image[f"{status}_left"],
+            button_image[f"{status}_middle"],
+            button_image[f"{status}_right"],
+        )
+
     def _update_position(self):
-        image = button_image["normal_left"]
-        wi, hi = image.width, image.height
-        w, h = self.width, self.height
-        ws = floor((wi * h) / hi)
-        wm = ceil(w - 2 * ws)
-
-        self._sprites["left"].width = ws
-        self._sprites["left"].height = h
-        self._sprites["middle"].width = wm
-        self._sprites["middle"].height = h
-        self._sprites["right"].width = ws
-        self._sprites["right"].height = h
-
-        self._sprites["left"].position = (self._x, self._y, 0)
-        self._sprites["middle"].position = (self._x + ws, self._y, 0)
-        self._sprites["right"].position = (self._x + ws + wm, self._y, 0)
-        self._label.position = (self._x + w // 2, self._y + h // 2, 0)
+        self._button.x = self._x
+        self._button.y = self._y
+        self._button.width = self._width
+        self._button.height = self._height
+        self._label.position = (
+            self._x + self._width // 2,
+            self._y + self._height // 2,
+            0,
+        )
 
     @property
     def group(self) -> Group:
-        return self._sprites_group.parent
+        return self._button_group.parent
 
     @group.setter
     def group(self, group: Group):
-        self._sprites_group = Group(order=0, parent=group)
+        self._button_group = Group(order=0, parent=group)
         self._label_group = Group(order=1, parent=group)
-        for sprite in self._sprites.values():
-            sprite.group = self._sprites_group
+        self._button.group = self._button_group
         self._label.group = self._label_group
 
     @property
@@ -229,15 +233,12 @@ class TextButton(WidgetBase):
         return self._pressed
 
     def draw(self):
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].draw()
         self._label.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
         if not self.enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
             return
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].image = button_image[f"pressed_{where}"]
+        self._button[:] = self._get_images("pressed")
         self._pressed = True
 
     def on_mouse_release(self, x, y, buttons, modifiers):
@@ -245,8 +246,7 @@ class TextButton(WidgetBase):
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
         status = "hover" if self._check_hit(x, y) else "normal"
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].image = button_image[f"{status}_{where}"]
+        self._button[:] = self._get_images(status)
         self._pressed = False
         self.dispatch_event("on_click")
 
@@ -255,16 +255,13 @@ class TextButton(WidgetBase):
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
         status = "hover" if self._check_hit(x, y) else "normal"
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].image = button_image[f"{status}_{where}"]
+        self._button[:] = self._get_images(status)
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if not self.enabled or self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
-        status = "hover" if self._check_hit(x, y) else "normal"
-        for where in ["left", "middle", "right"]:
-            self._sprites[where].image = button_image[f"{status}_{where}"]
+        self._button[:] = self._get_images(status)
 
 
 TextButton.register_event_type("on_click")

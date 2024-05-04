@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
