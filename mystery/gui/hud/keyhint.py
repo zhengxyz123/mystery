@@ -29,15 +29,15 @@ for name in [
 class KeyHint:
     def __init__(
         self,
-        game: "pyglet.scenes.game.GameScene",
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
     ):
-        self._game = game
-        self._shape_group = Group(order=0, parent=group)
-        self._hint_group1 = Group(order=1, parent=group)
-        self._hint_group2 = Group(order=2, parent=group)
+        self._group = Group(order=0, parent=group)
+        self._shape_group = Group(order=0, parent=self._group)
+        self._hint_group1 = Group(order=1, parent=self._group)
+        self._hint_group2 = Group(order=2, parent=self._group)
         self._hint_group2.visible = False
+        self._hint_lang = ""
         self._state = 0
 
         self._shape = Rectangle(
@@ -75,7 +75,6 @@ class KeyHint:
         self._key_space.scale = 2
 
         self._hint_arrow = Label(
-            resmgr.translate("hint.arrow"),
             x=100,
             y=112,
             font_name=FONT_NAME,
@@ -86,7 +85,6 @@ class KeyHint:
             group=self._hint_group1,
         )
         self._hint_shift = Label(
-            resmgr.translate("hint.shift"),
             x=100,
             y=68,
             font_name=FONT_NAME,
@@ -97,7 +95,6 @@ class KeyHint:
             group=self._hint_group1,
         )
         self._hint_space = Label(
-            resmgr.translate("hint.space"),
             x=100,
             y=31,
             font_name=FONT_NAME,
@@ -107,12 +104,6 @@ class KeyHint:
             batch=batch,
             group=self._hint_group1,
         )
-        max_width = max(
-            self._hint_arrow.content_width,
-            self._hint_shift.content_width,
-            self._hint_space.content_width,
-        )
-        self._width1 = self._shape.width = 100 + max_width
 
         self._key_e = Sprite(
             key_image["e"], 15, 126, batch=batch, group=self._hint_group2
@@ -132,7 +123,6 @@ class KeyHint:
         self._key_f11.scale = 2
 
         self._hint_e = Label(
-            resmgr.translate("hint.e"),
             x=60,
             y=142,
             font_name=FONT_NAME,
@@ -143,7 +133,6 @@ class KeyHint:
             group=self._hint_group2,
         )
         self._hint_esc = Label(
-            resmgr.translate("hint.escape"),
             x=60,
             y=105,
             font_name=FONT_NAME,
@@ -154,7 +143,6 @@ class KeyHint:
             group=self._hint_group2,
         )
         self._hint_f5 = Label(
-            resmgr.translate("hint.f5"),
             x=60,
             y=68,
             font_name=FONT_NAME,
@@ -165,7 +153,6 @@ class KeyHint:
             group=self._hint_group2,
         )
         self._hint_f11 = Label(
-            resmgr.translate("hint.f11"),
             x=60,
             y=31,
             font_name=FONT_NAME,
@@ -204,6 +191,30 @@ class KeyHint:
         self._shape_group.visible = False
 
     def reset(self):
+        if self._hint_lang != resmgr.language:
+            self._hint_lang = resmgr.language
+            self._hint_arrow.text = resmgr.translate("hint.arrow")
+            self._hint_shift.text = resmgr.translate("hint.shift")
+            self._hint_space.text = resmgr.translate("hint.space")
+            max_width = max(
+                self._hint_arrow.content_width,
+                self._hint_shift.content_width,
+                self._hint_space.content_width,
+            )
+            self._width1 = 100 + max_width
+
+            self._hint_e.text = resmgr.translate("hint.e")
+            self._hint_esc.text = resmgr.translate("hint.escape")
+            self._hint_f5.text = resmgr.translate("hint.f5")
+            self._hint_f11.text = resmgr.translate("hint.f11")
+            max_width = max(
+                self._hint_e.content_width,
+                self._hint_esc.content_width,
+                self._hint_f5.content_width,
+                self._hint_f11.content_width,
+            )
+            self._width2 = 60 + max_width
+
         self._shape.width = self._width1
         self._shape.height = 131
         self._shape_group.visible = True

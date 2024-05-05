@@ -22,22 +22,16 @@ for status in ["normal", "hover", "pressed"]:
     button_image[status] = button_and_icon_texture.get_region(
         *texture_region[f"rb{status[0]}.red"]
     )
-advanced_frame_image = {"top": {}, "middle": {}, "bottom": {}}
-for i in ["top", "middle", "bottom"]:
-    for j in ["left", "middle", "right"]:
-        if i == "top":
-            region = f"sft{j[0]}2"
-        else:
-            region = f"f{i[0]}{j[0]}"
-        advanced_frame_image[i][j] = frame_texture.get_region(*texture_region[region])
-simple_frame_image = {"top": {}, "middle": {}, "bottom": {}}
-for i in ["top", "middle", "bottom"]:
-    for j in ["left", "middle", "right"]:
-        if i == "top":
-            region = f"sft{j[0]}1"
-        else:
-            region = f"f{i[0]}{j[0]}"
-        simple_frame_image[i][j] = frame_texture.get_region(*texture_region[region])
+advanced_frame_image = []
+for i in "tmb":
+    for j in "lmr":
+        region = f"sft{j}2" if i == "t" else f"f{i}{j}"
+        advanced_frame_image.append(frame_texture.get_region(*texture_region[region]))
+simple_frame_image = []
+for i in "tmb":
+    for j in "lmr":
+        region = f"sft{j}1" if i == "t" else f"f{i}{j}"
+        simple_frame_image.append(frame_texture.get_region(*texture_region[region]))
 
 
 class AdvancedFrame(WidgetBase):
@@ -70,15 +64,7 @@ class AdvancedFrame(WidgetBase):
             self._y,
             self._width,
             self._height,
-            advanced_frame_image["top"]["left"],
-            advanced_frame_image["top"]["middle"],
-            advanced_frame_image["top"]["right"],
-            advanced_frame_image["middle"]["left"],
-            advanced_frame_image["middle"]["middle"],
-            advanced_frame_image["middle"]["right"],
-            advanced_frame_image["bottom"]["left"],
-            advanced_frame_image["bottom"]["middle"],
-            advanced_frame_image["bottom"]["right"],
+            *advanced_frame_image,
             batch=batch,
             group=self._frame_group,
         )
@@ -189,19 +175,10 @@ class SimpleFrame(WidgetBase):
             self._y,
             self._width,
             self._height,
-            simple_frame_image["top"]["left"],
-            simple_frame_image["top"]["middle"],
-            simple_frame_image["top"]["right"],
-            simple_frame_image["middle"]["left"],
-            simple_frame_image["middle"]["middle"],
-            simple_frame_image["middle"]["right"],
-            simple_frame_image["bottom"]["left"],
-            simple_frame_image["bottom"]["middle"],
-            simple_frame_image["bottom"]["right"],
+            *simple_frame_image,
             batch=batch,
             group=group,
         )
-        
 
     def _update_position(self):
         self._frame.update(x=self._x, y=self._y, width=self._width, height=self._height)

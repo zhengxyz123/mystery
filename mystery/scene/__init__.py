@@ -45,6 +45,7 @@ class GameWindow(Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_caption("Mystery")
+        self.set_icon(resmgr.loader.image("textures/pyglet.png"))
         self.set_minimum_size(768, 576)
         self._scenes: dict[str, Scene] = {}
         self._now = ""
@@ -77,8 +78,7 @@ class GameWindow(Window):
         return name in self._scenes
 
     def remove_scene(self, name: str):
-        """
-        Remove a scene.
+        """Remove a scene.
 
         You cannot remove the active one!
         """

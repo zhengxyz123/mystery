@@ -145,6 +145,8 @@ class NinePatch:
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
     ):
+        # The `scale` property doesn't scale all sprites, it just scales
+        # tl, tr, bl and br sprites.
         self._scale = 1
         self._x, self._y = x, y
         self._width = width

@@ -259,6 +259,7 @@ class TextButton(WidgetBase):
         if not self.enabled or self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
+        status = "hover" if self._check_hit(x, y) else "normal"
         self._button[:] = self._get_images(status)
 
 

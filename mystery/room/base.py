@@ -28,14 +28,15 @@ class BaseRoom(EventDispatcher):
         self._name = name
         self._map_loaded = False
         self.char = char
-        self.batch = Batch()
+        self.map_batch = Batch()
+        self.gui_batch = Batch()
         self.parent_group = {
             "back": Group(order=1, parent=group),
             "char": Group(order=2, parent=group),
             "fore": Group(order=3, parent=group),
         }
         self.child_group = []
-        self.char.batch = self.batch
+        self.char.batch = self.map_batch
         self.char.group = self.parent_group["char"]
         self.char.room = self
         self.sprits = []
@@ -97,7 +98,7 @@ class BaseRoom(EventDispatcher):
             for tile in layer.tiles():
                 x, y, image = tile
                 sprite = Sprite(
-                    image, x * tw, (h - y) * th, batch=self.batch, group=group
+                    image, x * tw, (h - y) * th, batch=self.map_batch, group=group
                 )
                 self.sprits.append(sprite)
         for obj in tiled_map.objects:
@@ -120,7 +121,8 @@ class BaseRoom(EventDispatcher):
         )
         trans_mat = Mat4.from_translation(center_pos - char_pos)
         with self._game.window.apply_view(trans_mat):
-            self.batch.draw()
+            self.map_batch.draw()
+        self.gui_batch.draw()
 
     def interact(self):
         pass

@@ -5,7 +5,6 @@ from pyglet import clock
 from pyglet.graphics import Batch
 
 from mystery.character import Character
-from mystery.gui.hud import KeyHint
 from mystery.scene import GameWindow, Scene
 
 
@@ -14,7 +13,6 @@ class GameScene(Scene):
         super().__init__(window)
         self.batch = Batch()
         self.character = Character(self)
-        self.key_hint = KeyHint(self, self.batch)
         self._cached_room = {}
         self._now_room = None
 
@@ -48,14 +46,12 @@ class GameScene(Scene):
 
     def on_scene_enter(self):
         self.window.push_handlers(self.character)
-        self.window.push_handlers(self.key_hint)
         clock.schedule_interval(self.character.update, 4 / self.window.setting["fps"])
         self.switch_room("start", "Start")
 
     def on_scene_leave(self):
         clock.unschedule(self.character.update)
         self.window.remove_handlers(self.character)
-        self.window.remove_handlers(self.key_hint)
         if self._now_room:
             self._now_room.dispatch_event("on_room_leave")
 
