@@ -19,18 +19,17 @@ button_texture = resmgr.loader.image("textures/gui/widgets/buttons.png")
 decorated_button_texture = resmgr.loader.image(
     "textures/gui/widgets/frame_decorations.png"
 )
-button_image = {}
-decorated_button_image = {}
-for status in ["normal", "hover", "pressed"]:
-    for where in ["left", "middle", "right"]:
-        name = f"{status}_{where}"
-        region_name = f"b{status[0]}{where[0]}"
-        button_image[name] = button_texture.get_region(*texture_region[region_name])
-        if status == "hover":
+button_image = {"normal": [], "hover": [], "pressed": []}
+decorated_button_image = {"normal": [], "pressed": []}
+for i in ["normal", "hover", "pressed"]:
+    for j in "lmr":
+        region_name = f"b{i[0]}{j}"
+        button_image[i].append(button_texture.get_region(*texture_region[region_name]))
+        if i == "hover":
             continue
-        region_name = f"fdb{status[0]}{where[0]}"
-        decorated_button_image[name] = decorated_button_texture.get_region(
-            *texture_region[region_name]
+        region_name = f"fdb{i[0]}{j}"
+        decorated_button_image[i].append(
+            decorated_button_texture.get_region(*texture_region[region_name])
         )
 
 
@@ -54,7 +53,7 @@ class DecoratedButton(WidgetBase):
             self._y,
             self._width,
             self._height,
-            *self._get_images("normal"),
+            *decorated_button_image["normal"],
             batch=batch,
             group=self._button_group,
         )
@@ -72,24 +71,6 @@ class DecoratedButton(WidgetBase):
             group=self._label_group,
         )
         self._pressed = False
-
-    def _get_images(self, status: str) -> tuple[AbstractImage, ...]:
-        assert status in ["normal", "pressed"]
-        return (
-            decorated_button_image[f"{status}_left"],
-            decorated_button_image[f"{status}_middle"],
-            decorated_button_image[f"{status}_right"],
-        )
-
-    def _update_position(self):
-        self._button.update(
-            x=self._x, y=self._y, width=self._width, height=self._height
-        )
-        self._label.position = (
-            self._x + self._width // 2,
-            self._y + self._height // 2,
-            0,
-        )
 
     @property
     def group(self) -> Group:
@@ -114,35 +95,45 @@ class DecoratedButton(WidgetBase):
     def value(self):
         return self._pressed
 
+    def _update_position(self):
+        self._button.update(
+            x=self._x, y=self._y, width=self._width, height=self._height
+        )
+        self._label.position = (
+            self._x + self._width // 2,
+            self._y + self._height // 2,
+            0,
+        )
+
     def draw(self):
         self._button.draw()
         self._label.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
-        if not self.enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
+        if not self._enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
             return
-        self._button[:] = self._get_images("pressed")
+        self._button[:] = decorated_button_image["pressed"]
         self._pressed = True
 
     def on_mouse_release(self, x, y, buttons, modifiers):
-        if not self.enabled or not self._pressed:
+        if not self._enabled or not self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
-        self._button[:] = self._get_images("normal")
+        self._button[:] = decorated_button_image["normal"]
         self._pressed = False
         self.dispatch_event("on_click")
 
     def on_mouse_motion(self, x, y, dx, dy):
-        if not self.enabled or self._pressed:
+        if not self._enabled or self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
-        self._button[:] = self._get_images("normal")
+        self._button[:] = decorated_button_image["normal"]
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-        if not self.enabled or self._pressed:
+        if not self._enabled or self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
-        self._button[:] = self._get_images("normal")
+        self._button[:] = decorated_button_image["normal"]
 
 
 DecoratedButton.register_event_type("on_click")
@@ -170,7 +161,7 @@ class TextButton(WidgetBase):
             self._y,
             self._width,
             self._height,
-            *self._get_images("normal"),
+            *button_image["normal"],
             batch=batch,
             group=self._button_group,
         )
@@ -188,24 +179,6 @@ class TextButton(WidgetBase):
             group=self._label_group,
         )
         self._pressed = False
-
-    def _get_images(self, status: str) -> tuple[AbstractImage, ...]:
-        assert status in ["normal", "hover", "pressed"]
-        return (
-            button_image[f"{status}_left"],
-            button_image[f"{status}_middle"],
-            button_image[f"{status}_right"],
-        )
-
-    def _update_position(self):
-        self._button.update(
-            x=self._x, y=self._y, width=self._width, height=self._height
-        )
-        self._label.position = (
-            self._x + self._width // 2,
-            self._y + self._height // 2,
-            0,
-        )
 
     @property
     def group(self) -> Group:
@@ -230,37 +203,55 @@ class TextButton(WidgetBase):
     def value(self):
         return self._pressed
 
+    def _set_enabled(self, enabled: bool):
+        if enabled:
+            self._button[:] = button_image["normal"]
+            self._label.color = WHITE
+        else:
+            self._button[:] = button_image["pressed"]
+            self._label.color = GRAY
+
+    def _update_position(self):
+        self._button.update(
+            x=self._x, y=self._y, width=self._width, height=self._height
+        )
+        self._label.position = (
+            self._x + self._width // 2,
+            self._y + self._height // 2,
+            0,
+        )
+
     def draw(self):
         self._label.draw()
 
     def on_mouse_press(self, x, y, buttons, modifiers):
-        if not self.enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
+        if not self._enabled or not self._check_hit(x, y) or not buttons & mouse.LEFT:
             return
-        self._button[:] = self._get_images("pressed")
+        self._button[:] = button_image["pressed"]
         self._pressed = True
 
     def on_mouse_release(self, x, y, buttons, modifiers):
-        if not self.enabled or not self._pressed:
+        if not self._enabled or not self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
         status = "hover" if self._check_hit(x, y) else "normal"
-        self._button[:] = self._get_images(status)
+        self._button[:] = button_image[status]
         self._pressed = False
         self.dispatch_event("on_click")
 
     def on_mouse_motion(self, x, y, dx, dy):
-        if not self.enabled or self._pressed:
+        if not self._enabled or self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
         status = "hover" if self._check_hit(x, y) else "normal"
-        self._button[:] = self._get_images(status)
+        self._button[:] = button_image[status]
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-        if not self.enabled or self._pressed:
+        if not self._enabled or self._pressed:
             return
         self._label.color = GRAY if self._check_hit(x, y) else WHITE
         status = "hover" if self._check_hit(x, y) else "normal"
-        self._button[:] = self._get_images(status)
+        self._button[:] = button_image[status]
 
 
 TextButton.register_event_type("on_click")

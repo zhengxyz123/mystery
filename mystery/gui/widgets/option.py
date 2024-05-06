@@ -109,16 +109,6 @@ class LanguageSelectOption(OptionBase):
             group=self._label_group,
         )
 
-    def _update_position(self):
-        self._shape.position = (self._x, self._y)
-        self._shape.width = self._width
-        self._shape.height = self._height
-        self._label.position = (
-            self._x + self._width // 2,
-            self._y + self._height // 2,
-            0,
-        )
-
     @property
     def group(self) -> Group:
         return self._shape_group.parent
@@ -142,6 +132,16 @@ class LanguageSelectOption(OptionBase):
         else:
             self._shape.opacity = 0
         self._selected = value
+
+    def _update_position(self):
+        self._shape.position = (self._x, self._y)
+        self._shape.width = self._width
+        self._shape.height = self._height
+        self._label.position = (
+            self._x + self._width // 2,
+            self._y + self._height // 2,
+            0,
+        )
 
     def draw(self):
         self._shape.draw()

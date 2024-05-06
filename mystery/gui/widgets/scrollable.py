@@ -38,9 +38,6 @@ class ScrollableLayout(WidgetBase):
         self._hscroll: Optional[ScrollBar] = None
         self._elements: list[PygletWidgetBase | ShapeBase | Sprite] = []
 
-    def _update_position(self):
-        self._group.area = self._x, self._y, self._width, self._height
-
     @property
     def value(self):
         return self._value
@@ -101,6 +98,9 @@ class ScrollableLayout(WidgetBase):
             self._hscroll.value = 0
         else:
             self._hscroll.value = self._offset_y / (self._content_height - self._height)
+
+    def _update_position(self):
+        self._group.area = self._x, self._y, self._width, self._height
 
     def add(self, *elements: PygletWidgetBase | ShapeBase | Sprite):
         """Add some elements to ScrollableLayout.
@@ -233,6 +233,28 @@ class ScrollBar(WidgetBase):
             group=self._group2,
         )
 
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value: float):
+        self._value = value
+        self._update_position()
+
+    @property
+    def visiable(self):
+        return self._visiable
+
+    @visiable.setter
+    def visiable(self, value: bool):
+        self._visiable = bool(value)
+        self._group.visible = self._visiable
+        if not self._visiable:
+            self.value = 0
+        else:
+            self._update_position()
+
     def _refresh_value(self):
         self._value = (self._y + self._height - self._bbar.y - self._bbar.height) / (
             self._height - self._bbar.height
@@ -258,28 +280,6 @@ class ScrollBar(WidgetBase):
             - self._value * (self._height - self._bbar.height),
         )
         self._fbar.position = (self._x, self._bbar.y + 3)
-
-    @property
-    def value(self):
-        return self._value
-
-    @value.setter
-    def value(self, value: float):
-        self._value = value
-        self._update_position()
-
-    @property
-    def visiable(self):
-        return self._visiable
-
-    @visiable.setter
-    def visiable(self, value: bool):
-        self._visiable = bool(value)
-        self._group.visible = self._visiable
-        if not self._visiable:
-            self.value = 0
-        else:
-            self._update_position()
 
     def draw(self):
         self._scrolling_area.draw()

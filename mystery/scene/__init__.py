@@ -9,7 +9,7 @@ from pyglet.math import Mat4
 from pyglet.window import Window, key
 
 from mystery import data_path, game_setting, resmgr
-from mystery.gui import WidgetFrame
+from mystery.gui.frame import WidgetFrame
 
 
 class Scene(EventDispatcher):

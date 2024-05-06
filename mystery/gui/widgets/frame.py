@@ -23,13 +23,11 @@ for status in ["normal", "hover", "pressed"]:
         *texture_region[f"rb{status[0]}.red"]
     )
 advanced_frame_image = []
+simple_frame_image = []
 for i in "tmb":
     for j in "lmr":
         region = f"sft{j}2" if i == "t" else f"f{i}{j}"
         advanced_frame_image.append(frame_texture.get_region(*texture_region[region]))
-simple_frame_image = []
-for i in "tmb":
-    for j in "lmr":
         region = f"sft{j}1" if i == "t" else f"f{i}{j}"
         simple_frame_image.append(frame_texture.get_region(*texture_region[region]))
 
@@ -78,22 +76,6 @@ class AdvancedFrame(WidgetBase):
             group=self._widgets_group,
         )
 
-    def _check_hit(self, x, y):
-        return dist(self._button_center, (x, y)) <= 14
-
-    def _update_position(self):
-        self._frame.update(x=self._x, y=self._y, width=self._width, height=self._height)
-        wc, hc = self._frame[(0, 0)].width, self._frame[(0, 0)].height
-        wm, hm = self._frame[(1, 1)].width, self._frame[(1, 1)].height
-        self._button_sprite.position = (
-            self._x + self._width - wc + 14,
-            self._y + self._height - hc + 78,
-            0,
-        )
-        self._icon_sprite.position = self._button_sprite.position
-        self._button_center = (self._button_sprite.x + 14, self._button_sprite.y + 14)
-        self._label.position = (self._x + 12, self._y + self._height - hc + 96, 0)
-
     @property
     def aabb(self) -> tuple[int, ...]:
         x, y, _ = self._button_sprite.position
@@ -120,6 +102,22 @@ class AdvancedFrame(WidgetBase):
     @title.setter
     def title(self, text: str):
         self._label.text = text
+
+    def _check_hit(self, x, y):
+        return dist(self._button_center, (x, y)) <= 14
+
+    def _update_position(self):
+        self._frame.update(x=self._x, y=self._y, width=self._width, height=self._height)
+        wc, hc = self._frame[(0, 0)].width, self._frame[(0, 0)].height
+        wm, hm = self._frame[(1, 1)].width, self._frame[(1, 1)].height
+        self._button_sprite.position = (
+            self._x + self._width - wc + 14,
+            self._y + self._height - hc + 78,
+            0,
+        )
+        self._icon_sprite.position = self._button_sprite.position
+        self._button_center = (self._button_sprite.x + 14, self._button_sprite.y + 14)
+        self._label.position = (self._x + 12, self._y + self._height - hc + 96, 0)
 
     def draw(self):
         self._frame.draw()
@@ -180,9 +178,6 @@ class SimpleFrame(WidgetBase):
             group=group,
         )
 
-    def _update_position(self):
-        self._frame.update(x=self._x, y=self._y, width=self._width, height=self._height)
-
     @property
     def group(self) -> Group:
         return self._frame.group
@@ -190,6 +185,9 @@ class SimpleFrame(WidgetBase):
     @group.setter
     def group(self, group: Group):
         self._frame.group = group
+
+    def _update_position(self):
+        self._frame.update(x=self._x, y=self._y, width=self._width, height=self._height)
 
     def draw(self):
         self._frame.draw()

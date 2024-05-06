@@ -12,10 +12,9 @@ from mystery.resource import texture_region
 from mystery.resource.manager import FONT_NAME
 
 mb_texture = resmgr.loader.image("textures/gui/message_box.png")
-mb_images = {}
-for where in ["left", "middle", "right"]:
-    name = f"mb{where[0]}"
-    mb_images[where] = mb_texture.get_region(*texture_region[name])
+mb_images = []
+for i in "lmr":
+    mb_images.append(mb_texture.get_region(*texture_region[f"mb{i}"]))
 
 
 class MessageBox(WidgetBase):
@@ -38,9 +37,7 @@ class MessageBox(WidgetBase):
             self._y,
             self._width,
             self._height,
-            mb_images["left"],
-            mb_images["middle"],
-            mb_images["right"],
+            *mb_images,
             batch=batch,
             group=self._back_group,
         )

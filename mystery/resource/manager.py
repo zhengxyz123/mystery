@@ -47,20 +47,6 @@ class ResourceManager:
             self.loader.add_font("unifont.otf")
         self.font = load_font("Unifont")
 
-    def _image_loader(self, filename: str, flags, **kwargs):
-        image = load_image(filename)
-
-        def custom_load_image(rect: tuple[int, ...] = None, flags: TileFlags = None):
-            if rect:
-                x, y, w, h = rect
-                y = image.height - y - h
-                tile = image.get_region(x, y, w, h)
-            else:
-                tile = image
-            return tile
-
-        return custom_load_image
-
     @property
     def language(self) -> str:
         return self._lang
@@ -76,6 +62,20 @@ class ResourceManager:
         contents = self.loader.file(f"i18n/{self._lang}.json", mode="rb").read()
         s = contents.decode("utf-8")
         self._translation_now = loads(s)
+
+    def _image_loader(self, filename: str, flags, **kwargs):
+        image = load_image(filename)
+
+        def custom_load_image(rect: tuple[int, ...] = None, flags: TileFlags = None):
+            if rect:
+                x, y, w, h = rect
+                y = image.height - y - h
+                tile = image.get_region(x, y, w, h)
+            else:
+                tile = image
+            return tile
+
+        return custom_load_image
 
     def copy_to_tempdir(self):
         files = [

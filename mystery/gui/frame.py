@@ -13,13 +13,6 @@ class WidgetFrame:
         self._enable = False
         self._mouse_pos = 0, 0
 
-    def _hash(self, x: int, y: int) -> tuple[int, int]:
-        return int(x / self._cell_size), int(y / self._cell_size)
-
-    def _on_reposition_handler(self, widget: WidgetBase):
-        self.remove_widget(widget)
-        self.add_widget(widget)
-
     @property
     def enable(self) -> bool:
         return self._enable
@@ -31,6 +24,13 @@ class WidgetFrame:
             self._window.push_handlers(self)
         else:
             self._window.remove_handlers(self)
+
+    def _hash(self, x: int, y: int) -> tuple[int, int]:
+        return int(x / self._cell_size), int(y / self._cell_size)
+
+    def _on_reposition_handler(self, widget: WidgetBase):
+        self.remove_widget(widget)
+        self.add_widget(widget)
 
     def add_widget(self, *widgets: WidgetBase):
         for widget in widgets:
