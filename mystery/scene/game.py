@@ -11,10 +11,10 @@ from mystery.scene import GameWindow, Scene
 class GameScene(Scene):
     def __init__(self, window: GameWindow):
         super().__init__(window)
-        self.batch = Batch()
-        self.character = Character(self)
+        self._batch = Batch()
         self._cached_room = {}
         self._now_room = None
+        self.character = Character(self)
 
     def switch_room(self, namespace: str, class_name: str, name: Optional[str] = None):
         """Load then switch to a room.
@@ -42,7 +42,7 @@ class GameScene(Scene):
         self.window.clear()
         if self._now_room:
             self._now_room.draw()
-        self.batch.draw()
+        self._batch.draw()
 
     def on_scene_enter(self):
         self.window.push_handlers(self.character)

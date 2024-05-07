@@ -14,14 +14,13 @@ from mystery.scene import GameWindow, Scene
 class StartScene(Scene):
     def __init__(self, window: GameWindow):
         super().__init__(window)
-        self.batch = Batch()
-        self.mb_group = Group(order=0)
-        self.now_plot = 0
-        self.plot = []
-        self.label_text = ""
+        self._batch = Batch()
+        self._mb_group = Group(order=0)
+        self._now_plot = 0
+        self._plot = []
         self._load_plots()
 
-        self.message = MessageBox(self.window, self.batch, self.mb_group)
+        self.message = MessageBox(self.window, self._batch, self._mb_group)
         self.frame.add_widget(self.message)
 
     def _load_plots(self):
@@ -32,28 +31,30 @@ class StartScene(Scene):
             if text == trans_key:
                 break
             else:
-                self.plot.append(text)
+                self._plot.append(text)
                 i += 1
 
     def _next_plot(self):
-        if self.now_plot + 1 >= len(self.plot):
+        if self._now_plot + 1 >= len(self._plot):
             if not self.window.has_scene("game"):
                 game_scene = import_module("mystery.scene.game").GameScene
                 self.window.add_scene("game", game_scene)
             self.window.switch_scene("game")
-        if self.now_plot + 1 < len(self.plot):
-            self.now_plot += 1
-        self.message.text = self.plot[self.now_plot]
+        if self._now_plot + 1 < len(self._plot):
+            self._now_plot += 1
+        self.message.text = self._plot[self._now_plot]
 
     def on_draw(self):
         self.window.clear()
-        self.batch.draw()
+        self._batch.draw()
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_release(self, symbol, modifiers):
         if symbol == key.SPACE:
             self._next_plot()
+        elif symbol == key.ESCAPE:
+            self.window.switch_scene("menu")
 
-    def on_mouse_press(self, x, y, buttons, modifiers):
+    def on_mouse_release(self, x, y, buttons, modifiers):
         if buttons == mouse.LEFT:
             self._next_plot()
 
@@ -61,12 +62,12 @@ class StartScene(Scene):
         self.message.resize()
 
     def on_language_change(self):
-        self.plot[:] = []
+        self._plot[:] = []
         self._load_plots()
 
     def on_scene_enter(self):
-        self.now_plot = 0
-        self.message.text = self.plot[0]
+        self._now_plot = 0
+        self.message.text = self._plot[0]
 
 
 __all__ = ("StartScene",)

@@ -119,9 +119,6 @@ class Character(EventDispatcher):
             CharacterDirection.UP: Vec2(0, 8),
         }
 
-    def _reset_bubble(self):
-        self.bubble = CharacterBubble.EMPTY
-
     @property
     def batch(self) -> Batch:
         return self._char_sprite.batch
@@ -200,6 +197,25 @@ class Character(EventDispatcher):
         self._char_sprite.position = (x, y, 0)
         self._bubble_sprite.position = (x + 30, y + 50, 0)
 
+    def _reset_bubble(self):
+        self.bubble = CharacterBubble.EMPTY
+
+    def update(self, dt: float):
+        if self._state != CharacterState.CTRLED and (
+            self._prev_state != self._state or self._prev_direction != self._direction
+        ):
+            state = self._prev_state = self._state.value
+            direction = self._prev_direction = self._direction.value
+            self._char_sprite.image = char_anime[state][direction]
+        if self._state in (CharacterState.RUN, CharacterState.WALK):
+            dp = self._move_vec[self._direction]
+            if self._state == CharacterState.RUN:
+                dp *= 2
+            prev_pos = Vec2(*self.position)
+            now_pos = prev_pos + dp
+            if self._room and self._room.allow_move(now_pos[:]):
+                self.position = now_pos[:]
+
     def on_key_press(self, symbol, modifiers):
         if self._state == CharacterState.CTRLED:
             return
@@ -225,22 +241,6 @@ class Character(EventDispatcher):
         elif key.LEFT <= symbol <= key.DOWN:
             if self._mapping[symbol] == self._direction:
                 self._state = CharacterState.IDLE
-
-    def update(self, dt: float):
-        if self._state != CharacterState.CTRLED and (
-            self._prev_state != self._state or self._prev_direction != self._direction
-        ):
-            state = self._prev_state = self._state.value
-            direction = self._prev_direction = self._direction.value
-            self._char_sprite.image = char_anime[state][direction]
-        if self._state in (CharacterState.RUN, CharacterState.WALK):
-            dp = self._move_vec[self._direction]
-            if self._state == CharacterState.RUN:
-                dp *= 2
-            prev_pos = Vec2(*self.position)
-            now_pos = prev_pos + dp
-            if self._room and self._room.allow_move(now_pos[:]):
-                self.position = now_pos[:]
 
 
 __all__ = "CharacterState", "CharacterDirection", "CharacterBubble", "Character"

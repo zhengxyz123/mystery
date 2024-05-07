@@ -170,16 +170,6 @@ class KeyHint:
         )
         self._width2 = 60 + max_width
 
-    def on_key_press(self, symbol, modifiers):
-        if self._state < 0:
-            return
-        if key.LEFT <= symbol <= key.DOWN and self._state == 0:
-            clock.schedule_once(self.update1, 3)
-            self._state = 1
-        elif symbol == key.E and self._state == 1:
-            clock.schedule_once(self.update2, 3)
-            self._state = 2
-
     def update1(self, dt: float):
         self._shape.width = self._width2
         self._shape.height = 153
@@ -221,6 +211,16 @@ class KeyHint:
         self._hint_group1.visible = True
         self._hint_group2.visible = False
         self._state = 0
+
+    def on_key_press(self, symbol, modifiers):
+        if self._state < 0:
+            return
+        if key.LEFT <= symbol <= key.DOWN and self._state == 0:
+            clock.schedule_once(self.update1, 3)
+            self._state = 1
+        elif symbol == key.E and self._state == 1:
+            clock.schedule_once(self.update2, 3)
+            self._state = 2
 
 
 __all__ = ("KeyHint",)

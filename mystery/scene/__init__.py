@@ -9,6 +9,7 @@ from pyglet.math import Mat4
 from pyglet.window import Window, key
 
 from mystery import data_path, game_setting, resmgr
+from mystery import version as mystery_ver
 from mystery.gui.frame import WidgetFrame
 
 
@@ -44,7 +45,7 @@ class GameWindow(Window):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.set_caption("Mystery")
+        self.set_caption(f"Mystery {mystery_ver}")
         self.set_icon(resmgr.loader.image("textures/pyglet.png"))
         self.set_minimum_size(768, 576)
         self._scenes: dict[str, Scene] = {}
