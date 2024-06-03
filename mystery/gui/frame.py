@@ -9,7 +9,6 @@ class WidgetFrame:
         self._cell_size = cell_size
         self._cells: dict[tuple[int, int], set[WidgetBase]] = {}
         self._active_widgets: set[WidgetBase] = set()
-        self._order = 0
         self._enable = False
         self._mouse_pos = 0, 0
 
@@ -40,7 +39,6 @@ class WidgetFrame:
             for i in range(min_vec[0], max_vec[0] + 1):
                 for j in range(min_vec[1], max_vec[1] + 1):
                     self._cells.setdefault((i, j), set()).add(widget)
-            widget.update_groups(self._order)
             widget.set_handler("on_reposition", self._on_reposition_handler)
 
     def remove_widget(self, *widgets: WidgetBase):

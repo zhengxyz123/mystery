@@ -17,11 +17,18 @@ class StartRoom(BaseRoom):
         group: Optional[Group] = None,
     ):
         super().__init__(game, "example", char, group)
-        self.key_hint = KeyHint(self.gui_batch)
-        self.cup = CupEntity(self._game)
+
+        self.key_hint_group = Group(order=0)
+        self.cup_group = Group(order=1)
+        self.cup_group.visible = False
+
+        self.key_hint = KeyHint(self.gui_batch, self.key_hint_group)
+        self.cup = CupEntity(self._game, self)
 
     def interact(self):
         if self.check_collide("cup"):
+            self.key_hint._state = 2
+            self.key_hint.update2(0)
             self.cup.dispatch_event("on_interact")
 
     def on_room_enter(self, *args):

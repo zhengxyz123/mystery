@@ -6,8 +6,6 @@ from mystery.gui.widgets import (
     DecoratedButton,
     LanguageSelectOption,
     OptionGroup,
-    ScrollableLayout,
-    ScrollBar,
 )
 from mystery.resource.manager import SUPPORTED_LANG
 from mystery.scene import GameWindow, Scene
@@ -52,22 +50,6 @@ class LanguageSettingScene(Scene):
             batch=self.batch,
             group=self.fore_group,
         )
-        self.options_layout = ScrollableLayout(
-            self.window.width // 2 - 220,
-            self.window.height // 2 - 210,
-            440,
-            390,
-            group=self.fore_group,
-        )
-        self.scroll_bar = ScrollBar(
-            self.window.width // 2 + 220,
-            self.window.height // 2 - 210,
-            390,
-            scrollable_layout=self.options_layout,
-            batch=self.batch,
-            group=self.fore_group,
-        )
-        self.options_layout.content_height = len(SUPPORTED_LANG) * 50
         self.language_options = []
         for index, item in enumerate(SUPPORTED_LANG.items()):
             self.language_options.append(
@@ -83,17 +65,12 @@ class LanguageSettingScene(Scene):
                 )
             )
             self.options_group.add(option)
-            self.options_layout.add(option)
+            self.frame.add_widget(option)
         self.language_frame.push_handlers(
             on_button_click=lambda: self.window.switch_scene("settings.main")
         )
         self.apply_button.push_handlers(on_click=self.apply_change)
-        self.frame.add_widget(
-            self.language_frame,
-            self.apply_button,
-            self.options_layout,
-            self.scroll_bar,
-        )
+        self.frame.add_widget(self.language_frame, self.apply_button)
 
     def apply_change(self):
         self.window.setting["lang"] = self.options_group.value
@@ -114,13 +91,8 @@ class LanguageSettingScene(Scene):
             self.background.scale = height / self.background.image.height
         self.language_frame.position = (width // 2 - 300, height // 2 - 250)
         self.apply_button.position = (width // 2 - 75, height // 2 - 270)
-        self.options_layout.position = (width // 2 - 220, height // 2 - 210)
-        self.scroll_bar.position = (width // 2 + 220, height // 2 - 210)
         for index, option in enumerate(self.language_options):
-            position = self.options_layout.get_point(
-                width // 2 - 200, height // 2 + 130 - 50 * index
-            )
-            option.position = position
+            option.position = (width // 2 - 200, height // 2 + 130 - 50 * index)
 
     def on_language_change(self):
         self.language_frame.title = self.window.resource.translate("settings.language")
@@ -130,7 +102,6 @@ class LanguageSettingScene(Scene):
         i = list(SUPPORTED_LANG.keys()).index(self.window.resource.language)
         if not (option := self.language_options[i]).selected:
             option.selected = True
-        self.options_layout.offset_y = 0
 
 
 __all__ = ("LanguageSettingScene",)

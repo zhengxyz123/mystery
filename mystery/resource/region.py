@@ -34,6 +34,13 @@ texture_region: dict[str, tuple[int, ...]] = {
     "rbh.red": (32, 16, 14, 14),
     "rbp.red": (32, 0, 14, 14),
     "icon.close": (81, 0, 14, 14),
+    # textures/gui/widgets/scroll_bar.png
+    "sbt1": (0, 32, 24, 27),
+    "sbb1": (0, 0, 24, 24),
+    "sbt2": (25, 29, 20, 27),
+    "sbb2": (25, 3, 20, 25),
+    "sbm": (7, 26, 10, 5),
+    "sbr": (46, 20, 12, 17),
     # textures/gui/message_box.png
     "mbl": (0, 0, 78, 78),
     "mbm": (78, 0, 162, 78),
