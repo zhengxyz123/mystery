@@ -92,9 +92,6 @@ class ResourceManager:
             with open(name, "wb") as target:
                 target.write(contents)
 
-    def info(self, key: str):
-        return self._translation_now["language.info"].get(key, "")
-
     def tiled_map(self, name: str) -> TiledMap:
         if self._frozen:
             filename = Path(sys._MEIPASS) / "assets" / "maps" / f"{name}.tmx"

@@ -43,7 +43,7 @@ class OptionGroup(EventDispatcher):
     """
 
     def __init__(self):
-        self._now = 0
+        self._now = -1
         self._options_list = []
         self._value = ""
 
@@ -60,7 +60,7 @@ class OptionGroup(EventDispatcher):
 
     def on_toggle(self, which: OptionBase):
         assert which in self._options_list
-        if self._options_list[self._now] is which:
+        if self._options_list[self._now] is which and self._now < 0:
             return
         self._options_list[self._now].selected = False
         self._now = self._options_list.index(which)

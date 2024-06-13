@@ -42,7 +42,7 @@ def line_break_func(text: str, line_width: int, font_width: int = 24) -> str:
         "en": line_break_en,
         "cjk": line_break_cjk,
     }
-    if (func := resmgr.info("line_break_func")) in lang2func:
+    if (func := resmgr.translate("language.line_break_func")) in lang2func:
         return lang2func[func](text, line_width, font_width)
     else:
         return line_break_ascii(text, line_width, font_width)

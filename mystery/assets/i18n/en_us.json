@@ -1,7 +1,4 @@
 {
-    "language.info": {
-        "line_break_func": "en"
-    },
     "general.apply": "Apply",
     "hint.arrow": "Move",
     "hint.e": "Open inventory",
@@ -10,9 +7,10 @@
     "hint.f11": "Toggle fullscreen",
     "hint.shift": "Run",
     "hint.space": "Interact",
+    "language.code": "en_us",
+    "language.line_break_func": "en",
     "language.name": "English",
     "language.region": "United States",
-    "language.code": "en_us",
     "menu.start_game": "Start Game",
     "menu.save": "Saves",
     "menu.settings": "Settings",
