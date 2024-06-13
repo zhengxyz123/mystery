@@ -208,13 +208,18 @@ class Character(EventDispatcher):
             direction = self._prev_direction = self._direction.value
             self._char_sprite.image = char_anime[state][direction]
         if self._state in (CharacterState.RUN, CharacterState.WALK):
-            dp = self._move_vec[self._direction]
-            if self._state == CharacterState.RUN:
-                dp *= 2
-            prev_pos = Vec2(*self.position)
-            now_pos = prev_pos + dp
-            if self._room and self._room.allow_move(now_pos[:]):
-                self.position = now_pos[:]
+            dx = self._move_vec[self._direction] / 8
+            for _ in range(8):
+                if self._state == CharacterState.RUN:
+                    dp = dx * 2
+                else:
+                    dp = dx
+                prev_pos = Vec2(*self.position)
+                now_pos = prev_pos + dp
+                if self._room and self._room.allow_move(now_pos[:]):
+                    self.position = now_pos[:]
+                else:
+                    break
 
     def on_key_press(self, symbol, modifiers):
         if self._state == CharacterState.CTRLED:

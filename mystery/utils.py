@@ -45,7 +45,7 @@ def line_break_func(text: str, line_width: int, font_width: int = 24) -> str:
     if (func := resmgr.translate("language.line_break_func")) in lang2func:
         return lang2func[func](text, line_width, font_width)
     else:
-        return line_break_ascii(text, line_width, font_width)
+        return line_break_en(text, line_width, font_width)
 
 
 class Rect:
