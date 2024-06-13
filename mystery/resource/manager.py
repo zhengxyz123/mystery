@@ -54,7 +54,7 @@ class ResourceManager:
     @language.setter
     def language(self, name: str):
         if name not in SUPPORTED_LANG:
-            return
+            name = "en_us"
         self._lang = name
         if self._lang == "en_us":
             self._translation_now = self._translation_en_us
