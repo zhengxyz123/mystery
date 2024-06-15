@@ -7,6 +7,10 @@ from pyglet.graphics import Batch
 from mystery.character import Character
 from mystery.scene import GameWindow, Scene
 
+rooms = {
+    "start": ("start", "StartRoom"),
+}
+
 
 class GameScene(Scene):
     def __init__(self, window: GameWindow):
@@ -16,38 +20,29 @@ class GameScene(Scene):
         self._now_room = None
         self.character = Character(self)
 
-    def switch_room(self, namespace: str, class_name: str, name: Optional[str] = None):
-        """Load then switch to a room.
-
-        The 3 parameters are:
-          - namespace: load module at namespace `mystery.room.<namespace>`
-          - class_name: load a class named `<class_name>Room` in the above namespace
-          - name: a str refers to the instance of above class
-
-        The default value of `name` is the lower case of `class_name`.
-        """
-        if not name:
-            name = class_name.lower()
-        if name not in self._cached_room:
-            module = import_module(f"mystery.room.{namespace}")
-            room = getattr(module, f"{class_name}Room")
-            self._cached_room[name] = room(self, self.character)
+    def switch_room(self, room_name: str, args: tuple = tuple()):
+        """Load then switch to a room."""
+        module_name, class_name = rooms[room_name]
+        if room_name not in self._cached_room:
+            module = import_module(f"mystery.room.{module_name}")
+            room = getattr(module, class_name)
+            self._cached_room[room_name] = room(self, self.character)
         if self._now_room:
             self._now_room.dispatch_event("on_room_leave")
-        self._now_room = self._cached_room[name]
+        self._now_room = self._cached_room[room_name]
         self.character.room = self._now_room
-        self._now_room.dispatch_event("on_room_enter")
+        self._now_room.dispatch_event("on_room_enter", *args)
 
     def on_draw(self):
         self.window.clear()
-        if self._now_room:
+        if self._now_room is not None:
             self._now_room.draw()
         self._batch.draw()
 
     def on_scene_enter(self):
         self.window.push_handlers(self.character)
         clock.schedule_interval(self.character.update, 4 / self.window.setting["fps"])
-        self.switch_room("start", "Start")
+        self.switch_room("start")
 
     def on_scene_leave(self):
         clock.unschedule(self.character.update)

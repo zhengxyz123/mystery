@@ -1,13 +1,15 @@
 from typing import Optional
 
+from pyglet import gl
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.math import Mat4, Vec3
-from pyglet.sprite import Sprite
+from pyglet.sprite import Sprite, SpriteGroup
 from pytmx import TiledTileLayer
 
 from mystery.character import Character, CharacterDirection
 from mystery.scene.game import GameScene
+from mystery.depth_sprite import DepthSprite
 from mystery.utils import Rect
 
 
@@ -27,28 +29,83 @@ class BaseRoom(EventDispatcher):
         self._game = game
         self._name = name
         self._map_loaded = False
+        self.tiled_map = self._game.window.resource.tiled_map(self._name)
         self.char = char
-        self.map_batch = Batch()
-        self.gui_batch = Batch()
-        self.parent_group = {
-            "back": Group(order=1, parent=group),
-            "char": Group(order=2, parent=group),
-            "fore": Group(order=3, parent=group),
+        self.map_batches = {
+            "back": Batch(),
+            "char": Batch(),
+            "fore": Batch(),
         }
-        self.child_group = []
-        self.char.batch = self.map_batch
-        self.char.group = self.parent_group["char"]
+        self.gui_batch = Batch()
+        self.sprite_groups = []
+        self.sprites_list = []
+        self.ibojs_dict = {}
+        self.char.batch = self.map_batches["char"]
         self.char.room = self
-        self.sprits = []
 
         # One is a list, the other is a dict.
         self._collisions_walkable = []
         self._collisions_unwalkable = {}
         self._spawn_points = {}
 
+        # A dict that store the room info.
+        # It must be capable of turning into JSON!
+        self.data = {}
+
     @property
     def name(self) -> str:
         return self._name
+
+    def _load_map(self):
+        if self._map_loaded:
+            return
+        tw, th = self.tiled_map.tilewidth, self.tiled_map.tileheight
+        for layer in self.tiled_map.layers:
+            if not isinstance(layer, TiledTileLayer):
+                continue
+            batch_name, group_order = layer.name.split("_")
+            group = Group(int(group_order))
+            self.sprite_groups.append(group)
+            h = layer.height - 1
+            for tile in layer.tiles():
+                x, y, image = tile
+                sprite = Sprite(
+                    image,
+                    x * tw,
+                    (h - y) * th,
+                    batch=self.map_batches[batch_name],
+                    group=group,
+                )
+                self.sprites_list.append(sprite)
+        for obj in self.tiled_map.objects:
+            obj.y = (
+                (self.tiled_map.tileheight * self.tiled_map.height) - obj.y - obj.height
+            )
+            if obj.type == "CRect":
+                if obj.properties["can_walk"]:
+                    self._collisions_walkable.append(Rect.from_tmx_obj(obj))
+                else:
+                    name = obj.properties["cr_name"]
+                    self._collisions_unwalkable[name] = Rect.from_tmx_obj(obj)
+            elif obj.type == "IObj":
+                image = self.tiled_map.get_tile_image_by_gid(obj.gid)
+                iobj_name = obj.name
+                sprite = DepthSprite(
+                    image, obj.x, obj.y, batch=self.map_batches["char"]
+                )
+                self.ibojs_dict[iobj_name] = sprite
+            elif obj.type == "SPoint":
+                name = obj.properties["sp_name"]
+                self._spawn_points[name] = (obj.x, obj.y)
+        self._map_loaded = True
+
+    def _update_iobjs(self):
+        char_y = self.char.position[1] + 4
+        for iobj in self.ibojs_dict.values():
+            if iobj.y > char_y:
+                iobj.z = 0
+            else:
+                iobj.z = 2
 
     def allow_move(self, pos: tuple[int, int]) -> bool:
         x, y = pos
@@ -61,7 +118,11 @@ class BaseRoom(EventDispatcher):
         for rect in self._collisions_walkable:
             check1.append(pos1 in rect)
             check2.append(pos2 in rect)
-        return any(check1) and any(check2)
+        if any(check1) and any(check2):
+            self._update_iobjs()
+            return True
+        else:
+            return False
 
     def check_collide(self, which: str) -> bool:
         """Check whether a character can intercat with a collision box.
@@ -83,37 +144,6 @@ class BaseRoom(EventDispatcher):
         else:
             return False
 
-    def _load_map(self):
-        if self._map_loaded:
-            return
-        tiled_map = self._game.window.resource.tiled_map(self._name)
-        tw, th = tiled_map.tilewidth, tiled_map.tileheight
-        for layer in tiled_map.layers:
-            if not isinstance(layer, TiledTileLayer):
-                continue
-            parent, order = layer.name.split("_")
-            group = Group(int(order), self.parent_group[parent])
-            self.child_group.append(group)
-            h = layer.height - 1
-            for tile in layer.tiles():
-                x, y, image = tile
-                sprite = Sprite(
-                    image, x * tw, (h - y) * th, batch=self.map_batch, group=group
-                )
-                self.sprits.append(sprite)
-        for obj in tiled_map.objects:
-            obj.y = (tiled_map.tileheight * tiled_map.height) - obj.y - obj.height
-            if obj.type == "CRect":
-                if obj.properties["can_walk"]:
-                    self._collisions_walkable.append(Rect.from_tmx_obj(obj))
-                else:
-                    name = obj.properties["cr_name"]
-                    self._collisions_unwalkable[name] = Rect.from_tmx_obj(obj)
-            elif obj.type == "SPoint":
-                name = obj.properties["sp_name"]
-                self._spawn_points[name] = (obj.x, obj.y)
-        self._map_loaded = True
-
     def draw(self):
         char_pos = Vec3(*self.char.position, 0)
         center_pos = Vec3(
@@ -121,7 +151,9 @@ class BaseRoom(EventDispatcher):
         )
         trans_mat = Mat4.from_translation(center_pos - char_pos)
         with self._game.window.apply_view(trans_mat):
-            self.map_batch.draw()
+            self.map_batches["back"].draw()
+            self.map_batches["char"].draw()
+            self.map_batches["fore"].draw()
         self.gui_batch.draw()
 
     def interact(self):
@@ -130,7 +162,7 @@ class BaseRoom(EventDispatcher):
     def on_room_enter(self, *args):
         pass
 
-    def on_rome_leave(self, *args):
+    def on_rome_leave(self):
         pass
 
 

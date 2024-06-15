@@ -79,9 +79,11 @@ class ResourceManager:
 
     def copy_to_tempdir(self):
         files = [
-            Path("example.tmx"),
+            Path("start.tmx"),
             Path("tilesets/mask.png"),
             Path("tilesets/mask.tsx"),
+            Path("tilesets/outside_objects.png"),
+            Path("tilesets/outside_objects.tsx"),
             Path("tilesets/terrain.png"),
             Path("tilesets/terrain.tsx"),
         ]

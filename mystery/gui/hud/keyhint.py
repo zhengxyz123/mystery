@@ -21,7 +21,7 @@ for name in [
     "space",
     "f5",
     "f11",
-    "e",
+    "x",
 ]:
     key_image[name] = resmgr.loader.image(f"textures/keys/{name}.png")
 
@@ -49,32 +49,32 @@ class KeyHint:
             batch=batch,
             group=self._shape_group,
         )
-        self._key_up = Sprite(
+        self._key_move_north = Sprite(
             key_image["up"], 38, 112, batch=batch, group=self._hint_group1
         )
-        self._key_up.scale = 1.5
-        self._key_left = Sprite(
+        self._key_move_north.scale = 1.5
+        self._key_move_west = Sprite(
             key_image["left"], 15, 89, batch=batch, group=self._hint_group1
         )
-        self._key_left.scale = 1.5
-        self._key_down = Sprite(
+        self._key_move_west.scale = 1.5
+        self._key_move_south = Sprite(
             key_image["down"], 38, 89, batch=batch, group=self._hint_group1
         )
-        self._key_down.scale = 1.5
-        self._key_right = Sprite(
+        self._key_move_south.scale = 1.5
+        self._key_move_east = Sprite(
             key_image["right"], 61, 89, batch=batch, group=self._hint_group1
         )
-        self._key_right.scale = 1.5
-        self._key_shift = Sprite(
+        self._key_move_east.scale = 1.5
+        self._key_run = Sprite(
             key_image["shift"], 18, 52, batch=batch, group=self._hint_group1
         )
-        self._key_shift.scale = 2
-        self._key_space = Sprite(
+        self._key_run.scale = 2
+        self._key_interact = Sprite(
             key_image["space"], 18, 15, batch=batch, group=self._hint_group1
         )
-        self._key_space.scale = 2
+        self._key_interact.scale = 2
 
-        self._hint_arrow = Label(
+        self._hint_move = Label(
             x=100,
             y=112,
             font_name=FONT_NAME,
@@ -84,7 +84,7 @@ class KeyHint:
             batch=batch,
             group=self._hint_group1,
         )
-        self._hint_shift = Label(
+        self._hint_run = Label(
             x=100,
             y=68,
             font_name=FONT_NAME,
@@ -94,7 +94,7 @@ class KeyHint:
             batch=batch,
             group=self._hint_group1,
         )
-        self._hint_space = Label(
+        self._hint_interact = Label(
             x=100,
             y=31,
             font_name=FONT_NAME,
@@ -105,24 +105,24 @@ class KeyHint:
             group=self._hint_group1,
         )
 
-        self._key_e = Sprite(
-            key_image["e"], 15, 126, batch=batch, group=self._hint_group2
+        self._key_open = Sprite(
+            key_image["x"], 15, 126, batch=batch, group=self._hint_group2
         )
-        self._key_e.scale = 2
-        self._key_esc = Sprite(
+        self._key_open.scale = 2
+        self._key_back = Sprite(
             key_image["escape"], 15, 89, batch=batch, group=self._hint_group2
         )
-        self._key_esc.scale = 2
-        self._key_f5 = Sprite(
+        self._key_back.scale = 2
+        self._key_screenshot = Sprite(
             key_image["f5"], 15, 52, batch=batch, group=self._hint_group2
         )
-        self._key_f5.scale = 2
-        self._key_f11 = Sprite(
+        self._key_screenshot.scale = 2
+        self._key_fullscreen = Sprite(
             key_image["f11"], 15, 15, batch=batch, group=self._hint_group2
         )
-        self._key_f11.scale = 2
+        self._key_fullscreen.scale = 2
 
-        self._hint_e = Label(
+        self._hint_open = Label(
             x=60,
             y=142,
             font_name=FONT_NAME,
@@ -132,7 +132,7 @@ class KeyHint:
             batch=batch,
             group=self._hint_group2,
         )
-        self._hint_esc = Label(
+        self._hint_back = Label(
             x=60,
             y=105,
             font_name=FONT_NAME,
@@ -142,7 +142,7 @@ class KeyHint:
             batch=batch,
             group=self._hint_group2,
         )
-        self._hint_f5 = Label(
+        self._hint_screenshot = Label(
             x=60,
             y=68,
             font_name=FONT_NAME,
@@ -152,7 +152,7 @@ class KeyHint:
             batch=batch,
             group=self._hint_group2,
         )
-        self._hint_f11 = Label(
+        self._hint_fullscreen = Label(
             x=60,
             y=31,
             font_name=FONT_NAME,
@@ -163,45 +163,51 @@ class KeyHint:
             group=self._hint_group2,
         )
         max_width = max(
-            self._hint_e.content_width,
-            self._hint_esc.content_width,
-            self._hint_f5.content_width,
-            self._hint_f11.content_width,
+            self._hint_open.content_width,
+            self._hint_back.content_width,
+            self._hint_screenshot.content_width,
+            self._hint_fullscreen.content_width,
         )
         self._width2 = 60 + max_width
 
-    def update1(self, dt: float):
+    @property
+    def state(self) -> int:
+        return self._state
+
+    def switch_hint(self):
         self._shape.width = self._width2
         self._shape.height = 153
         self._hint_group1.visible = False
         self._hint_group2.visible = True
+        self._state = 1
 
-    def update2(self, dt: float):
+    def hide(self):
         self._hint_group2.visible = False
         self._shape_group.visible = False
+        self._state = 2
 
     def reset(self):
         if self._hint_lang != resmgr.language:
             self._hint_lang = resmgr.language
-            self._hint_arrow.text = resmgr.translate("hint.arrow")
-            self._hint_shift.text = resmgr.translate("hint.shift")
-            self._hint_space.text = resmgr.translate("hint.space")
+            self._hint_move.text = resmgr.translate("hint.move")
+            self._hint_run.text = resmgr.translate("hint.run")
+            self._hint_interact.text = resmgr.translate("hint.interact")
             max_width = max(
-                self._hint_arrow.content_width,
-                self._hint_shift.content_width,
-                self._hint_space.content_width,
+                self._hint_move.content_width,
+                self._hint_run.content_width,
+                self._hint_interact.content_width,
             )
             self._width1 = 100 + max_width
 
-            self._hint_e.text = resmgr.translate("hint.e")
-            self._hint_esc.text = resmgr.translate("hint.escape")
-            self._hint_f5.text = resmgr.translate("hint.f5")
-            self._hint_f11.text = resmgr.translate("hint.f11")
+            self._hint_open.text = resmgr.translate("hint.open")
+            self._hint_back.text = resmgr.translate("hint.back")
+            self._hint_screenshot.text = resmgr.translate("hint.screenshot")
+            self._hint_fullscreen.text = resmgr.translate("hint.fullscreen")
             max_width = max(
-                self._hint_e.content_width,
-                self._hint_esc.content_width,
-                self._hint_f5.content_width,
-                self._hint_f11.content_width,
+                self._hint_open.content_width,
+                self._hint_back.content_width,
+                self._hint_screenshot.content_width,
+                self._hint_fullscreen.content_width,
             )
             self._width2 = 60 + max_width
 
@@ -211,16 +217,6 @@ class KeyHint:
         self._hint_group1.visible = True
         self._hint_group2.visible = False
         self._state = 0
-
-    def on_key_press(self, symbol, modifiers):
-        if self._state < 0:
-            return
-        if key.LEFT <= symbol <= key.DOWN and self._state == 0:
-            clock.schedule_once(self.update1, 3)
-            self._state = 1
-        elif symbol == key.E and self._state == 1:
-            clock.schedule_once(self.update2, 3)
-            self._state = 2
 
 
 __all__ = ("KeyHint",)

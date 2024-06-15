@@ -1,15 +1,12 @@
 {
-    "language.info": {
-        "line_break_func": "cjk"
-    },
     "general.apply": "應用",
-    "hint.arrow": "移動",
-    "hint.e": "打開揹包",
-    "hint.escape": "返回上級",
-    "hint.f5": "屏幕截圖",
-    "hint.f11": "切換全屏",
-    "hint.shift": "跑步",
-    "hint.space": "交互",
+    "hint.move": "移動",
+    "hint.open": "打開揹包",
+    "hint.back": "返回上級",
+    "hint.screenshot": "屏幕截圖",
+    "hint.fullscreen": "切換全屏",
+    "hint.run": "跑步",
+    "hint.interact": "交互",
     "language.code": "zh_tw",
     "language.line_break_func": "cjk",
     "language.name": "繁體中文",

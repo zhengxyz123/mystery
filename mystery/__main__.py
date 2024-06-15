@@ -31,6 +31,7 @@ def record_error():
 def start():
     gl.glEnable(gl.GL_LINE_SMOOTH)
     gl.glEnable(gl.GL_POLYGON_SMOOTH)
+    gl.glEnable(gl.GL_BLEND)
     gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
     gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST)
     gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_NEAREST)

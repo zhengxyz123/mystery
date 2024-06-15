@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="48" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="12">
+ <tileset firstgid="1" source="tilesets/terrain.tsx"/>
+ <tileset firstgid="1025" source="tilesets/mask.tsx"/>
+ <tileset firstgid="1041" source="tilesets/outside_objects.tsx"/>
+ <layer id="1" name="back_0" width="32" height="48">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+VX7QrCMAzcfJQ9iy9irfuhoO//bwoOSkia60eawQaHOKpJLndpO036s8xl6P0cJf7LOX4U4q2O/N8c+8/FHhGf8k11YRFfqvVM/uN44DxhEV/yPtWCh/7O1H8OI/zHce81f7Q52PO/z46HY2xpvy/F9dJ3nQVSD9+NePHsZU8dfAzr7KW5IyB88SbvEI1r+kPX13L57JRXKzSd/ZDTWlqHdmZB71alaOllJN/3WnNn8SPOmPjXfADWWu0BAYwP1QNwT32P/L62Lu59yX1NA+JDBDlt5u60LbVY+TrFPmfWRq6kuduql1ZPhQEcUkg9l7go1Uis5MSKC25/QnIM5FPLF12H5JqbcUvBGhSSPzRtpBh9hqnhtzVOjoc4j81HwwainmkmABgAAA==
+  </data>
+ </layer>
+ <layer id="2" name="back_1" width="32" height="48">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3PtxGAMBREQQVqCNMApgFc/61wM6SEmGR35qW6r1IAAADg0tRS2tSlvn6/P2RzTFOab/aPl29a8v6atrT/8H8AgCedXd49BwAYAAA=
+  </data>
+ </layer>
+ <layer id="3" name="fore_0" width="32" height="48">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3PMQ6AIBAEQFQEG/3/c6XQGi4h2swm221ucin1s+SB0ZMS2I6Gz+fz+Xz+XH9r+7XTK3DzHLj3NufYb7NT+Hw+n8/n8/l8Pp/P/8ivrftPPVpvUnrhdwAYAAA=
+  </data>
+ </layer>
+ <objectgroup id="4" name="objects">
+  <object id="1" name="sp_0" type="SPoint" x="448" y="1024">
+   <properties>
+    <property name="sp_name" value="start"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="2" name="cr_0" type="CRect" x="32" y="584" width="960" height="920">
+   <properties>
+    <property name="can_walk" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="3" name="cr_1" type="CRect" x="320" y="64" width="320" height="520">
+   <properties>
+    <property name="can_walk" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="4" name="cr_2" type="CRect" x="292" y="894" width="122" height="94">
+   <properties>
+    <property name="can_walk" type="bool" value="false"/>
+    <property name="cr_name" value="tent"/>
+   </properties>
+  </object>
+  <object id="5" name="cr_3" type="CRect" x="544" y="935" width="32" height="24">
+   <properties>
+    <property name="can_walk" type="bool" value="false"/>
+    <property name="cr_name" value="campfire"/>
+   </properties>
+  </object>
+  <object id="6" name="tent_0" type="IObj" gid="1057" x="288" y="896" width="32" height="32"/>
+  <object id="7" name="tent_1" type="IObj" gid="1058" x="320" y="896" width="32" height="32"/>
+  <object id="8" name="tent_2" type="IObj" gid="1059" x="352" y="896" width="32" height="32"/>
+  <object id="9" name="tent_3" type="IObj" gid="1060" x="384" y="896" width="32" height="32"/>
+  <object id="10" name="tent_4" type="IObj" gid="1042" x="320" y="864" width="32" height="32"/>
+  <object id="11" name="tent_5" type="IObj" gid="1043" x="352" y="864" width="32" height="32"/>
+ </objectgroup>
+</map>

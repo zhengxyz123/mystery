@@ -5,10 +5,10 @@ from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.image import Animation, AnimationFrame, ImageGrid
 from pyglet.math import Vec2
-from pyglet.sprite import Sprite
 from pyglet.window import key
 
 from mystery import resmgr
+from mystery.depth_sprite import DepthSprite as Sprite
 
 idle_img = resmgr.loader.image("textures/character/idle.png")
 idle_seq = ImageGrid(idle_img, 4, 3).get_texture_sequence()
@@ -86,12 +86,13 @@ class Character(EventDispatcher):
         self._batch = batch
         self._group = Group(parent=group)
         self._char_sprite = Sprite(
-            char_anime["idle"]["up"], batch=self._batch, group=self._group
+            char_anime["idle"]["up"], 0, 0, 1, batch=self._batch, group=self._group
         )
         self._bubble_sprite = Sprite(
             bubble_anime["dots"],
             self._char_sprite.x + 30,
             self._char_sprite.y + 50,
+            1,
             batch=self._batch,
             group=self._group,
         )
@@ -194,8 +195,8 @@ class Character(EventDispatcher):
     @position.setter
     def position(self, pos: tuple[int, int]):
         x, y, *_ = pos
-        self._char_sprite.position = (x, y, 0)
-        self._bubble_sprite.position = (x + 30, y + 50, 0)
+        self._char_sprite.position = (x, y, 1)
+        self._bubble_sprite.position = (x + 30, y + 50, 1)
 
     def _reset_bubble(self):
         self.bubble = CharacterBubble.EMPTY
