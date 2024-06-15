@@ -236,9 +236,7 @@ class Character(EventDispatcher):
     def on_key_release(self, symbol, modifiers):
         if self._state == CharacterState.CTRLED:
             return
-        if symbol == key.ESCAPE:
-            self._game.window.switch_scene("menu")
-        elif symbol == key.SPACE:
+        if symbol == key.SPACE:
             self._room.interact()
         elif symbol == key.LSHIFT:
             self._runnable = False

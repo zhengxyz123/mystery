@@ -4,12 +4,12 @@ from pyglet import gl
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.math import Mat4, Vec3
-from pyglet.sprite import Sprite, SpriteGroup
+from pyglet.sprite import Sprite
 from pytmx import TiledTileLayer
 
 from mystery.character import Character, CharacterDirection
-from mystery.scene.game import GameScene
 from mystery.depth_sprite import DepthSprite
+from mystery.scene.game import GameScene
 from mystery.utils import Rect
 
 
@@ -22,15 +22,14 @@ class BaseRoom(EventDispatcher):
     def __init__(
         self,
         game: GameScene,
-        name: str,
+        map_name: str,
         char: Character,
         group: Optional[Group] = None,
     ):
-        self._game = game
-        self._name = name
+        self.game = game
+        self.map_name = map_name
+        self.tiled_map = self.game.window.resource.tiled_map(self.map_name)
         self._map_loaded = False
-        self.tiled_map = self._game.window.resource.tiled_map(self._name)
-        self.char = char
         self.map_batches = {
             "back": Batch(),
             "char": Batch(),
@@ -40,10 +39,11 @@ class BaseRoom(EventDispatcher):
         self.sprite_groups = []
         self.sprites_list = []
         self.ibojs_dict = {}
+
+        self.char = char
         self.char.batch = self.map_batches["char"]
         self.char.room = self
 
-        # One is a list, the other is a dict.
         self._collisions_walkable = []
         self._collisions_unwalkable = {}
         self._spawn_points = {}
@@ -54,7 +54,7 @@ class BaseRoom(EventDispatcher):
 
     @property
     def name(self) -> str:
-        return self._name
+        return self.map_name
 
     def _load_map(self):
         if self._map_loaded:
@@ -147,10 +147,10 @@ class BaseRoom(EventDispatcher):
     def draw(self):
         char_pos = Vec3(*self.char.position, 0)
         center_pos = Vec3(
-            self._game.window.width // 2 - 32, self._game.window.height // 2 - 32, 0
+            self.game.window.width // 2 - 32, self.game.window.height // 2 - 32, 0
         )
         trans_mat = Mat4.from_translation(center_pos - char_pos)
-        with self._game.window.apply_view(trans_mat):
+        with self.game.window.apply_view(trans_mat):
             self.map_batches["back"].draw()
             self.map_batches["char"].draw()
             self.map_batches["fore"].draw()
