@@ -27,6 +27,7 @@ class StartRoom(BaseRoom):
 
         self.plots = []
         self._now_plot = 0
+        self.language = ""
         self.data = {
             "state": -1,
         }
@@ -77,9 +78,11 @@ class StartRoom(BaseRoom):
         self.character.state = CharacterState.FREEZE
         self.character.position = self._spawn_points["start"]
         self.data["state"] = 0
-        self.plots[:] = []
         self._now_plot = 0
-        self._load_plots()
+        if self.language != self.game.window.resource.language:
+            self.plots[:] = []
+            self._load_plots()
+            self.language = self.game.window.resource.language
         self.message_box.text = self.plots[0]
         self.game.window.push_handlers(self)
 

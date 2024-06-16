@@ -11,6 +11,7 @@ class CampfireEntity(EntityBase):
         self._now_plot = 0
         self._interacting = False
         self._show_hints = self.room.key_hint_group.visible
+        self._language = ""
 
     def _load_plots(self):
         i = 0
@@ -40,9 +41,11 @@ class CampfireEntity(EntityBase):
             return
         self._interacting = True
         self._show_hints = self.room.key_hint_group.visible
-        self.plots[:] = []
         self._now_plot = 0
-        self._load_plots()
+        if self._language != self.game.window.resource.language:
+            self.plots[:] = []
+            self._load_plots()
+            self._language = self.game.window.resource.language
         self.room.character.state = CharacterState.FREEZE
         self.room.key_hint_group.visible = False
         self.room.mb_group.visible = True
