@@ -56,6 +56,7 @@ class Rect:
         self._y = y
         self._width = width
         self._height = height
+        self._walkable = False
 
     def __contains__(self, pos: tuple[int, int]) -> bool:
         px, py = pos
@@ -68,8 +69,9 @@ class Rect:
         return f"Rect(x={self._x}, y={self._y}, w={self._width}, h={self._height})"
 
     @classmethod
-    def from_tmx_obj(cls, obj):
+    def from_tmx_obj(cls, obj, walkable: bool):
         rect = cls(obj.x, obj.y, obj.width, obj.height)
+        rect.walkable = walkable
         return rect
 
     @property
@@ -79,6 +81,14 @@ class Rect:
     @area.setter
     def area(self, area: tuple[int, ...]):
         self._x, self._y, self._width, self._height = area
+    
+    @property
+    def walkable(self) -> bool:
+        return self._walkable
+    
+    @walkable.setter
+    def walkable(self, value: bool):
+        self._walkable = value
 
 
 __all__ = "line_break_ascii", "line_break_cjk", "line_break_func", "Rect"

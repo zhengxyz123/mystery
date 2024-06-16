@@ -1,6 +1,5 @@
 from typing import Optional
 
-from pyglet import gl
 from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.math import Mat4, Vec3
@@ -38,14 +37,13 @@ class BaseRoom(EventDispatcher):
         self.gui_batch = Batch()
         self.sprite_groups = []
         self.sprites_list = []
-        self.ibojs_dict = {}
+        self.stiles_dict = {}
 
         self.character = character
         self.character.batch = self.map_batches["char"]
         self.character.room = self
 
-        self._collisions_walkable = []
-        self._collisions_unwalkable = {}
+        self._collision_rectangles = {}
         self._spawn_points = {}
 
         # A dict that store the room info.
@@ -82,44 +80,43 @@ class BaseRoom(EventDispatcher):
                 (self.tiled_map.tileheight * self.tiled_map.height) - obj.y - obj.height
             )
             if obj.type == "CRect":
-                if obj.properties["can_walk"]:
-                    self._collisions_walkable.append(Rect.from_tmx_obj(obj))
-                else:
-                    name = obj.properties["cr_name"]
-                    self._collisions_unwalkable[name] = Rect.from_tmx_obj(obj)
-            elif obj.type == "IObj":
+                #  CRect refers to "Collision Rectangle"
+                rect = Rect.from_tmx_obj(obj, obj.properties["walkable"])
+                self._collision_rectangles[obj.name] = rect
+            elif obj.type == "STile":
+                # STile refers to "Special Tile"
                 image = self.tiled_map.get_tile_image_by_gid(obj.gid)
-                iobj_name = obj.name
+                stile_name = obj.name
                 sprite = DepthSprite(
                     image, obj.x, obj.y, batch=self.map_batches["char"]
                 )
-                self.ibojs_dict[iobj_name] = sprite
+                self.stiles_dict[stile_name] = sprite
             elif obj.type == "SPoint":
-                name = obj.properties["sp_name"]
-                self._spawn_points[name] = (obj.x, obj.y)
+                # SPoint refers to "Spawn Point"
+                self._spawn_points[obj.name] = (obj.x, obj.y)
         self._map_loaded = True
 
-    def _update_iobjs(self):
+    def _update_stiles(self):
         char_y = self.character.position[1] + 4
-        for iobj in self.ibojs_dict.values():
-            if iobj.y > char_y:
-                iobj.z = 0
+        for stile in self.stiles_dict.values():
+            if stile.y > char_y:
+                stile.z = 0
             else:
-                iobj.z = 2
+                stile.z = 2
 
     def allow_move(self, pos: tuple[int, int]) -> bool:
         x, y = pos
         pos1 = (x + 20, y + 4)
         pos2 = (x + 44, y + 4)
-        for rect in self._collisions_unwalkable.values():
-            if pos1 in rect or pos2 in rect:
-                return False
         check1, check2 = [], []
-        for rect in self._collisions_walkable:
-            check1.append(pos1 in rect)
-            check2.append(pos2 in rect)
+        for rect in self._collision_rectangles.values():
+            if (pos1 in rect or pos2 in rect) and not rect.walkable:
+                    return False
+            else:
+                check1.append(pos1 in rect)
+                check2.append(pos2 in rect)
         if any(check1) and any(check2):
-            self._update_iobjs()
+            self._update_stiles()
             return True
         else:
             return False
@@ -127,11 +124,15 @@ class BaseRoom(EventDispatcher):
     def check_collide(self, which: str) -> bool:
         """Check whether a character can intercat with a collision box.
 
-        `which` is a key in `BaseRoom._collisions_unwalkable`.
+        `which` is a key in `BaseRoom._collision_rectangles`.
         """
+        rect = self._collision_rectangles[which]
+        if rect.walkable:
+            x, y = self.character.position
+            point = (x + 32, y + 4)
+            return point in rect
         char_dir = self.character.direction
         points = self.character.control_point
-        rect = self._collisions_unwalkable[which]
         t = tuple((point in rect for point in points))
         if t == (True, False, False, False):
             return char_dir == CharacterDirection.LEFT

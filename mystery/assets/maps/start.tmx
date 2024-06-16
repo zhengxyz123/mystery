@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="48" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="6">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="48" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="7">
  <tileset firstgid="1" source="tilesets/terrain.tsx"/>
  <tileset firstgid="1025" source="tilesets/mask.tsx"/>
  <tileset firstgid="1041" source="tilesets/outside_objects.tsx"/>
@@ -19,32 +19,32 @@
   </data>
  </layer>
  <objectgroup id="4" name="objects">
-  <object id="1" name="sp_0" type="SPoint" x="448" y="1024">
-   <properties>
-    <property name="sp_name" value="start"/>
-   </properties>
+  <object id="1" name="start" type="SPoint" x="448" y="1024">
    <point/>
   </object>
-  <object id="2" name="cr_0" type="CRect" x="32" y="584" width="960" height="920">
+  <object id="2" name="grass" type="CRect" x="32" y="584" width="960" height="920">
    <properties>
-    <property name="can_walk" type="bool" value="true"/>
+    <property name="walkable" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="3" name="cr_1" type="CRect" x="320" y="64" width="320" height="520">
+  <object id="3" name="path" type="CRect" x="320" y="64" width="320" height="520">
    <properties>
-    <property name="can_walk" type="bool" value="true"/>
+    <property name="walkable" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="4" name="cr_2" type="CRect" x="292" y="894" width="122" height="94">
+  <object id="4" name="tent" type="CRect" x="292" y="894" width="122" height="94">
    <properties>
-    <property name="can_walk" type="bool" value="false"/>
-    <property name="cr_name" value="tent"/>
+    <property name="walkable" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="5" name="cr_3" type="CRect" x="544" y="935" width="32" height="24">
+  <object id="5" name="tent_entry" type="CRect" x="336" y="951" width="33" height="37">
    <properties>
-    <property name="can_walk" type="bool" value="false"/>
-    <property name="cr_name" value="campfire"/>
+    <property name="walkable" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="6" name="campfire" type="CRect" x="544" y="936" width="32" height="24">
+   <properties>
+    <property name="walkable" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>
