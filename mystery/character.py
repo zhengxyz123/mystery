@@ -68,7 +68,7 @@ class CharacterBubble(StrEnum):
 
 
 class CharacterState(StrEnum):
-    CTRLED = "controlled"
+    FREEZE = "freeze"
     IDLE = "idle"
     RUN = "run"
     SIT = "sit"
@@ -202,7 +202,7 @@ class Character(EventDispatcher):
         self.bubble = CharacterBubble.EMPTY
 
     def update(self, dt: float):
-        if self._state != CharacterState.CTRLED and (
+        if self._state != CharacterState.FREEZE and (
             self._prev_state != self._state or self._prev_direction != self._direction
         ):
             state = self._prev_state = self._state.value
@@ -223,7 +223,7 @@ class Character(EventDispatcher):
                     break
 
     def on_key_press(self, symbol, modifiers):
-        if self._state == CharacterState.CTRLED:
+        if self._state == CharacterState.FREEZE:
             return
         elif symbol == key.LSHIFT:
             self._runnable = True
@@ -234,8 +234,10 @@ class Character(EventDispatcher):
             self._state = CharacterState.RUN
 
     def on_key_release(self, symbol, modifiers):
-        if self._state == CharacterState.CTRLED:
+        if self._state == CharacterState.FREEZE:
             return
+        if symbol == key.ESCAPE:
+            self._game.window.switch_scene("menu")
         if symbol == key.SPACE:
             self._room.interact()
         elif symbol == key.LSHIFT:

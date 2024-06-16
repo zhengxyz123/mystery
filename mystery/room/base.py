@@ -23,7 +23,7 @@ class BaseRoom(EventDispatcher):
         self,
         game: GameScene,
         map_name: str,
-        char: Character,
+        character: Character,
         group: Optional[Group] = None,
     ):
         self.game = game
@@ -40,9 +40,9 @@ class BaseRoom(EventDispatcher):
         self.sprites_list = []
         self.ibojs_dict = {}
 
-        self.char = char
-        self.char.batch = self.map_batches["char"]
-        self.char.room = self
+        self.character = character
+        self.character.batch = self.map_batches["char"]
+        self.character.room = self
 
         self._collisions_walkable = []
         self._collisions_unwalkable = {}
@@ -100,7 +100,7 @@ class BaseRoom(EventDispatcher):
         self._map_loaded = True
 
     def _update_iobjs(self):
-        char_y = self.char.position[1] + 4
+        char_y = self.character.position[1] + 4
         for iobj in self.ibojs_dict.values():
             if iobj.y > char_y:
                 iobj.z = 0
@@ -129,8 +129,8 @@ class BaseRoom(EventDispatcher):
 
         `which` is a key in `BaseRoom._collisions_unwalkable`.
         """
-        char_dir = self.char.direction
-        points = self.char.control_point
+        char_dir = self.character.direction
+        points = self.character.control_point
         rect = self._collisions_unwalkable[which]
         t = tuple((point in rect for point in points))
         if t == (True, False, False, False):
@@ -145,7 +145,7 @@ class BaseRoom(EventDispatcher):
             return False
 
     def draw(self):
-        char_pos = Vec3(*self.char.position, 0)
+        char_pos = Vec3(*self.character.position, 0)
         center_pos = Vec3(
             self.game.window.width // 2 - 32, self.game.window.height // 2 - 32, 0
         )
