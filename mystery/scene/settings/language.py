@@ -1,5 +1,6 @@
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
+from pyglet.window import key
 
 from mystery.gui.widgets import (
     AdvancedFrame,
@@ -83,6 +84,12 @@ class LanguageSettingScene(Scene):
         self.window.clear()
         self.batch.draw()
 
+    def on_key_release(self, symbol, modifiers):
+        if symbol in [key.ENTER, key.SPACE]:
+            self.apply_button.dispatch_event("on_click")
+        elif symbol == key.ESCAPE:
+            self.language_frame.dispatch_event("on_button_click")
+
     def on_resize(self, width, height):
         self.background.position = (width // 2, height // 2, 0)
         if 3 * width >= 4 * height:
@@ -102,6 +109,10 @@ class LanguageSettingScene(Scene):
         i = list(SUPPORTED_LANG.keys()).index(self.window.resource.language)
         if not (option := self.language_options[i]).selected:
             option.selected = True
+        self.window.push_handlers(self.options_group)
+
+    def on_scene_leave(self):
+        self.window.remove_handlers(self.options_group)
 
 
 __all__ = ("LanguageSettingScene",)

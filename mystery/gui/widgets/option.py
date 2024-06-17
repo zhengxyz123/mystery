@@ -4,7 +4,7 @@ from pyglet.event import EventDispatcher
 from pyglet.graphics import Batch, Group
 from pyglet.shapes import Rectangle
 from pyglet.text import Label
-from pyglet.window import mouse
+from pyglet.window import key, mouse
 
 from mystery.gui.widgets import WidgetBase
 from mystery.resource.manager import FONT_NAME
@@ -57,6 +57,22 @@ class OptionGroup(EventDispatcher):
                 return
             self._options_list.append(option)
             option.set_handler("on_option_toggle", self.on_toggle)
+
+    def on_key_release(self, symbol, modifiers):
+        di = 0
+        if symbol == key.UP:
+            di = -1
+        elif symbol == key.DOWN:
+            di = 1
+        else:
+            return
+        if self._now + di > len(self._options_list) - 1:
+            now = 0
+        elif self._now + di < 0:
+            now = -1
+        else:
+            now = self._now + di
+        self._options_list[now].selected = True
 
     def on_toggle(self, which: OptionBase):
         assert which in self._options_list

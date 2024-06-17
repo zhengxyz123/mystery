@@ -80,7 +80,7 @@ class BaseRoom(EventDispatcher):
                 (self.tiled_map.tileheight * self.tiled_map.height) - obj.y - obj.height
             )
             if obj.type == "CRect":
-                #  CRect refers to "Collision Rectangle"
+                # CRect refers to "Collision Rectangle"
                 rect = Rect.from_tmx_obj(obj, obj.properties["walkable"])
                 self._collision_rectangles[obj.name] = rect
             elif obj.type == "STile":

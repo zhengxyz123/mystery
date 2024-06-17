@@ -2,6 +2,7 @@ from importlib import import_module
 
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
+from pyglet.window import key
 
 from mystery.gui.widgets import AdvancedFrame, TextButton
 from mystery.scene import GameWindow, Scene
@@ -96,6 +97,10 @@ class SettingsScene(Scene):
     def on_draw(self):
         self.window.clear()
         self.batch.draw()
+    
+    def on_key_release(self, symbol, modifiers):
+        if symbol == key.ESCAPE:
+            self.buttons_frame.dispatch_event("on_button_click")
 
     def on_resize(self, width, height):
         self.background.position = (width // 2, height // 2, 0)
