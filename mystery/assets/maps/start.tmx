@@ -19,7 +19,7 @@
   </data>
  </layer>
  <objectgroup id="4" name="objects">
-  <object id="1" name="start" type="SPoint" x="448" y="1024">
+  <object id="1" name="start" type="SPoint" x="496" y="1024">
    <point/>
   </object>
   <object id="2" name="grass" type="CRect" x="32" y="584" width="960" height="920">

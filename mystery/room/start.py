@@ -29,6 +29,7 @@ class StartRoom(BaseRoom):
         self._now_plot = 0
         self.language = ""
         self.data = {
+            "char_pos": (0, 0),
             "state": -1,
         }
 
@@ -60,6 +61,9 @@ class StartRoom(BaseRoom):
     def interact(self):
         if self.check_collide("campfire"):
             self.campfire.dispatch_event("on_interact")
+        elif self.check_collide("tent_entry"):
+            self.data["char_pos"] = self.character.position
+            self.game.switch_room("start_tent")
 
     def on_key_release(self, symbol, modifiers):
         if self.data["state"] == 0:
@@ -69,25 +73,47 @@ class StartRoom(BaseRoom):
     def on_resize(self, width, height):
         self.message_box.resize()
 
-    def on_room_enter(self, *args):
+    def on_room_enter(self, state, *args):
         self._load_map()
-        self.key_hint_group.visible = False
-        self.mb_group.visible = True
-        self.key_hint.reset()
-        self.character.direction = CharacterDirection.UP
-        self.character.state = CharacterState.FREEZE
-        self.character.position = self._spawn_points["start"]
-        self.data["state"] = 0
-        self._now_plot = 0
-        if self.language != self.game.window.resource.language:
-            self.plots[:] = []
-            self._load_plots()
-            self.language = self.game.window.resource.language
-        self.message_box.text = self.plots[0]
         self.game.window.push_handlers(self)
+        if state == "start_game":
+            self.key_hint_group.visible = False
+            self.mb_group.visible = True
+            self.key_hint.reset()
+            self.character.direction = CharacterDirection.UP
+            self.character.state = CharacterState.FREEZE
+            self.character.position = self._spawn_points["start"]
+            self.data["state"] = 0
+            self._now_plot = 0
+            if self.language != self.game.window.resource.language:
+                self.plots[:] = []
+                self._load_plots()
+                self.language = self.game.window.resource.language
+            self.message_box.text = self.plots[0]
+        elif state == "return":
+            self.character.position = self.data["char_pos"]
 
     def on_room_leave(self):
         self.game.window.remove_handlers(self)
 
 
-__all__ = ("StartRoom",)
+class StartTentRoom(BaseRoom):
+    def __init__(
+        self,
+        game: GameScene,
+        character: Character,
+        group: Optional[Group] = None,
+    ):
+        super().__init__(game, "start_tent", character, group)
+        self.data = {}
+
+    def interact(self):
+        if self.check_collide("door"):
+            self.game.switch_room("start", "return")
+
+    def on_room_enter(self, *args):
+        self._load_map()
+        self.character.position = self._spawn_points["start"]
+
+
+__all__ = ("StartRoom", "StartTentRoom")

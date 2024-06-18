@@ -81,11 +81,11 @@ class Rect:
     @area.setter
     def area(self, area: tuple[int, ...]):
         self._x, self._y, self._width, self._height = area
-    
+
     @property
     def walkable(self) -> bool:
         return self._walkable
-    
+
     @walkable.setter
     def walkable(self, value: bool):
         self._walkable = value

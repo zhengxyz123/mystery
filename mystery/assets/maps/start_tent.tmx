@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="4" height="5" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="5">
+ <tileset firstgid="1" source="tilesets/terrain.tsx"/>
+ <layer id="1" name="back_0" width="4" height="5">
+  <data encoding="base64" compression="zlib">
+   eJxTYmRgUKIAgwAyGwBwWgJ3
+  </data>
+ </layer>
+ <objectgroup id="2" name="objects">
+  <object id="1" name="inside" type="CRect" x="0" y="0" width="128" height="128">
+   <properties>
+    <property name="walkable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="2" name="fake_door" type="CRect" x="32" y="128" width="64" height="24">
+   <properties>
+    <property name="walkable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="3" name="door" type="CRect" x="32" y="152" width="64" height="8">
+   <properties>
+    <property name="walkable" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="4" name="start" type="SPoint" x="64" y="152">
+   <point/>
+  </object>
+ </objectgroup>
+</map>

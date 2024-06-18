@@ -9,6 +9,7 @@ from mystery.scene import GameWindow, Scene
 
 rooms = {
     "start": ("start", "StartRoom"),
+    "start_tent": ("start", "StartTentRoom"),
 }
 
 
@@ -20,7 +21,7 @@ class GameScene(Scene):
         self._now_room = None
         self.character = Character(self)
 
-    def switch_room(self, room_name: str, args: tuple = tuple()):
+    def switch_room(self, room_name: str, *args):
         """Load then switch to a room."""
         module_name, class_name = rooms[room_name]
         if room_name not in self._cached_room:
@@ -30,6 +31,7 @@ class GameScene(Scene):
         if self._now_room:
             self._now_room.dispatch_event("on_room_leave")
         self._now_room = self._cached_room[room_name]
+        self.character.batch = self._now_room.map_batches["char"]
         self.character.room = self._now_room
         self._now_room.dispatch_event("on_room_enter", *args)
 
@@ -42,7 +44,7 @@ class GameScene(Scene):
     def on_scene_enter(self):
         self.window.push_handlers(self.character)
         clock.schedule_interval(self.character.update, 4 / self.window.setting["fps"])
-        self.switch_room("start")
+        self.switch_room("start", "start_game")
 
     def on_scene_leave(self):
         clock.unschedule(self.character.update)

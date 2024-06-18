@@ -97,7 +97,7 @@ class SettingsScene(Scene):
     def on_draw(self):
         self.window.clear()
         self.batch.draw()
-    
+
     def on_key_release(self, symbol, modifiers):
         if symbol == key.ESCAPE:
             self.buttons_frame.dispatch_event("on_button_click")

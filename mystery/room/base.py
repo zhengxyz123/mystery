@@ -93,7 +93,7 @@ class BaseRoom(EventDispatcher):
                 self.stiles_dict[stile_name] = sprite
             elif obj.type == "SPoint":
                 # SPoint refers to "Spawn Point"
-                self._spawn_points[obj.name] = (obj.x, obj.y)
+                self._spawn_points[obj.name] = (obj.x - 32, obj.y + 4)
         self._map_loaded = True
 
     def _update_stiles(self):
@@ -111,7 +111,7 @@ class BaseRoom(EventDispatcher):
         check1, check2 = [], []
         for rect in self._collision_rectangles.values():
             if (pos1 in rect or pos2 in rect) and not rect.walkable:
-                    return False
+                return False
             else:
                 check1.append(pos1 in rect)
                 check2.append(pos2 in rect)
