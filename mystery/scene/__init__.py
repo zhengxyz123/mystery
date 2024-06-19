@@ -112,7 +112,10 @@ class GameWindow(Window):
     def on_key_press(self, symbol, modifiers):
         if symbol == key.F5:
             filename = data_path / "screenshots" / strftime("%Y%m%d_%H%M%S.png")
-            get_buffer_manager().get_color_buffer().save(filename)
+            if modifiers & key.MOD_SHIFT:
+                get_buffer_manager().get_depth_buffer().save(filename)
+            else:
+                get_buffer_manager().get_color_buffer().save(filename)
         elif symbol == key.F11:
             self.set_fullscreen(not self.fullscreen)
             if not self.fullscreen:

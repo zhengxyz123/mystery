@@ -91,8 +91,9 @@ def build_executable(pack_into_zip: bool = False):
             platform.machine(),
             *platform.python_version_tuple()[:2],
         )
-        shutil.make_archive(archive_name, "zip", base_path / "dist" / "mystery")
-        shutil.rmtree(Path.cwd() / "dist", ignore_errors=True)
+        shutil.make_archive(
+            base_path / "dist" / archive_name, "zip", base_path / "dist" / "mystery"
+        )
     os.remove(Path.cwd() / "mystery.spec")
     shutil.rmtree(Path.cwd() / "build", ignore_errors=True)
 
@@ -121,9 +122,10 @@ def build_pyz(compressed: bool = False):
     if result.returncode != 0:
         print(f"pip has returned a non-zero exit status {result.returncode}")
         exit(1)
+    os.makedirs(base_path / "dist", exist_ok=True)
     zipapp.create_archive(
         base_path / "build",
-        base_path / "mystery.pyz",
+        base_path / "dist" / "mystery.pyz",
         interpreter="/usr/bin/env python3",
         main="mystery.__main__:start",
         compressed=compressed,

@@ -38,7 +38,7 @@ class ResourceManager:
 
         # Create temporary directory for *.tmx files.
         if not self._frozen:
-            self._tmpdir = TemporaryDirectory(suffix=".mystery")
+            self._tmpdir = TemporaryDirectory(prefix="mystery-")
             atexit_register(self._tmpdir.cleanup)
             self.copy_to_tempdir()
 
