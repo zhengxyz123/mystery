@@ -9,6 +9,7 @@ datas = [(assets_path, "assets")]
 hiddenimports = [
     "mystery.room.start",
     "mystery.scene.game",
+    "mystery.scene.save",
     "mystery.scene.settings",
     "mystery.scene.settings.language",
     "mystery.scene.settings.main",
