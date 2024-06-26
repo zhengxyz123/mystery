@@ -91,7 +91,7 @@ class ResourceManager:
         ]
         makedirs(Path(self._tmpdir.name) / "tilesets", exist_ok=True)
         for f in files:
-            contents = self.loader.file(str(Path("maps") / f)).read()
+            contents = self.loader.file(str(Path("maps") / f).replace("\\", "/")).read()
             name = Path(self._tmpdir.name) / f
             with open(name, "wb") as target:
                 target.write(contents)
