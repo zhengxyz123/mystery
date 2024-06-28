@@ -134,14 +134,14 @@ class BaseRoom(EventDispatcher):
         char_dir = self.character.direction
         points = self.character.control_point
         t = tuple((point in rect for point in points))
-        if t == (True, False, False, False):
+        if t[0]:
             return char_dir == CharacterDirection.LEFT
-        elif t == (False, False, True, False):
-            return char_dir == CharacterDirection.RIGHT
-        elif t == (False, False, False, True):
-            return char_dir == CharacterDirection.UP
-        elif t[1] and not t[3]:
+        elif t[1]:
             return char_dir == CharacterDirection.DOWN
+        elif t[2]:
+            return char_dir == CharacterDirection.RIGHT
+        elif t[3]:
+            return char_dir == CharacterDirection.UP
         else:
             return False
 
