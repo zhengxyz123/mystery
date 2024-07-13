@@ -42,7 +42,7 @@ class DepthSpriteGroup(sprite.SpriteGroup):
         self.program.stop()
 
 
-class DepthSprite(sprite.AdvancedSprite):
+class DepthSprite(sprite.Sprite):
     group_class = DepthSpriteGroup
 
     def __init__(
