@@ -91,4 +91,4 @@ class Rect:
         self._walkable = value
 
 
-__all__ = "line_break_ascii", "line_break_cjk", "line_break_func", "Rect"
+__all__ = "line_break_en", "line_break_cjk", "line_break_func", "Rect"

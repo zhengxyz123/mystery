@@ -42,4 +42,4 @@ else:
     lang_code = game_setting.get("lang", "en_us")
 resmgr.language = lang_code
 
-__all__ = "version", "data_path", "setting", "resmgr"
+__all__ = "version", "data_path", "game_setting", "resmgr"
