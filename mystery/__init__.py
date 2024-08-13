@@ -15,8 +15,8 @@ from mystery.setting import Setting
 version = "0.0.1"
 
 # Check version of dependencies.
-if pyglet_ver != "2.0.16":
-    print(f"This game must use pyglet 2.0.16, but {pyglet_ver} found.")
+if pyglet_ver != "2.0.17":
+    print(f"This game must use pyglet 2.0.17, but {pyglet_ver} found.")
     exit(1)
 if pytmx_ver != (3, 32):
     print("This game must use pytmx 3.32, but {}.{} found.".format(*pytmx_ver))

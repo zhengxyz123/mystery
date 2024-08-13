@@ -1,2 +1,2 @@
-pyglet==2.0.16
+pyglet==2.0.17
 pytmx==3.32
